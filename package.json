@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host",
-    "build": "run-p type-check \"build-only {@}\" --",
+    "check-node-version": "node -e \"const semver = require('semver'); const { engines } = require('./package.json'); const version = process.version; if (!semver.satisfies(version, engines.node)) { console.error(`Node.js version ${version} does not satisfy the required version ${engines.node}`); process.exit(1); }\"",
+    "dev": "npm run check-node-version && vite --host",
+    "build": "npm run check-node-version && run-p type-check \"build-only {@}\" --",
     "build:test": "vue-tsc && vite build --mode test",
     "build:pro": "vue-tsc && vite build --mode production",
     "preview": "vite preview",
@@ -52,6 +53,7 @@
     "prettier": "^3.2.5",
     "sass": "^1.71.1",
     "sass-loader": "^14.1.1",
+    "semver": "^7.6.3",
     "stylelint": "^16.2.1",
     "stylelint-config-prettier": "^9.0.5",
     "stylelint-config-recess-order": "^4.6.0",
@@ -68,8 +70,9 @@
     "vite-plugin-svg-icons": "^2.0.1",
     "vue-tsc": "^1.8.27"
   },
+  "packageManager": "pnpm@9.6.0",
   "engines": {
-    "node": "20.6.1",
-    "pnpm": "8.15.3"
+    "node": ">20.0.0",
+    "pnpm": ">8.15.3"
   }
 }
