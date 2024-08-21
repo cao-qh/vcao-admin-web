@@ -1,8 +1,10 @@
 <template>
   <div class="login-container">
+    <canvas class="particle-background"></canvas>
+
     <div class="main">
-      <h1>vcao admin</h1>
-      <h2>持续完善中</h2>
+      <a-typography-text class="h1">vcao admin</a-typography-text>
+      <a-typography-text class="h2">持续完善中</a-typography-text>
 
       <Form></Form>
     </div>
@@ -16,11 +18,27 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
 import useLayoutSettingStore from '@/store/modules/setting'
 import Form from './components/Form/index.vue'
+import particles from 'particlesjs'
 
 const layoutSettingStore = useLayoutSettingStore()
+const particleInstance = ref<any>(null)
+
+onMounted(() => {
+  particleInstance.value = particles.init({
+    selector: '.particle-background',
+    color: '#c92a2a',
+    connectParticles: true,
+    maxParticles: 150,
+  })
+})
+
+onBeforeUnmount(() => {
+  particleInstance.value?.destroy()
+})
+
 // 获取主页背景颜色
 const bgColor = computed(() => {
   if (layoutSettingStore.dark) {
@@ -33,10 +51,20 @@ const bgColor = computed(() => {
 
 <style scoped lang="scss">
 .login-container {
-  width: 100%;
+  position: relative;
   height: 100vh;
   background: v-bind('bgColor');
-  padding: 10% 0;
+  padding: 15% 0;
+
+  .particle-background {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+  }
 
   .main {
     width: 375px;
@@ -44,15 +72,17 @@ const bgColor = computed(() => {
     box-sizing: border-box;
     padding: 20px;
 
-    h1 {
+    .h1 {
       font-size: 25px;
       padding: 10px 0;
       text-align: center;
+      display: block;
     }
-    h2 {
+    .h2 {
       font-size: 15px;
       padding: 0 0 10px 0;
       text-align: center;
+      display: block;
     }
   }
   .footer {
