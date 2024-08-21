@@ -10,6 +10,9 @@ import gloalComponent from '@/components'
 import router from '@/router'
 // 引入仓库
 import pinia from './store'
+// 引入粒子特效
+import Particles from '@tsparticles/vue3'
+import { loadSlim } from '@tsparticles/slim'
 
 const app = createApp(App)
 
@@ -19,6 +22,12 @@ app.use(gloalComponent)
 app.use(router)
 // 安装仓库
 app.use(pinia)
+// 安装粒子特效插件
+app.use(Particles, {
+  init: async (engine) => {
+    await loadSlim(engine)
+  },
+})
 // 引入路由鉴权文件
 // import './permisstion'
 // 引入自定义指令文件

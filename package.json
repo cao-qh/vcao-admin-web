@@ -20,13 +20,14 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
+    "@tsparticles/slim": "^3.5.0",
+    "@tsparticles/vue3": "^3.0.1",
     "ant-design-vue": "4.x",
     "axios": "^1.6.7",
     "dayjs": "^1.11.10",
     "echarts": "^5.5.0",
     "echarts-liquidfill": "^3.1.0",
     "nprogress": "^0.2.0",
-    "particlesjs": "^2.2.3",
     "pinia": "^2.1.7",
     "vue": "^3.4.15",
     "vue-router": "^4.3.0"
