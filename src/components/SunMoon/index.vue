@@ -54,10 +54,6 @@ const handleMoon = () => {
     text-align: center;
     transition: all 0.3s;
     font-size: 19px;
-
-    /*  .icon.active {
-      color: #fff;
-    } */
   }
 }
 
