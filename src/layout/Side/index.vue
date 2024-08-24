@@ -17,7 +17,7 @@
         </a-flex>
       </a-form-item>
       <a-form-item label="暗黑模式">
-        <sun-moon v-model:checked="layoutSettingStore.dark"></sun-moon>
+        <sun-moon v-model="layoutSettingStore.dark"></sun-moon>
       </a-form-item>
     </a-form>
   </a-drawer>

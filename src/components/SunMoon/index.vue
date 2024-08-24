@@ -67,7 +67,7 @@ const getSize = computed(() => {
       return {
         bg: '24px',
         icon: '16px',
-        lineHeight: '28px',
+        lineHeight: '29px',
       }
     case 'large':
       return {
@@ -79,7 +79,7 @@ const getSize = computed(() => {
       return {
         bg: '24px',
         icon: '16px',
-        lineHeight: '2',
+        lineHeight: '29px',
       }
   }
 })

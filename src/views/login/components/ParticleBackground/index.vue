@@ -3,25 +3,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
 import useLayoutSettingStore from '@/store/modules/setting'
 const layoutSettingStore = useLayoutSettingStore()
 
-// 获取主页背景颜色
-const bgColor = computed(() => {
-  if (layoutSettingStore.dark) {
-    return '#000000'
-  } else {
-    return '#f2f2f2'
-  }
-})
-
-const particleOptions = ref({
-  background: {
-    color: {
-      value: bgColor,
-    },
-  },
+const particleOptions = {
   fpsLimit: 120,
   interactivity: {
     events: {
@@ -86,7 +71,7 @@ const particleOptions = ref({
     },
   },
   detectRetina: true,
-})
+}
 </script>
 
 <style></style>
