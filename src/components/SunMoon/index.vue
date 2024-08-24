@@ -1,39 +1,88 @@
 <template>
-  <div class="sun-moon holder" :class="{ leftChecked }">
-    <span class="icon" @click="handleSun">
-      <SvgIcon name="sun" :color="iconColor.sun" />
+  <div class="sun-moon holder" :class="{ leftChecked: !isDark }">
+    <span @click="handleSun">
+      <SvgIcon
+        class="icon"
+        name="sun"
+        :width="getSize.icon"
+        :height="getSize.icon"
+        :color="iconColor.sun"
+      />
     </span>
-    <span class="icon" @click="handleMoon">
-      <SvgIcon name="moon" :color="iconColor.moon" />
+    <span @click="handleMoon">
+      <SvgIcon
+        class="icon"
+        name="moon"
+        :width="getSize.icon"
+        :height="getSize.icon"
+        :color="iconColor.moon"
+      />
     </span>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import useLayoutSettingStore from '@/store/modules/setting'
+import { computed } from 'vue'
 
-const settingStore = useLayoutSettingStore()
+defineOptions({
+  name: 'SunMoon',
+})
 
-const leftChecked = ref(!settingStore.dark)
+const props = withDefaults(
+  defineProps<{ size?: 'middle' | 'large' | 'small' }>(),
+  {
+    size: 'middle',
+  },
+)
+
+const isDark = defineModel()
+
 const iconColor = computed(() => {
   return {
-    sun: settingStore.dark ? '#a3b1bf' : '#fff',
-    moon: settingStore.dark ? '#fff' : '#a3b1bf',
+    sun: isDark.value ? '#a3b1bf' : '#fff',
+    moon: isDark.value ? '#fff' : '#a3b1bf',
   }
 })
 
 // 当太阳被点击
 const handleSun = () => {
-  leftChecked.value = true
-  settingStore.dark = false
+  isDark.value = false
 }
 
 // 当月亮被点击
 const handleMoon = () => {
-  leftChecked.value = false
-  settingStore.dark = true
+  isDark.value = true
 }
+
+// 获取具体尺寸数值
+const getSize = computed(() => {
+  switch (props.size) {
+    case 'small':
+      return {
+        bg: '16px',
+        icon: '11px',
+        lineHeight: '16px',
+      }
+    case 'middle':
+      return {
+        bg: '24px',
+        icon: '16px',
+        lineHeight: '28px',
+      }
+    case 'large':
+      return {
+        bg: '32px',
+        icon: '20px',
+        lineHeight: '40px',
+      }
+    default:
+      return {
+        bg: '24px',
+        icon: '16px',
+        lineHeight: '2',
+      }
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -45,24 +94,22 @@ const handleMoon = () => {
   cursor: pointer;
   transition: all 0.3s;
 
-  .icon {
+  span {
     position: relative;
-    width: 32px;
-    height: 32px;
-    color: #a3b1bf;
-    line-height: 32px;
+    width: v-bind('getSize.bg');
+    height: v-bind('getSize.bg');
     text-align: center;
+    line-height: v-bind('getSize.lineHeight');
     transition: all 0.3s;
-    font-size: 19px;
   }
 }
 
 .holder::before {
   position: absolute;
   top: 0;
-  left: calc(100% - 32px);
-  width: 32px;
-  height: 32px;
+  left: calc(100% - v-bind('getSize.bg'));
+  width: v-bind('getSize.bg');
+  height: v-bind('getSize.bg');
   background: #314659;
   border-radius: 100vw;
   transition: all 0.3s;

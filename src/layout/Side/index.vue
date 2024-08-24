@@ -17,7 +17,7 @@
         </a-flex>
       </a-form-item>
       <a-form-item label="暗黑模式">
-        <a-switch v-model:checked="layoutSettingStore.dark"></a-switch>
+        <sun-moon v-model:checked="layoutSettingStore.dark"></sun-moon>
       </a-form-item>
     </a-form>
   </a-drawer>
@@ -26,6 +26,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import useLayoutSettingStore from '@/store/modules/setting'
+import SunMoon from '@/components/SunMoon/index.vue'
 
 defineOptions({
   name: 'Side',
