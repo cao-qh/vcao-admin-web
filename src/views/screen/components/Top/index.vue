@@ -1,13 +1,12 @@
 <template>
   <div class="top">
     <div class="left">
-      <a class="lbtn" @click="goHome">首页</a>
+      <a class="lbtn" @click="goHome">返回</a>
     </div>
     <div class="center">
-      <div class="title">智慧旅游可视化大数据平台</div>
+      <div class="title">号卡平台数据智能看板</div>
     </div>
     <div class="right">
-      <span class="rbtn">统计报告</span>
       <span class="time">当前时间 {{ time }}</span>
     </div>
   </div>
@@ -69,7 +68,7 @@ const goHome = () => {
       text-align: center;
       line-height: 74px;
       color: #29fcff;
-      font-size: 24px;
+      font-size: 32px;
     }
   }
   .right {

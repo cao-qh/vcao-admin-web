@@ -4,18 +4,18 @@
       <Top />
       <div class="bottom">
         <div class="left">
-          <Tourist class="tourist" />
-          <Sex class="sex" />
-          <Age class="age" />
+          <CountStatistics class="count-statistics" />
+          <!-- <Sex class="sex" /> -->
+          <!-- <Age class="age" /> -->
         </div>
         <div class="center">
-          <Map class="map" />
-          <Line class="line" />
+          <!-- <Map class="map" />
+          <Line class="line" /> -->
         </div>
         <div class="right">
-          <Rank class="rank" />
+          <!-- <Rank class="rank" />
           <Year class="year" />
-          <Counter class="count" />
+          <Counter class="count" /> -->
         </div>
       </div>
     </div>
@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import Top from './components/Top/index.vue'
-import Tourist from './components/Tourist/index.vue'
+import CountStatistics from './components/CountStatistics/index.vue'
 import Sex from './components/Sex/index.vue'
 import Age from './components/Age/index.vue'
 import Map from './components/Map/index.vue'
@@ -53,6 +53,7 @@ function getScale(w = 1920, h = 1080) {
 
 <style scoped lang="scss">
 .container {
+  user-select: none;
   width: 100vw;
   height: 100vh;
   background: url(./images/bg.png) no-repeat;
@@ -72,51 +73,56 @@ function getScale(w = 1920, h = 1080) {
     }
     .bottom {
       display: flex;
+      padding: 0 20px;
       .right {
         flex: 1;
-        display: flex;
-        flex-direction: column;
-        margin-left: 40px;
+        // display: flex;
+        // flex-direction: column;
+        background-color: aqua;
 
-        .rank {
-          flex: 1.5;
-        }
+        // .rank {
+        //   flex: 1.5;
+        // }
 
-        .year {
-          flex: 1;
-        }
+        // .year {
+        //   flex: 1;
+        // }
 
-        .count {
-          flex: 1;
-        }
+        // .count {
+        //   flex: 1;
+        // }
       }
       .left {
         flex: 1;
-        height: 1025px;
-        display: flex;
-        flex-direction: column;
-        .tourist {
-          flex: 1.2;
-        }
-        .sex {
-          flex: 1;
-        }
-        .age {
-          flex: 1;
-        }
+        // height: 1025px;
+        // display: flex;
+        // flex-direction: column;
+        // background-color: red;
+
+        // .count-statistics {
+        //   flex: 1.2;
+        // }
+        // .sex {
+        //   flex: 1;
+        // }
+        // .age {
+        //   flex: 1;
+        // }
       }
       .center {
-        flex: 1.5;
-        display: flex;
-        flex-direction: column;
+        flex: 2.1;
+        // display: flex;
+        // flex-direction: column;
+        background-color: orange;
+        margin: 0 10px;
 
-        .map {
-          flex: 4;
-        }
+        // .map {
+        //   flex: 4;
+        // }
 
-        .line {
-          flex: 1;
-        }
+        // .line {
+        //   flex: 1;
+        // }
       }
     }
   }
