@@ -14,24 +14,52 @@ export const constantRoute = [
     },
   },
   // 测试
+  // {
+  //   path: '/test',
+  //   component: Layout,
+  //   name: 'Test',
+  //   meta: {
+  //     title: '测试',
+  //     icon: 'ExperimentOutlined',
+  //   },
+  //   children: [
+  //     {
+  //       path: '/test/test1',
+  //       component: () => import('@/views/test/index.vue'),
+  //       name: 'Test1',
+  //       meta: {
+  //         title: '测试1',
+  //       },
+  //     },
+  //   ],
+  // },
+  // 登录成功以后展示数据的路由
   {
-    path: '/test',
+    path: '/',
     component: Layout,
-    name: 'Test',
+    name: 'layout',
+    redirect: '/dashboard',
     meta: {
-      title: '测试',
-      icon: 'ExperimentOutlined',
+      title: '仪表盘',
+      icon: 'DashboardOutlined',
     },
     children: [
       {
-        path: '/test/test1',
-        component: () => import('@/views/test/index.vue'),
-        name: 'Test1',
-        meta: {
-          title: '测试1',
-        },
+        path: '/dashboard',
+        component: () => import('@/views/dashboard/index.vue'),
+        name: 'Dashboard',
       },
     ],
+  },
+  // 数据大屏
+  {
+    path: '/screen',
+    component: () => import('@/views/screen/index.vue'),
+    name: 'Screen',
+    meta: {
+      title: '数据大屏',
+      icon: 'FundProjectionScreenOutlined',
+    },
   },
   // 权限管理
   {
@@ -63,37 +91,6 @@ export const constantRoute = [
         },
       },
     ],
-  },
-  // 登录成功以后展示数据的路由
-  {
-    path: '/',
-    component: Layout,
-    name: 'layout',
-    redirect: '/home',
-    meta: {
-      title: '主页',
-      icon: 'HomeOutlined',
-    },
-    children: [
-      {
-        path: '/home',
-        component: () => import('@/views/home/index.vue'),
-        name: 'Home',
-        meta: {
-          title: '首页',
-        },
-      },
-    ],
-  },
-  // 数据大屏
-  {
-    path: '/screen',
-    component: () => import('@/views/screen/index.vue'),
-    name: 'Screen',
-    meta: {
-      title: '数据大屏',
-      icon: 'FundProjectionScreenOutlined',
-    },
   },
   // 数据表格
   {
