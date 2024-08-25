@@ -44,7 +44,7 @@ const data = ref([
 <style scoped lang="scss">
 .box {
   background: url(../../images/dataScreen-main-lt.png) no-repeat;
-  background-size: 100% 100%;
+  background-size: 100%;
   margin-top: 10px;
   .top {
     .title {
@@ -55,11 +55,11 @@ const data = ref([
       width: 68px;
       height: 7px;
       background: url(../../images/dataScreen-title.png) no-repeat;
-      margin-top: 13px;
+      margin-top: 15px;
     }
   }
   .bottom {
-    padding: 50px 0;
+    padding: 40px 0;
 
     .item {
       .number {

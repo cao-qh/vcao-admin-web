@@ -1,11 +1,11 @@
 <template>
   <PageWrapper>
-    <SunMoon v-model="layoutSettingStore.dark" />
+    <div>{{ msg }}</div>
   </PageWrapper>
 </template>
 
 <script setup lang="ts">
-import SunMoon from '@/components/SunMoon/index.vue'
-import useLayoutSettingStore from '@/store/modules/setting'
-const layoutSettingStore = useLayoutSettingStore()
+import { ref } from 'vue'
+
+const msg = ref(import.meta.env.MODE)
 </script>

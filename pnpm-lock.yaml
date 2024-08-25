@@ -29,9 +29,6 @@ importers:
       echarts:
         specifier: ^5.5.0
         version: 5.5.0
-      echarts-liquidfill:
-        specifier: ^3.1.0
-        version: 3.1.0(echarts@5.5.0)
       nprogress:
         specifier: ^0.2.0
         version: 0.2.0
@@ -1302,11 +1299,6 @@ packages:
 
   eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
-
-  echarts-liquidfill@3.1.0:
-    resolution: {integrity: sha512-5Dlqs/jTsdTUAsd+K5LPLLTgrbbNORUSBQyk8PSy1Mg2zgHDWm83FmvA4s0ooNepCJojFYRITTQ4GU1UUSKYLw==}
-    peerDependencies:
-      echarts: ^5.0.1
 
   echarts@5.5.0:
     resolution: {integrity: sha512-rNYnNCzqDAPCr4m/fqyUFv7fD9qIsd50S6GDFgO1DxZhncCsNsG7IfUlAlvZe5oSEQxtsjnHiUuppzccry93Xw==}
@@ -4371,10 +4363,6 @@ snapshots:
       domhandler: 5.0.3
 
   eastasianwidth@0.2.0: {}
-
-  echarts-liquidfill@3.1.0(echarts@5.5.0):
-    dependencies:
-      echarts: 5.5.0
 
   echarts@5.5.0:
     dependencies:

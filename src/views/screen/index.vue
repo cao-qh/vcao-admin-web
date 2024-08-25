@@ -5,7 +5,7 @@
       <div class="bottom">
         <div class="left">
           <CountStatistics class="count-statistics" />
-          <!-- <Sex class="sex" /> -->
+          <FailDetails />
           <!-- <Age class="age" /> -->
         </div>
         <div class="center">
@@ -26,7 +26,7 @@
 import { ref, onMounted } from 'vue'
 import Top from './components/Top/index.vue'
 import CountStatistics from './components/CountStatistics/index.vue'
-import Sex from './components/Sex/index.vue'
+import FailDetails from './components/FailDetails/index.vue'
 import Age from './components/Age/index.vue'
 import Map from './components/Map/index.vue'
 import Line from './components/Line/index.vue'
