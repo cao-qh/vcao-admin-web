@@ -6,7 +6,7 @@
         <div class="left">
           <CountStatistics class="count-statistics" />
           <FailDetails />
-          <!-- <Age class="age" /> -->
+          <AgentArea />
         </div>
         <div class="center">
           <!-- <Map class="map" />
@@ -27,7 +27,7 @@ import { ref, onMounted } from 'vue'
 import Top from './components/Top/index.vue'
 import CountStatistics from './components/CountStatistics/index.vue'
 import FailDetails from './components/FailDetails/index.vue'
-import Age from './components/Age/index.vue'
+import AgentArea from './components/AgentArea/index.vue'
 import Map from './components/Map/index.vue'
 import Line from './components/Line/index.vue'
 
@@ -94,20 +94,6 @@ function getScale(w = 1920, h = 1080) {
       }
       .left {
         flex: 1;
-        // height: 1025px;
-        // display: flex;
-        // flex-direction: column;
-        // background-color: red;
-
-        // .count-statistics {
-        //   flex: 1.2;
-        // }
-        // .sex {
-        //   flex: 1;
-        // }
-        // .age {
-        //   flex: 1;
-        // }
       }
       .center {
         flex: 2.1;

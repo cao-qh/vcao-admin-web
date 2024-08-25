@@ -10,7 +10,7 @@
         <span>用户地址</span>
         <span>异常原因</span>
       </div>
-      <div>
+      <div class="content-list">
         <span>暂无数据</span>
       </div>
     </div>
@@ -24,7 +24,7 @@
   width: 100%;
   background: url(../../images/dataScreen-main-lt.png) no-repeat;
   background-size: 100%;
-  margin: 20px 0px;
+  margin: 20px 0 0 0;
 
   .title {
     p {
@@ -40,11 +40,24 @@
     .content-title {
       background-color: #3a3d64;
       color: #51b5d0;
-      font-size: 23px;
+      font-size: 20px;
       display: flex;
       justify-content: space-around;
       margin-top: 10px;
       padding: 15px 0;
+    }
+    .content-list {
+      color: #3165c4;
+      background-color: #11144e;
+      height: 350px;
+      display: flex;
+      justify-content: center;
+      align-items: start;
+
+      span {
+        font-size: 19px;
+        margin-top: 60px;
+      }
     }
   }
 }

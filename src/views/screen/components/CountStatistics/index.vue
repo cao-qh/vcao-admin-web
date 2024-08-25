@@ -59,7 +59,7 @@ const data = ref([
     }
   }
   .bottom {
-    padding: 40px 0;
+    padding: 45px 0;
 
     .item {
       .number {

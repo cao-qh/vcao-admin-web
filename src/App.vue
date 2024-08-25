@@ -7,7 +7,7 @@
         : theme.defaultAlgorithm,
       token: {
         colorPrimary: layoutSettingStore.themeColor,
-        borderRadius: 2,
+        borderRadius: 3,
       },
     }"
   >

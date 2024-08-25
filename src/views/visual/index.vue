@@ -67,7 +67,7 @@ const onDeleteSelected = () => {
 <style lang="scss" scoped>
 .content {
   display: flex;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 89px);
   user-select: none;
 
   h3 {
