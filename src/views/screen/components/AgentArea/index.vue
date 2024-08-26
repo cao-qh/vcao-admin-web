@@ -5,25 +5,27 @@
       <img src="../../images/dataScreen-title.png" alt="" />
     </div>
     <div class="content">
-      <!-- <div class="left">
-        <div ref="pie"></div>
+      <div class="left">
+        <div class="pie" ref="pie"></div>
       </div>
+
       <div class="right">
-        <div>
-          <span></span>
-          <div>
-            <span></span>
+        <div class="right-item">
+          <span class="number">18</span>
+          <div class="desc">
+            <div style="background-color: #ed3f35"></div>
             <span>代理总数</span>
           </div>
         </div>
-        <div>
-          <span></span>
-          <div>
-            <span></span>
+        <div style="height: 40px"></div>
+        <div class="right-item">
+          <span class="number">18</span>
+          <div class="desc">
+            <div style="background-color: #e5c022"></div>
             <span>本月新增</span>
           </div>
         </div>
-      </div> -->
+      </div>
     </div>
   </div>
 </template>
@@ -47,7 +49,6 @@ const data = reactive({
         radius: ['10%', '70%'],
         center: ['50%', '50%'],
         avoidLabelOverlap: false,
-
         label: {
           show: true,
           color: 'white',
@@ -228,13 +229,79 @@ onMounted(() => {
 
   .content {
     margin-top: 12px;
-    height: 310px;
+    // height: 200px;
     display: flex;
+    // background-color: orange;
 
-    // .left {
-    //   background-color: red;
-    //   height: 100%;
-    // }
+    .left {
+      flex: 1.8;
+      // background-color: red;
+      height: 100%;
+      background-color: pink;
+
+      .pie {
+        width: 100px;
+        height: 100px;
+      }
+    }
+
+    .right {
+      position: relative;
+      flex: 1;
+      background-color: #182965;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 35px 0;
+      margin: 0 20px 20px 20px;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: -1px;
+        right: -1px;
+        border-bottom: 20px solid transparent;
+        border-right: 20px solid #11144e;
+        z-index: 1;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: -1px;
+        border-top: 20px solid transparent;
+        border-left: 20px solid #11144e;
+        z-index: 1;
+      }
+
+      .right-item {
+        display: flex;
+        flex-direction: column;
+
+        .number {
+          color: white;
+          font-size: 32px;
+          margin-bottom: 15px;
+        }
+
+        .desc {
+          color: #3165c4;
+          display: flex;
+          align-items: center;
+          > div {
+            width: 8px;
+            height: 15px;
+            border-radius: 5px;
+            margin-right: 5px;
+          }
+          > span {
+            font-size: 20px;
+          }
+        }
+      }
+    }
   }
 }
 </style>
