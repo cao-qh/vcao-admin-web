@@ -46,7 +46,7 @@ const data = reactive({
     series: [
       {
         type: 'pie',
-        radius: ['10%', '70%'],
+        radius: ['5%', '50%'],
         center: ['50%', '50%'],
         avoidLabelOverlap: false,
         label: {
@@ -206,7 +206,7 @@ const initPie = () => {
 }
 
 onMounted(() => {
-  // initPie()
+  initPie()
 })
 </script>
 
@@ -229,19 +229,15 @@ onMounted(() => {
 
   .content {
     margin-top: 12px;
-    // height: 200px;
     display: flex;
-    // background-color: orange;
 
     .left {
       flex: 1.8;
-      // background-color: red;
       height: 100%;
-      background-color: pink;
 
       .pie {
-        width: 100px;
-        height: 100px;
+        width: 100%;
+        height: 260px;
       }
     }
 
@@ -254,7 +250,7 @@ onMounted(() => {
       justify-content: center;
       align-items: center;
       padding: 35px 0;
-      margin: 0 20px 20px 20px;
+      margin: 0 15px 20px 15px;
 
       &::before {
         content: '';

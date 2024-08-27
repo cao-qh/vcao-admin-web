@@ -49,7 +49,7 @@
     .content-list {
       color: #3165c4;
       background-color: #11144e;
-      height: 350px;
+      height: 360px;
       display: flex;
       justify-content: center;
       align-items: start;
