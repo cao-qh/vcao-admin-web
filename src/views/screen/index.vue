@@ -14,8 +14,10 @@
         </div>
         <div class="right">
           <Brokerage />
-          <!-- <Year class="year" />
-          <Counter class="count" /> -->
+          <a-flex gap="middle">
+            <SubscribeChnnal style="flex: 1" />
+            <QuarterBrokerage style="flex: 1" />
+          </a-flex>
         </div>
       </div>
     </div>
@@ -33,8 +35,8 @@ import CustomerTotal from './components/CustomerTotal/index.vue'
 
 //引入右侧三个子组件
 import Brokerage from './components/Brokerage/index.vue'
-import Year from './components/Year/index.vue'
-import Counter from './components/Couter/index.vue'
+import SubscribeChnnal from './components/SubscribeChnnal/index.vue'
+import QuarterBrokerage from './components/QuarterBrokerage/index.vue'
 
 defineOptions({ name: 'Screen' })
 const screen = ref()
