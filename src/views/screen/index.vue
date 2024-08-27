@@ -13,8 +13,8 @@
           <CustomerTotal />
         </div>
         <div class="right">
-          <!-- <Rank class="rank" />
-          <Year class="year" />
+          <Brokerage />
+          <!-- <Year class="year" />
           <Counter class="count" /> -->
         </div>
       </div>
@@ -32,7 +32,7 @@ import Map from './components/Map/index.vue'
 import CustomerTotal from './components/CustomerTotal/index.vue'
 
 //引入右侧三个子组件
-import Rank from './components/Rank/index.vue'
+import Brokerage from './components/Brokerage/index.vue'
 import Year from './components/Year/index.vue'
 import Counter from './components/Couter/index.vue'
 
@@ -76,7 +76,7 @@ function getScale(w = 1920, h = 1080) {
       padding: 0 20px;
       .right {
         flex: 1;
-        background-color: aqua;
+        // background-color: aqua;
       }
       .left {
         flex: 1;
