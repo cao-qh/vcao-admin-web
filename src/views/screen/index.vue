@@ -4,13 +4,13 @@
       <Top />
       <div class="bottom">
         <div class="left">
-          <CountStatistics class="count-statistics" />
+          <CountStatistics />
           <FailDetails />
           <AgentArea />
         </div>
         <div class="center">
-          <Map class="map"></Map>
-          <!--  <Line class="line" /> -->
+          <Map></Map>
+          <CustomerTotal />
         </div>
         <div class="right">
           <!-- <Rank class="rank" />
@@ -29,7 +29,7 @@ import CountStatistics from './components/CountStatistics/index.vue'
 import FailDetails from './components/FailDetails/index.vue'
 import AgentArea from './components/AgentArea/index.vue'
 import Map from './components/Map/index.vue'
-import Line from './components/Line/index.vue'
+import CustomerTotal from './components/CustomerTotal/index.vue'
 
 //引入右侧三个子组件
 import Rank from './components/Rank/index.vue'
