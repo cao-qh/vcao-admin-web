@@ -91,7 +91,7 @@ const data = reactive([
     display: flex;
     background-color: #11144e;
     margin-top: 10px;
-    height: 284px;
+    height: 282px;
     overflow: hidden;
     padding: 10px;
 

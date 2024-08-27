@@ -130,6 +130,7 @@ onMounted(() => {
   width: 100%;
   background: url(../../images/dataScreen-main-lt.png) no-repeat;
   background-size: 100%;
+  margin-top: 20px;
 
   .title {
     margin-left: 10px;
@@ -151,10 +152,10 @@ onMounted(() => {
 
     .left {
       flex: 5;
-      padding: 0 0 20px 10px;
+      padding: 0 0 18px 10px;
       .bar {
         width: 100%;
-        height: 270px;
+        height: 250px;
         // background-color: red;
       }
     }
@@ -168,7 +169,7 @@ onMounted(() => {
       justify-content: center;
       align-items: center;
       padding: 35px 0;
-      margin: 0 20px 20px 10px;
+      margin: 0 20px 10px 10px;
       // background-color: red;
 
       &::before {
