@@ -9,8 +9,8 @@
           <AgentArea />
         </div>
         <div class="center">
-          <!-- <Map class="map" />
-          <Line class="line" /> -->
+          <Map class="map"></Map>
+          <!--  <Line class="line" /> -->
         </div>
         <div class="right">
           <!-- <Rank class="rank" />
@@ -76,39 +76,15 @@ function getScale(w = 1920, h = 1080) {
       padding: 0 20px;
       .right {
         flex: 1;
-        // display: flex;
-        // flex-direction: column;
         background-color: aqua;
-
-        // .rank {
-        //   flex: 1.5;
-        // }
-
-        // .year {
-        //   flex: 1;
-        // }
-
-        // .count {
-        //   flex: 1;
-        // }
       }
       .left {
         flex: 1;
       }
       .center {
         flex: 2.1;
-        // display: flex;
-        // flex-direction: column;
-        background-color: orange;
-        margin: 0 10px;
-
-        // .map {
-        //   flex: 4;
-        // }
-
-        // .line {
-        //   flex: 1;
-        // }
+        // background-color: orange;
+        margin: 40px 10px 0px 10px;
       }
     }
   }

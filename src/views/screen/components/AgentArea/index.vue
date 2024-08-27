@@ -250,7 +250,7 @@ onMounted(() => {
       justify-content: center;
       align-items: center;
       padding: 35px 0;
-      margin: 0 15px 20px 15px;
+      margin: 0 20px 20px 10px;
 
       &::before {
         content: '';
