@@ -60,7 +60,7 @@ onMounted(() => {
       roam: true,
       zoom: 2,
       top: '33%',
-      bottom: '20px',
+      bottom: '10px',
       itemStyle: {
         // 地图省份的背景颜色
         areaColor: '#01214a',
@@ -211,6 +211,6 @@ const initData = () => {
 <style lang="scss" scoped>
 .box4 {
   width: 100%;
-  height: 655px;
+  height: 665px;
 }
 </style>
