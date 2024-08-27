@@ -148,7 +148,7 @@ onMounted(() => {
     background-color: #11144e;
     margin-top: 10px;
     .charts {
-      height: 122px;
+      height: 120px;
     }
 
     .total_wrap {

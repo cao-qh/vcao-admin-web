@@ -18,6 +18,7 @@
             <SubscribeChnnal style="flex: 1" />
             <QuarterBrokerage style="flex: 1" />
           </a-flex>
+          <RankingList />
         </div>
       </div>
     </div>
@@ -32,6 +33,7 @@ import FailDetails from './components/FailDetails/index.vue'
 import AgentArea from './components/AgentArea/index.vue'
 import Map from './components/Map/index.vue'
 import CustomerTotal from './components/CustomerTotal/index.vue'
+import RankingList from './components/RankingList/index.vue'
 
 //引入右侧三个子组件
 import Brokerage from './components/Brokerage/index.vue'

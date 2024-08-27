@@ -121,7 +121,7 @@ onMounted(() => {
     margin-top: 10px;
     padding: 20px 30px;
     .charts {
-      height: 180px;
+      height: 178px;
     }
   }
 }
