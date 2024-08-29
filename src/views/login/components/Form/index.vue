@@ -1,14 +1,18 @@
 <template>
   <a-form ref="formRef" :model="loginForm" :rules="rules" class="login-form">
     <a-form-item name="username">
-      <a-input v-model:value="loginForm.username">
+      <a-input size="large" v-model:value="loginForm.username">
         <template #prefix>
           <UserOutlined style="color: gray" />
         </template>
       </a-input>
     </a-form-item>
     <a-form-item name="password">
-      <a-input-password v-model:value="loginForm.password" type="password">
+      <a-input-password
+        size="large"
+        v-model:value="loginForm.password"
+        type="password"
+      >
         <template #prefix>
           <LockOutlined style="color: gray" />
         </template>
@@ -24,7 +28,9 @@
     </a-checkbox>
 
     <a-form-item>
-      <a-button class="login-btn" type="primary" @click="login">登录</a-button>
+      <a-button class="login-btn" type="primary" size="large" @click="login">
+        登录
+      </a-button>
     </a-form-item>
   </a-form>
 </template>

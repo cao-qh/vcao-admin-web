@@ -41,7 +41,7 @@ const color = computed(() => {
 
   span {
     margin-left: 8px;
-    font-size: 18px;
+    font-size: 19px;
     font-weight: bold;
     height: 100%;
     line-height: 39px;
