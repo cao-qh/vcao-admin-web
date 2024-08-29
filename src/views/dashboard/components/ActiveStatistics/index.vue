@@ -11,6 +11,7 @@
         justify-content: space-between;
         margin-top: 20px;
         height: 110px;
+        padding: 0 30px 20px 30px;
       "
     >
       <div>

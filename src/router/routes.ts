@@ -14,25 +14,25 @@ export const constantRoute = [
     },
   },
   // 测试
-  {
-    path: '/test',
-    component: Layout,
-    name: 'Test',
-    meta: {
-      title: '测试',
-      icon: 'ExperimentOutlined',
-    },
-    children: [
-      {
-        path: '/test/test1',
-        component: () => import('@/views/test/index.vue'),
-        name: 'Test1',
-        meta: {
-          title: '测试1',
-        },
-      },
-    ],
-  },
+  // {
+  //   path: '/test',
+  //   component: Layout,
+  //   name: 'Test',
+  //   meta: {
+  //     title: '测试',
+  //     icon: 'ExperimentOutlined',
+  //   },
+  //   children: [
+  //     {
+  //       path: '/test/test1',
+  //       component: () => import('@/views/test/index.vue'),
+  //       name: 'Test1',
+  //       meta: {
+  //         title: '测试1',
+  //       },
+  //     },
+  //   ],
+  // },
   // 登录成功以后展示数据的路由
   {
     path: '/',
