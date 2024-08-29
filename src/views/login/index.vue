@@ -8,7 +8,7 @@
     </div>
 
     <div class="main">
-      <a-typography-text class="h1">vcao admin</a-typography-text>
+      <a-typography-text class="h1">{{ setting.title }}</a-typography-text>
       <a-typography-text class="h2">持续完善中</a-typography-text>
       <Form></Form>
     </div>
@@ -27,6 +27,7 @@ import ParticleBackground from './components/ParticleBackground/index.vue'
 import SunMoon from '@/components/SunMoon/index.vue'
 import useLayoutSettingStore from '@/store/modules/setting'
 import { computed } from 'vue'
+import setting from '@/setting'
 
 const layoutSettingStore = useLayoutSettingStore()
 
@@ -65,10 +66,12 @@ const bgColor = computed(() => {
     transform: translate(-50%, -50%);
 
     .h1 {
-      font-size: 25px;
+      font-size: 28px;
       padding: 10px 0;
       text-align: center;
       display: block;
+      color: v-bind('layoutSettingStore.themeColor');
+      font-weight: 500;
     }
     .h2 {
       font-size: 15px;
