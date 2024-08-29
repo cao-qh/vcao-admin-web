@@ -28,10 +28,10 @@ const useUserStore: any = defineStore('user', () => {
     if (result.code == 200) {
       // pinia仓库存储一下token
       // 由于pinia|vuex存储数据其实利用js对象
-      token.value = result.data.token
+      token.value = result.data
       username.value = data.username
       // 本地存储持久化存储一份
-      localStorage.setItem('TOKEN', result.data.token)
+      localStorage.setItem('TOKEN', result.data)
       localStorage.setItem('USERNAME', data.username)
       // 能保证当前async函数返回一个成功的promise
       return 'ok'
@@ -44,8 +44,9 @@ const useUserStore: any = defineStore('user', () => {
     // const result: any = await reqLogout()
     // if (result.code == 200) {
     token.value = ''
-    // username.value = ''
+    username.value = ''
     localStorage.removeItem('TOKEN')
+    localStorage.removeItem('USERNAME')
     //   return 'ok'
     // } else {
     //   return Promise.reject(new Error(result.message))
