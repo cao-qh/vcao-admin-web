@@ -2,7 +2,6 @@
 import router from '@/router'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import { notification } from 'ant-design-vue'
 // 获取用户token数据，去判断用户是否登录成功
 import pinia from './store'
 import useUserStore from './store/modules/user'
@@ -19,8 +18,6 @@ router.beforeEach(async (to, from, next) => {
   NProgress.start()
   // 获取token,去判断用户登录，还是未登录
   const token = userStore.token
-  // 获取用户名称
-  const username = userStore.username
   if (token) {
     // 登录成功，访问login，不能访问，指向首页
     if (to.path === '/login') {
@@ -28,26 +25,7 @@ router.beforeEach(async (to, from, next) => {
     } else {
       // 登录成功，访问除了登录页的其他页面
       // 有用户信息
-      if (username) {
-        next()
-      } else {
-        // 如果没有用户信息，则去获取用户信息
-        try {
-          // 获取用户信息
-          await userStore.userInfo()
-          // 万一：刷新的时候时异步路由，有可能获取到用户的信息，异步路由还没有加载完毕，出现空白的效果
-          // 放行
-          next({ ...to })
-        } catch (error) {
-          // token过期了，或者用户手动修改了token
-          await userStore.userLogout()
-          next({ path: '/login', query: { redirect: to.path } })
-          notification.error({
-            message: '登录失效',
-            description: `登录已过期，请重新登录`,
-          })
-        }
-      }
+      next()
     }
   } else {
     // 用户未登录判断

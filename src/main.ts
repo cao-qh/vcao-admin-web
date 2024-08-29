@@ -29,9 +29,6 @@ app.use(Particles, {
   },
 })
 // 引入路由鉴权文件
-// import './permisstion'
-// 引入自定义指令文件
-import { isHasButton } from './directive/has'
-isHasButton(app)
+import './permisstion'
 // 将应用挂在到挂在点上
 app.mount('#app')
