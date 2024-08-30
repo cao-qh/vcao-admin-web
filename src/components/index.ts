@@ -1,10 +1,10 @@
 // 引入项目中全部的全局组件
 import PageWrapper from './PageWrapper/index.vue'
-import SvgIcom from './SvgIcon/index.vue'
+import SvgIcon from './SvgIcon/index.vue'
 import * as AntDesignIconsVue from '@ant-design/icons-vue'
 
 const allGloablComponent: { [key: string]: any } = {
-  SvgIcom,
+  SvgIcon,
   PageWrapper,
 }
 

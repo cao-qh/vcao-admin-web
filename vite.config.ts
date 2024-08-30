@@ -4,8 +4,6 @@ import path from 'path'
 import { defineConfig } from 'vite'
 // import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import Components from 'unplugin-vue-components/vite'
-import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 // mock插件提供方法
 import { viteMockServe } from 'vite-plugin-mock'
@@ -18,13 +16,6 @@ export default defineConfig(() => {
   return {
     plugins: [
       vue(),
-      Components({
-        resolvers: [
-          AntDesignVueResolver({
-            importStyle: false, // css in js
-          }),
-        ],
-      }),
       createSvgIconsPlugin({
         // Specify the icon folder to be cached
         iconDirs: [path.resolve(process.cwd(), 'src/assets/icons')],

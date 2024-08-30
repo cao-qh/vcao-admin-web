@@ -6,6 +6,8 @@ import './styles/index.scss'
 import 'virtual:svg-icons-register'
 // 引入自定义擦火箭对象：注册整个项目全局组件
 import gloalComponent from '@/components'
+// ant-design组件按需引入
+import antesign from '@/components/antDesign'
 // 引入路由
 import router from '@/router'
 // 引入仓库
@@ -18,6 +20,8 @@ const app = createApp(App)
 
 // 安装自定义插件
 app.use(gloalComponent)
+// 安装ant-design-vue插件
+app.use(antesign)
 // 注册模板路由
 app.use(router)
 // 安装仓库
