@@ -28,8 +28,14 @@
 </template>
 
 <script setup lang="ts">
-import * as echarts from 'echarts'
 import { ref, onMounted } from 'vue'
+import * as echarts from 'echarts/core'
+import { GaugeChart } from 'echarts/charts'
+import { TitleComponent, TooltipComponent } from 'echarts/components'
+import { CanvasRenderer } from 'echarts/renderers'
+
+// 注册需要的组件
+echarts.use([GaugeChart, TitleComponent, TooltipComponent, CanvasRenderer])
 
 const data: { [key: string]: any } = ref({
   TBzengzhang: '1100.00%',

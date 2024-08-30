@@ -4,12 +4,30 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import * as echarts from 'echarts'
 //引入中国地图的JSON数据
 import chinaJSON from './china.json'
 // 引入渲染航线和航点的数据
 import data from './data.json'
 import type { ScatterData, LineData } from './type'
+import * as echarts from 'echarts/core'
+import { MapChart } from 'echarts/charts'
+import {
+  TitleComponent,
+  TooltipComponent,
+  VisualMapComponent,
+} from 'echarts/components'
+import { GeoComponent } from 'echarts/components'
+import { CanvasRenderer } from 'echarts/renderers'
+
+// 注册需要的组件
+echarts.use([
+  MapChart,
+  GeoComponent,
+  TitleComponent,
+  TooltipComponent,
+  VisualMapComponent,
+  CanvasRenderer,
+])
 
 //获取DOM元素
 const map = ref()

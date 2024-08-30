@@ -14,6 +14,7 @@ export default defineConfig(() => {
   // 获取各种环境下的对应的变量
   // const env = loadEnv(mode, process.cwd())
   return {
+    // 插件
     plugins: [
       vue(),
       createSvgIconsPlugin({
@@ -27,6 +28,7 @@ export default defineConfig(() => {
         enable: true,
       }),
     ],
+    // 解析
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -38,6 +40,34 @@ export default defineConfig(() => {
         scss: {
           javascriptEnabled: true,
           additionalData: '@import "./src/styles/variable.scss";',
+        },
+      },
+    },
+    // 构建
+    build: {
+      rollupOptions: {
+        output: {
+          // 手动分割包
+          manualChunks(id: string) {
+            if (id.includes('@ant-design/icons-vue')) {
+              return '@ant-design/icons-vue'
+            }
+            if (id.includes('ant-design-vue')) {
+              return 'ant-design-vue'
+            }
+            if (id.includes('echarts')) {
+              return 'echarts'
+            }
+            if (id.includes('@tsparticles')) {
+              return '@tsparticles'
+            }
+            if (id.includes('nprogress')) {
+              return 'nprogress'
+            }
+            if (id.includes('vue-router')) {
+              return 'vue-router'
+            }
+          },
         },
       },
     },

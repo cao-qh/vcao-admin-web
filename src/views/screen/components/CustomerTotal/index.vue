@@ -30,9 +30,27 @@
 </template>
 
 <script setup lang="ts">
-import * as echarts from 'echarts'
 import { ref, onMounted } from 'vue'
 import data from './data.json'
+import * as echarts from 'echarts/core'
+import { BarChart } from 'echarts/charts'
+import {
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  LegendComponent,
+} from 'echarts/components'
+import { CanvasRenderer } from 'echarts/renderers'
+
+// 注册需要的组件
+echarts.use([
+  BarChart,
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  LegendComponent,
+  CanvasRenderer,
+])
 
 //获取图形图标的节点
 let bar = ref()

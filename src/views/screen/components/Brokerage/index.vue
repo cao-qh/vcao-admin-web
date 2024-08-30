@@ -32,9 +32,27 @@
 </template>
 
 <script setup lang="ts">
-import * as echarts from 'echarts'
 import { ref, reactive, onMounted } from 'vue'
 import data from './data.json'
+import * as echarts from 'echarts/core'
+import { LineChart } from 'echarts/charts'
+import {
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  LegendComponent,
+} from 'echarts/components'
+import { CanvasRenderer } from 'echarts/renderers'
+
+// 注册需要的组件
+echarts.use([
+  LineChart,
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  LegendComponent,
+  CanvasRenderer,
+])
 
 const limit = reactive({
   labelArr: { '1': '年', '2': '近半年', '3': '月', '4': '周' },

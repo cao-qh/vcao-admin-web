@@ -80,7 +80,23 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import * as echarts from 'echarts'
+import * as echarts from 'echarts/core'
+import { PieChart } from 'echarts/charts'
+import {
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent,
+} from 'echarts/components'
+import { CanvasRenderer } from 'echarts/renderers'
+
+// 注册需要的组件
+echarts.use([
+  PieChart,
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent,
+  CanvasRenderer,
+])
 
 // 饼图-激活量
 const pieOption = reactive({
