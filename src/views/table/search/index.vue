@@ -32,7 +32,7 @@
             title="确定要启用吗？"
             ok-text="是"
             cancel-text="否"
-            @confirm="handelQqijinyong(row)"
+            @confirm="handelQijinyong(row)"
           >
             <a-switch :checked="row.qijinyong === 1" />
           </a-popconfirm>
@@ -296,7 +296,7 @@ const handleSubmit = async (dingdanhao: string) => {
 }
 
 // 启禁用
-const handelQqijinyong = async (row: any) => {
+const handelQijinyong = async (row: any) => {
   const result = await reqQijinyong({
     id: row.id,
     qijinyong: row.qijinyong === 1 ? 2 : 1,
