@@ -3,14 +3,14 @@
     <SearchForm :formItems="formItems" @search="table.refresh()"></SearchForm>
 
     <a-space style="margin-bottom: 8px">
-      <a-button type="primary" @click="handleAdd">
+      <a-button type="primary" @click="() => add.show()">
         <template #icon>
           <PlusOutlined />
         </template>
         添加记录
       </a-button>
 
-      <a-button type="primary" @click="handleBatchImport">
+      <a-button type="primary" @click="() => batchImport.show()">
         <template #icon>
           <UploadOutlined />
         </template>
@@ -48,7 +48,9 @@
               <a>提单</a>
             </a-popconfirm>
             <a-divider type="vertical" />
-            <a @click="handleChangeSubmit(row)">更换通道并提单</a>
+            <a @click="() => changeSubmit.show(row)">更换通道并提单</a>
+            <a-divider type="vertical" />
+            <a @click="() => detail.show(row)">详情</a>
           </template>
         </template>
       </template>
@@ -60,13 +62,17 @@
       :faceValue="FACE_VALUE"
       @success="table.refresh()"
     />
+
     <BatchImport ref="batchImport" @success="table.refresh()" />
+
     <ChangeSubmit
       ref="changeSubmit"
       :channel="CHANNEL"
       :faceValue="FACE_VALUE"
       @success="table.refresh()"
     />
+
+    <Detail ref="detail" />
   </PageWrapper>
 </template>
 
@@ -79,12 +85,12 @@ import type { StringKey } from './type'
 import type {
   RecordSearchResponseData,
   RecordSearchParams,
-  Record,
 } from '@/api/table/search/type'
 import { reqSearch, reqSubmit, reqQijinyong } from '@/api/table/search/index'
 import Add from './modules/Add.vue'
 import BatchImport from './modules/BatchImport.vue'
 import ChangeSubmit from './modules/ChangeSubmit.vue'
+import Detail from './modules/Detail.vue'
 import { message } from 'ant-design-vue'
 
 const ORDER_STATUS: StringKey = {
@@ -270,21 +276,15 @@ const reqData = async (page: number, limit: number) => {
 // 添加记录
 const add = ref()
 
-const handleAdd = () => {
-  add.value.show()
-}
-
 // 批量导入
 const batchImport = ref()
-const handleBatchImport = () => {
-  batchImport.value.show()
-}
 
 // 更换通道并提单
 const changeSubmit = ref()
-const handleChangeSubmit = (row: Record) => {
-  changeSubmit.value.show(row)
-}
+
+// 详情
+const detail = ref()
+
 // 提单
 const handleSubmit = async (dingdanhao: string) => {
   const res = await reqSubmit(dingdanhao)

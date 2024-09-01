@@ -106,4 +106,28 @@ export default [
       }
     },
   },
+  // 详情
+  {
+    url: '/api/table/detail',
+    method: 'get',
+    response: () => {
+      return {
+        code: 200,
+        message: '查询成功',
+        data: {
+          id: 1,
+          phone: '151@string("number", 8)',
+          mianzhi: '10',
+          agentname: '@word(8)',
+          tongdao: 3,
+          chongzhitime: '@datetime',
+          fankuitime: '@datetime',
+          zhuangtai: 4,
+          dingdanhao: '@guid',
+          beizhu: '@csentence',
+          qijinyong: '@integer(1, 2)',
+        },
+      }
+    },
+  },
 ]
