@@ -13,15 +13,8 @@
         <span>选择图片</span>
       </div>
     </a-upload>
-    <a-modal
-      :open="previewVisible"
-      :title="previewTitle"
-      :footer="null"
-      @cancel="handleCancel"
-      @preview="handlePreview"
-    >
-      <img alt="example" style="width: 100%" :src="previewImage" />
-    </a-modal>
+
+    <ImageViewer ref="imageViewer" />
   </div>
 </template>
 
@@ -29,6 +22,7 @@
 import { ref } from 'vue'
 import type { UploadProps } from 'ant-design-vue'
 import file2base64 from '@/utils/file2base64'
+import ImageViewer from '@/components/ImageViewer/index.vue'
 
 const model = defineModel('value')
 
@@ -43,20 +37,12 @@ const handleRemove: UploadProps['onRemove'] = () => {
 }
 
 const handlePreview = async (file: any) => {
-  previewImage.value = (await file2base64(file.originFileObj)) as string
-  previewVisible.value = true
-  previewTitle.value = file.name
+  const url = (await file2base64(file.originFileObj)) as string
+
+  imageViewer.value.show(file.name, url)
 }
 
-// 以下是预览
-const previewVisible = ref(false)
-const previewImage = ref('')
-const previewTitle = ref('')
-
-const handleCancel = () => {
-  previewVisible.value = false
-  previewTitle.value = ''
-}
+const imageViewer = ref()
 </script>
 
 <style scoped lang="scss">

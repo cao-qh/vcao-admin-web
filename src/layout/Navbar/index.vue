@@ -19,7 +19,15 @@
               @click="reload"
             />
             <a-button
-              :icon="h(resolveComponent('FullscreenOutlined'))"
+              :icon="
+                h(
+                  resolveComponent(
+                    fullScreenStatus
+                      ? 'FullscreenExitOutlined'
+                      : 'FullscreenOutlined',
+                  ),
+                )
+              "
               size="small"
               @click="fullScreen"
             />
@@ -32,7 +40,7 @@
 
           <a-dropdown>
             <span>
-              {{ userStore.username }}
+              {{ userStore.username || '未登录' }}
               <DownOutlined />
             </span>
             <template #overlay>
@@ -87,14 +95,17 @@ const reload = () => {
   layoutSettingStore.refresh = true
 }
 // 全屏
+const fullScreenStatus = ref<boolean>(false)
 const fullScreen = () => {
-  let full = document.fullscreenElement
+  const full = document.fullscreenElement
   // DOM对象的额一个属性：可以用来判断当前是不是全屏模式[全屏:true,不是全屏:false]
   if (full) {
     // 退出全屏
     document.exitFullscreen()
+    fullScreenStatus.value = false
   } else {
     document.documentElement.requestFullscreen()
+    fullScreenStatus.value = true
   }
 }
 

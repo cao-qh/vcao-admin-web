@@ -6,19 +6,20 @@
   >
     <a-form :wrapper-col="{ span: 24 }">
       <a-form-item label="主题颜色">
-        <a-flex justify="space-between" style="width: 100%">
+        <a-flex justify="space-between" align="center">
           <a-input
             type="color"
             v-model:value="color"
             @blur="changeThemeColor"
-            style="width: 50px"
+            style="width: 32px; padding: 0"
           />
-          <a-button @click="resetThemeColor">恢复默认</a-button>
+          <a-button @click="resetThemeColor" size="small">默认</a-button>
         </a-flex>
       </a-form-item>
       <a-form-item label="暗黑模式">
         <sun-moon v-model="layoutSettingStore.dark"></sun-moon>
       </a-form-item>
+      <a-divider></a-divider>
     </a-form>
   </a-drawer>
 </template>
