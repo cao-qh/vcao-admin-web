@@ -13,6 +13,9 @@
         <PlusOutlined />
         <span>选择图片</span>
       </div>
+      <div class="upload-selector" v-else-if="typeof model === 'string'">
+        <img :src="String(model)" alt="" />
+      </div>
     </a-upload>
 
     <ImageViewer ref="imageViewer" />
@@ -29,11 +32,13 @@ defineOptions({
   name: 'UploadImage',
 })
 
-const model = defineModel('value')
+const model = defineModel<object | string | null>('value')
 const upload = ref()
 
 watch(model, (val) => {
-  if (!val) {
+  if (val == null) {
+    upload.value.fileList = []
+  } else if (typeof val === 'string') {
     upload.value.fileList = []
   }
 })
