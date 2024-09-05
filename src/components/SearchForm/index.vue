@@ -8,13 +8,13 @@
               v-if="item.type === 'input'"
               v-model:value="item.value"
               :placeholder="item.placeholder"
-              allowClear
+              :allowClear="item.allowClear"
             />
             <a-select
               v-if="item.type === 'select'"
               v-model:value="item.value"
               :placeholder="item.placeholder"
-              allowClear
+              :allowClear="item.allowClear"
               showSearch
               :filterOption="filterOption"
               @change="item.onChange"
@@ -53,6 +53,7 @@
               :showTime="item.showTime"
               :valueFormat="item.valueFormat"
               :disabledDate="item.disabledDate"
+              :allowClear="item.allowClear"
             />
           </a-form-item>
         </a-col>
@@ -99,6 +100,7 @@ const props = withDefaults(defineProps<SearchFormProps>(), {
       placeholder: '请输入用户名',
     },
   ],
+  allowClear: () => true,
 })
 const layoutSettingStore = useLayoutSettingStore()
 

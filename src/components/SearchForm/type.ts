@@ -14,6 +14,7 @@ interface FormItem {
   defaultOption?: SelectOption
   showTime?: boolean
   valueFormat?: string
+  allowClear?: boolean
   onChange?: (value: any) => void
   disabledDate?: (current: dayjs.Dayjs) => boolean
 }
