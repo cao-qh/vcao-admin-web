@@ -1,4 +1,7 @@
 <template>
+  <a-space style="margin-bottom: 8px">
+    <slot name="toolbar"></slot>
+  </a-space>
   <a-table
     bordered
     :columns="columns"

@@ -13,8 +13,8 @@
         <PlusOutlined />
         <span>选择图片</span>
       </div>
-      <div class="upload-selector" v-else-if="typeof model === 'string'">
-        <img :src="String(model)" alt="" />
+      <div v-else-if="typeof model === 'string'">
+        <a-image :src="String(model)" :preview="false" alt="" />
       </div>
     </a-upload>
 
