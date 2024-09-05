@@ -8,13 +8,13 @@
               v-if="item.type === 'input'"
               v-model:value="item.value"
               :placeholder="item.placeholder"
-              :allowClear="item.allowClear"
+              :allowClear="item.allowClear === false ? false : true"
             />
             <a-select
               v-if="item.type === 'select'"
               v-model:value="item.value"
               :placeholder="item.placeholder"
-              :allowClear="item.allowClear"
+              :allowClear="item.allowClear === false ? false : true"
               showSearch
               :filterOption="filterOption"
               @change="item.onChange"
@@ -53,7 +53,7 @@
               :showTime="item.showTime"
               :valueFormat="item.valueFormat"
               :disabledDate="item.disabledDate"
-              :allowClear="item.allowClear"
+              :allowClear="item.allowClear === false ? false : true"
             />
           </a-form-item>
         </a-col>
@@ -82,7 +82,7 @@ import { ref, reactive, onMounted } from 'vue'
 import useLayoutSettingStore from '@/store/modules/setting'
 import type { SearchFormProps } from './type'
 
-const advanced = ref(false)
+const advanced = ref(true)
 
 defineEmits(['search'])
 
@@ -100,7 +100,6 @@ const props = withDefaults(defineProps<SearchFormProps>(), {
       placeholder: '请输入用户名',
     },
   ],
-  allowClear: () => true,
 })
 const layoutSettingStore = useLayoutSettingStore()
 
