@@ -1,6 +1,6 @@
 <template>
   <PageWrapper>
-    <div>{{ msg }}</div>
+    <SvgIcon name="logo" width="40px" />
   </PageWrapper>
 </template>
 

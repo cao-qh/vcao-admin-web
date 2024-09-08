@@ -17,6 +17,7 @@ import {
   UploadOutlined,
   PlusOutlined,
   FullscreenExitOutlined,
+  ExperimentOutlined,
 } from '@ant-design/icons-vue'
 
 const antDesignIconsVue = {
@@ -38,6 +39,7 @@ const antDesignIconsVue = {
   UploadOutlined,
   PlusOutlined,
   FullscreenExitOutlined,
+  ExperimentOutlined,
 }
 
 // 对外暴漏插件对象
