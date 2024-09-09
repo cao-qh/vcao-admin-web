@@ -1,6 +1,6 @@
 <template>
   <a-row class="navbar">
-    <a-col :span="11">
+    <a-col :span="5">
       <component
         style="font-size: 20px"
         :is="
@@ -9,7 +9,7 @@
         @click="changeManuFold"
       ></component>
     </a-col>
-    <a-col :span="13">
+    <a-col :span="19">
       <a-flex justify="end" align="center">
         <a-space size="middle">
           <a-space size="middle" v-if="navBtns">
@@ -19,7 +19,15 @@
               @click="reload"
             />
             <a-button
-              :icon="h(resolveComponent('FullscreenOutlined'))"
+              :icon="
+                h(
+                  resolveComponent(
+                    fullScreenStatus
+                      ? 'FullscreenExitOutlined'
+                      : 'FullscreenOutlined',
+                  ),
+                )
+              "
               size="small"
               @click="fullScreen"
             />
@@ -28,9 +36,8 @@
               size="small"
               @click="setting"
             />
+            <Notice />
           </a-space>
-
-          <Notice />
 
           <a-dropdown>
             <span>
@@ -84,15 +91,19 @@ const changeManuFold = () => {
 const reload = () => {
   layoutSettingStore.refresh = true
 }
+
+const fullScreenStatus = ref<boolean>(false)
 // 全屏
 const fullScreen = () => {
-  let full = document.fullscreenElement
+  const full = document.fullscreenElement
   // DOM对象的额一个属性：可以用来判断当前是不是全屏模式[全屏:true,不是全屏:false]
   if (full) {
     // 退出全屏
     document.exitFullscreen()
+    fullScreenStatus.value = false
   } else {
     document.documentElement.requestFullscreen()
+    fullScreenStatus.value = true
   }
 }
 
