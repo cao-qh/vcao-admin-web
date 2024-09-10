@@ -18,6 +18,9 @@
           </a-select-option>
         </a-select>
       </a-form-item>
+      <a-form-item label="收货地址" name="address">
+        <AddressSelector v-model:value="formState.address" />
+      </a-form-item>
       <a-form-item label="备注" name="beizhu">
         <a-textarea v-model:value="formState.beizhu"></a-textarea>
       </a-form-item>
@@ -30,6 +33,8 @@ import { message } from 'ant-design-vue'
 import type { Record } from '@/api/table/search/type'
 import { reqAdd } from '@/api/table/search/index'
 import { phone } from '@/utils/regexp'
+import AddressSelector from '@/components/AddressSelector/index.vue'
+import { address } from '@/utils/regexp'
 
 defineOptions({ name: 'Add' })
 // 属性
@@ -73,6 +78,10 @@ const rules = {
   ],
   mianzhi: [{ required: true, message: '请选择面值' }],
   tongdao: [{ required: true, message: '请选择通道' }],
+  address: [
+    { required: true, message: '请选择地址' },
+    { pattern: address, message: '请输入正确的地址' },
+  ],
 }
 
 const show = () => {
@@ -82,6 +91,7 @@ const show = () => {
     mianzhi: '',
     tongdao: '',
     beizhu: '',
+    address: '',
   })
   formRef.value?.clearValidate()
 }
@@ -89,6 +99,7 @@ const show = () => {
 const submit = async () => {
   try {
     await formRef.value.validate()
+    console.log('formState :>> ', formState)
     const res = await reqAdd(formState)
     if (res.code == 200) {
       $emit('success')

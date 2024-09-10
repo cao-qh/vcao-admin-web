@@ -20,6 +20,7 @@ export interface Record {
   fankuitime?: null
   zhuangtai?: number
   dingdanhao?: string
+  address?: string
   beizhu?: string
 }
 

@@ -14,6 +14,7 @@ function createRecordList() {
         'zhuangtai|1-4': 4,
         dingdanhao: '@guid',
         beizhu: '@csentence',
+        address: '@county(true) 华融国际大厦',
         qijinyong: '@integer(1, 2)',
       },
     ],

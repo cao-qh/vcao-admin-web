@@ -28,6 +28,8 @@ import {
   Tooltip,
   Checkbox,
   Typography,
+  Cascader,
+  Badge,
 } from 'ant-design-vue'
 
 const allComponent = [
@@ -60,6 +62,8 @@ const allComponent = [
   Tooltip,
   Checkbox,
   Typography,
+  Cascader,
+  Badge,
 ]
 
 export default {

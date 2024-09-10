@@ -23,6 +23,9 @@
           </a-select-option>
         </a-select>
       </a-form-item>
+      <a-form-item label="收货地址" name="address">
+        <AddressSelector v-model:value="formState.address" />
+      </a-form-item>
       <a-form-item label="备注" name="beizhu">
         <a-textarea v-model:value="formState.beizhu"></a-textarea>
       </a-form-item>
@@ -34,6 +37,7 @@ import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import type { Record } from '@/api/table/search/type'
 import { reqUpdateSubmit } from '@/api/table/search/index'
+import AddressSelector from '@/components/AddressSelector/index.vue'
 
 defineOptions({ name: 'ChangeSubmit' })
 
@@ -74,6 +78,7 @@ const show = async (row: Record) => {
   formState.dingdanhao = row.dingdanhao
   formState.tongdao = row.tongdao
   formState.mianzhi = row.mianzhi
+  formState.address = row.address
   formState.beizhu = row.beizhu
 }
 

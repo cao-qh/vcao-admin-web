@@ -18,6 +18,7 @@ import {
   PlusOutlined,
   FullscreenExitOutlined,
   ExperimentOutlined,
+  NotificationOutlined,
 } from '@ant-design/icons-vue'
 
 const antDesignIconsVue = {
@@ -40,6 +41,7 @@ const antDesignIconsVue = {
   PlusOutlined,
   FullscreenExitOutlined,
   ExperimentOutlined,
+  NotificationOutlined,
 }
 
 // 对外暴漏插件对象
