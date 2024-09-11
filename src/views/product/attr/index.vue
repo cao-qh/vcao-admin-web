@@ -21,7 +21,6 @@
         :columns="columns"
         :data="reqData"
         :load-data="false"
-        bordered
       >
         <template #bodyCell="{ column, row }">
           <template v-if="column.dataIndex === 'attrValueList'">

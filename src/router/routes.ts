@@ -61,37 +61,6 @@ export const constantRoute = [
       icon: 'FundProjectionScreenOutlined',
     },
   },
-  // 权限管理
-  {
-    path: '/acl',
-    component: Layout,
-    name: 'Acl',
-    meta: {
-      title: '权限管理',
-      icon: 'LockOutlined',
-    },
-    redirect: '/acl/user',
-    children: [
-      // 用户管理
-      {
-        path: '/acl/user',
-        component: () => import('@/views/acl/user/index.vue'),
-        name: 'User',
-        meta: {
-          title: '用户管理',
-        },
-      },
-      // 菜单管理
-      {
-        path: '/acl/permission',
-        component: () => import('@/views/acl/permission/index.vue'),
-        name: 'Permission',
-        meta: {
-          title: '菜单管理',
-        },
-      },
-    ],
-  },
   // 数据表格
   {
     path: '/table',

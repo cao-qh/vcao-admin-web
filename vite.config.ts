@@ -1,7 +1,7 @@
 import { fileURLToPath, URL } from 'node:url'
 import path from 'path'
 
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 // import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
@@ -9,10 +9,10 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import { viteMockServe } from 'vite-plugin-mock'
 
 // https://vitejs.dev/config/
-// export default defineConfig(({ mode }) => {
-export default defineConfig(() => {
+export default defineConfig(({ mode }) => {
+  // export default defineConfig(() => {
   // 获取各种环境下的对应的变量
-  // const env = loadEnv(mode, process.cwd())
+  const env = loadEnv(mode, process.cwd())
   return {
     // 插件
     plugins: [
@@ -74,16 +74,16 @@ export default defineConfig(() => {
     // 代理跨域
     server: {
       port: 5174,
-      // proxy: {
-      //   [env.VITE_APP_BASE_API]: {
-      //     // 获取数据的服务器地址设置
-      //     target: env.VITE_SERVE,
-      //     // 需要代理跨域
-      //     changeOrigin: true,
-      //     // 路径重写
-      //     rewrite: (path) => path.replace(/^\/api/, ''),
-      //   },
-      // },
+      proxy: {
+        [env.VITE_APP_BASE_API]: {
+          // 获取数据的服务器地址设置
+          target: env.VITE_SERVE,
+          // 需要代理跨域
+          changeOrigin: true,
+          // 路径重写
+          rewrite: (path) => path.replace(/^\/api/, ''),
+        },
+      },
     },
   }
 })

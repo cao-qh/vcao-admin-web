@@ -1,17 +1,12 @@
 //用户管理模块的接口
 import request from '@/utils/request'
-import type {
-  UserResponseData,
-  User,
-  AllRoleResponseData,
-  SetRoleData,
-} from './type'
+import type { User, AllRoleResponseData, SetRoleData } from './type'
 import type { RequestParams } from '@/api/type'
 
 //枚举地址
 enum API {
   //获取全部已有用户账号信息
-  ALLUSER_URL = '/user/list/',
+  ALLUSER_URL = '/admin/acl/user/',
   //添加一个新的用户账号
   ADDUSER_URL = '/user/add',
   //更新已有的用户账号

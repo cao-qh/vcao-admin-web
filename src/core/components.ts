@@ -30,6 +30,10 @@ import {
   Typography,
   Cascader,
   Badge,
+  Tree,
+  Tag,
+  Carousel,
+  InputNumber,
 } from 'ant-design-vue'
 
 const allComponent = [
@@ -64,6 +68,10 @@ const allComponent = [
   Typography,
   Cascader,
   Badge,
+  Tree,
+  Tag,
+  Carousel,
+  InputNumber,
 ]
 
 export default {

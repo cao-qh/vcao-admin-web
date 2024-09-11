@@ -40,9 +40,6 @@
               cancel-text="否"
               @confirm="handleDelete(row.id)"
             >
-              <template #icon>
-                <question-circle-outlined style="color: red" />
-              </template>
               <a-button type="primary" size="small" danger>
                 <template #icon>
                   <DeleteOutlined />

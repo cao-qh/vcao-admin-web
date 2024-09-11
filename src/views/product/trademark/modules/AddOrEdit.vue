@@ -29,7 +29,7 @@
               style="width: 100px"
             />
             <div v-else>
-              <loading-outlined v-if="uploadLoading"></loading-outlined>
+              <LoadingOutlined v-if="uploadLoading"></LoadingOutlined>
               <plus-outlined v-else></plus-outlined>
               <div class="ant-upload-text">Upload</div>
             </div>

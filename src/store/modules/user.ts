@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 // 引入接口
-import { reqLogin, reqUserInfo, reqLogout } from '@/api/user'
+import { reqLogin, reqUserInfo } from '@/api/user'
 // 引入数据类型
 import type {
   LoginForm,
@@ -92,6 +92,13 @@ const useUserStore: any = defineStore('user', () => {
     // } else {
     //   return Promise.reject(new Error(result.message))
     // }
+
+    router.push({
+      path: '/login',
+      query: {
+        redirect: router.currentRoute.value.path,
+      },
+    })
   }
 
   return {

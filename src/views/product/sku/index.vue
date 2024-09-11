@@ -4,7 +4,6 @@
       ref="table"
       :columns="columns"
       row-key="id"
-      bordered
       :data="reqData"
       :scroll="{ y: 'calc(100vh - 300px)' }"
     >

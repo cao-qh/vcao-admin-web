@@ -7,7 +7,7 @@ import type {
 } from '@/api/user/type'
 // 统一管理接口
 enum API {
-  LOGIN_URL = '/user/login',
+  LOGIN_URL = '/admin/acl/index/login',
   USERINFO_URL = '/admin/acl/index/info',
   LOGOUT_URL = '/admin/acl/index/logout',
 }
