@@ -21,6 +21,17 @@
           :preview="false"
           alt=""
         />
+        <a-button
+          v-if="deleteable"
+          class="upload-delete"
+          size="small"
+          type="text"
+          @click.stop="handleRemoveCustome"
+        >
+          <template #icon>
+            <DeleteOutlined />
+          </template>
+        </a-button>
       </div>
     </a-upload>
 
@@ -37,6 +48,8 @@ import ImageViewer from '@/components/ImageViewer/index.vue'
 defineOptions({
   name: 'UploadImage',
 })
+
+withDefaults(defineProps<{ deleteable?: boolean }>(), { deleteable: false })
 
 const model = defineModel<object | string | null>('value')
 const upload = ref()
@@ -68,6 +81,11 @@ const handlePreview = async (file: any) => {
 }
 
 const imageViewer = ref()
+
+// 处理删除按钮
+const handleRemoveCustome = () => {
+  model.value = null
+}
 </script>
 
 <style scoped lang="scss">
@@ -88,5 +106,14 @@ const imageViewer = ref()
   width: 100%;
   height: 100%;
   overflow: hidden;
+  position: relative;
+
+  .upload-delete {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+  }
 }
 </style>
