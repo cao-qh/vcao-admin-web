@@ -13,8 +13,14 @@
         <PlusOutlined />
         <span>选择图片</span>
       </div>
-      <div v-else-if="typeof model === 'string'">
-        <a-image :src="String(model)" :preview="false" alt="" />
+      <div class="upload-preview" v-else-if="typeof model === 'string'">
+        <a-image
+          width="100%"
+          height="100%"
+          :src="String(model)"
+          :preview="false"
+          alt=""
+        />
       </div>
     </a-upload>
 
@@ -76,5 +82,11 @@ const imageViewer = ref()
   > span {
     font-size: 12px;
   }
+}
+
+.upload-preview {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 </style>
