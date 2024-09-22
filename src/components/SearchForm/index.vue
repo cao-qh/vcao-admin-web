@@ -2,7 +2,12 @@
   <a-form style="margin-bottom: 10px">
     <a-row :gutter="32">
       <template v-for="(item, index) in formItems" :key="item.filed">
-        <a-col v-if="index < 3 || advanced" :xs="24" :md="8" :xl="6">
+        <a-col
+          v-if="(index < 3 || advanced) && !item.hidden"
+          :xs="24"
+          :md="8"
+          :xl="6"
+        >
           <a-form-item :label="item.label">
             <a-input
               v-if="item.type === 'input'"

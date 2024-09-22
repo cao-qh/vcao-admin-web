@@ -5,6 +5,7 @@ export interface SearchFormProps {
 }
 
 interface FormItem {
+  hidden?: boolean
   filed: string
   label: string
   type: string
