@@ -8,9 +8,7 @@
     </div>
 
     <div class="main">
-      <a-typography-text class="h1">{{ setting.title }}</a-typography-text>
-      <a-typography-text class="h2">持续完善中</a-typography-text>
-      <Form></Form>
+      <RouterView />
     </div>
 
     <div class="footer">
@@ -22,12 +20,10 @@
 </template>
 
 <script setup lang="ts">
-import Form from './components/Form/index.vue'
 import ParticleBackground from './components/ParticleBackground/index.vue'
 import SunMoon from '@/components/SunMoon/index.vue'
 import useLayoutSettingStore from '@/store/modules/setting'
 import { computed } from 'vue'
-import setting from '@/setting'
 
 const layoutSettingStore = useLayoutSettingStore()
 
@@ -57,28 +53,13 @@ const bgColor = computed(() => {
   .main {
     user-select: none;
     position: absolute;
-    width: 375px;
+    width: 100%;
     box-sizing: border-box;
     padding: 20px;
     z-index: 1;
-    top: 35%;
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
-
-    .h1 {
-      font-size: 28px;
-      padding: 10px 0;
-      text-align: center;
-      display: block;
-      color: v-bind('layoutSettingStore.themeColor');
-      font-weight: 500;
-    }
-    .h2 {
-      font-size: 15px;
-      padding: 0 0 10px 0;
-      text-align: center;
-      display: block;
-    }
   }
 
   .footer {

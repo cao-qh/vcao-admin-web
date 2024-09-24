@@ -1,22 +1,44 @@
-// 布局组件
-import Layout from '@/layout/index.vue'
+// 基础布局组件
+import BaseLayout from '@/layout/base/index.vue'
+// 用户登录，注册布局组件
+import UserLayout from '@/layout/user/index.vue'
 
 // 对外暴漏配置路由(常量路由)
 export const constantRoute = [
   // 登录
   {
-    path: '/login',
-    component: () => import('@/views/login/index.vue'),
-    name: 'Login',
+    path: '/user',
+    component: UserLayout,
+    name: 'User',
     meta: {
       title: '登录',
       hidden: true, //代表路由标题在菜单中是否隐藏  true:隐藏 false:不隐藏
     },
+    children: [
+      // 登录
+      {
+        path: '/user/login',
+        component: () => import('@/views/user/login/index.vue'),
+        name: 'Login',
+        meta: {
+          title: '登录',
+        },
+      },
+      // 注册
+      {
+        path: '/user/register',
+        component: () => import('@/views/user/register/index.vue'),
+        name: 'Register',
+        meta: {
+          title: '注册',
+        },
+      },
+    ],
   },
   // 测试
   {
     path: '/test',
-    component: Layout,
+    component: BaseLayout,
     name: 'Test',
     meta: {
       title: '测试',
@@ -36,7 +58,7 @@ export const constantRoute = [
   // 登录成功以后展示数据的路由
   {
     path: '/',
-    component: Layout,
+    component: BaseLayout,
     name: 'layout',
     redirect: '/dashboard',
     meta: {
@@ -64,7 +86,7 @@ export const constantRoute = [
   // 数据表格
   {
     path: '/table',
-    component: Layout,
+    component: BaseLayout,
     name: 'Table',
     meta: {
       title: '数据表格',
@@ -86,7 +108,7 @@ export const constantRoute = [
   // 可视化设计
   {
     path: '/visual',
-    component: Layout,
+    component: BaseLayout,
     name: 'Visual',
     meta: {
       title: '可视化设计',
@@ -118,7 +140,7 @@ export const asyncRoute = [
   // 权限管理
   {
     path: '/acl',
-    component: Layout,
+    component: BaseLayout,
     name: 'Acl',
     meta: {
       title: '权限管理',
@@ -158,7 +180,7 @@ export const asyncRoute = [
   // 商品管理
   {
     path: '/product',
-    component: Layout,
+    component: BaseLayout,
     name: 'Product',
     meta: {
       title: '商品管理',

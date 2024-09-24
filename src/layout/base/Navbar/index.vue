@@ -36,7 +36,7 @@
               size="small"
               @click="setting"
             />
-            <Notice />
+            <Notice @click="handleNotice" />
           </a-space>
 
           <a-dropdown>
@@ -63,6 +63,9 @@ import { h, resolveComponent, watchEffect, ref, computed } from 'vue'
 import useLayoutSettingStore from '@/store/modules/setting'
 import useUserStore from '@/store/modules/user'
 import Notice from '@/components/Notice/index.vue'
+import { useRouter } from 'vue-router'
+
+const $router = useRouter()
 
 // 获取layout配置相关的仓库
 const layoutSettingStore = useLayoutSettingStore()
@@ -123,6 +126,10 @@ watchEffect(() => {
     navBtns.value = false
   }
 })
+
+const handleNotice = () => {
+  $router.push({ name: 'NoticeUp' })
+}
 </script>
 
 <style lang="scss" scoped>

@@ -1,38 +1,49 @@
 <template>
-  <a-form ref="formRef" :model="loginForm" :rules="rules" class="login-form">
-    <a-form-item name="username">
-      <a-input size="large" v-model:value="loginForm.username">
-        <template #prefix>
-          <UserOutlined style="color: gray" />
-        </template>
-      </a-input>
-    </a-form-item>
-    <a-form-item name="password">
-      <a-input-password
-        size="large"
-        v-model:value="loginForm.password"
-        type="password"
-      >
-        <template #prefix>
-          <LockOutlined style="color: gray" />
-        </template>
-      </a-input-password>
-    </a-form-item>
+  <div class="login">
+    <a-typography-text class="h1">{{ setting.title }}</a-typography-text>
+    <a-typography-text class="h2">登录</a-typography-text>
+    <a-form ref="formRef" :model="loginForm" :rules="rules" class="login-form">
+      <a-form-item name="username">
+        <a-input
+          size="large"
+          v-model:value="loginForm.username"
+          placeholder="用户名"
+        >
+          <template #prefix>
+            <UserOutlined style="color: gray" />
+          </template>
+        </a-input>
+      </a-form-item>
+      <a-form-item name="password">
+        <a-input-password
+          size="large"
+          v-model:value="loginForm.password"
+          type="password"
+          placeholder="密码"
+        >
+          <template #prefix>
+            <LockOutlined style="color: gray" />
+          </template>
+        </a-input-password>
+      </a-form-item>
 
-    <a-checkbox
-      style="margin-bottom: 10px"
-      v-model:checked="isRemembermima"
-      @change="onRemembermimaChange"
-    >
-      记住密码
-    </a-checkbox>
+      <a-flex style="margin-bottom: 10px" justify="space-between">
+        <a-checkbox
+          v-model:checked="isRemembermima"
+          @change="onRemembermimaChange"
+        >
+          记住密码
+        </a-checkbox>
+        <RouterLink to="/user/register">注册账号</RouterLink>
+      </a-flex>
 
-    <a-form-item>
-      <a-button class="login-btn" type="primary" size="large" @click="login">
-        登录
-      </a-button>
-    </a-form-item>
-  </a-form>
+      <a-form-item>
+        <a-button class="login-btn" type="primary" size="large" @click="login">
+          登录
+        </a-button>
+      </a-form-item>
+    </a-form>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -43,6 +54,8 @@ import useUserStore from '@/store/modules/user'
 import { notification } from 'ant-design-vue'
 // 引入获取当前时间的函数
 import { getTime } from '@/utils/time'
+import setting from '@/setting'
+import useLayoutSettingStore from '@/store/modules/setting'
 
 const useStore = useUserStore()
 // 获取路由器
@@ -51,6 +64,8 @@ const $router = useRouter()
 const $route = useRoute()
 // 收集账户与密码的数据
 const loginForm = reactive({ username: '', password: '' })
+
+const layoutSettingStore = useLayoutSettingStore()
 
 // 表单验证
 const rules = {
@@ -150,9 +165,27 @@ const onRemembermimaChange = (e: any) => {
 </script>
 
 <style scoped lang="scss">
-.login-form {
-  .login-btn {
-    width: 100%;
+.login {
+  width: 375px;
+  margin: 0 auto;
+
+  .h1 {
+    font-size: 25px;
+    padding: 10px 0;
+    text-align: center;
+    display: block;
+    color: v-bind('layoutSettingStore.themeColor');
+  }
+  .h2 {
+    font-size: 15px;
+    padding: 0 0 10px 0;
+    text-align: center;
+    display: block;
+  }
+  .login-form {
+    .login-btn {
+      width: 100%;
+    }
   }
 }
 </style>
