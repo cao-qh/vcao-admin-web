@@ -19,4 +19,12 @@
     top: 4px;
   }
 }
+
+.notice:hover {
+  cursor: pointer;
+
+  .icon {
+    color: #1890ff;
+  }
+}
 </style>
