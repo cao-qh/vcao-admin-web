@@ -41,7 +41,7 @@ router.beforeEach(async (to, from, next) => {
         } catch (error) {
           // token过期了，或者用户手动修改了token
           await userStore.userLogout()
-          next({ path: '/login', query: { redirect: to.path } })
+          next({ path: '/user/login', query: { redirect: to.path } })
           notification.error({
             message: '登录失效',
             description: `登录已过期，请重新登录`,
@@ -51,7 +51,7 @@ router.beforeEach(async (to, from, next) => {
     }
   } else {
     // 用户未登录判断
-    if (to.path === '/user/login' || to.path === '/user/register') {
+    if (to.path === '/user/login') {
       next()
     } else {
       next({ path: '/user/login', query: { redirect: to.path } })

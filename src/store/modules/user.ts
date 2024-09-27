@@ -94,7 +94,7 @@ const useUserStore: any = defineStore('user', () => {
     // }
 
     router.push({
-      path: '/login',
+      path: '/user/login',
       query: {
         redirect: router.currentRoute.value.path,
       },
