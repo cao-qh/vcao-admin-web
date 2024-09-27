@@ -14,6 +14,7 @@ export default defineConfig(({ mode }) => {
   // 获取各种环境下的对应的变量
   const env = loadEnv(mode, process.cwd())
   return {
+    base: `/${env.VITE_APP_BASE_URL}/`,
     // 插件
     plugins: [
       vue(),
@@ -45,6 +46,7 @@ export default defineConfig(({ mode }) => {
     },
     // 构建
     build: {
+      outDir: env.VITE_APP_BASE_URL,
       rollupOptions: {
         output: {
           // 手动分割包

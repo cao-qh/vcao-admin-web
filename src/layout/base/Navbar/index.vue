@@ -41,7 +41,7 @@
 
           <a-dropdown>
             <span>
-              {{ userStore.userName }}
+              {{ userStore.username }}
               <DownOutlined />
             </span>
             <template #overlay>

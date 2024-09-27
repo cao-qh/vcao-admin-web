@@ -35,6 +35,7 @@ import {
   Carousel,
   InputNumber,
   Result,
+  Image,
 } from 'ant-design-vue'
 
 const allComponent = [
@@ -74,6 +75,7 @@ const allComponent = [
   Carousel,
   InputNumber,
   Result,
+  Image,
 ]
 
 export default {

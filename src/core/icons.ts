@@ -25,6 +25,7 @@ import {
   InfoCircleOutlined,
   EyeOutlined,
   LoadingOutlined,
+  StarOutlined,
 } from '@ant-design/icons-vue'
 
 const antDesignIconsVue = {
@@ -54,6 +55,7 @@ const antDesignIconsVue = {
   InfoCircleOutlined,
   EyeOutlined,
   LoadingOutlined,
+  StarOutlined,
 }
 
 // 对外暴漏插件对象

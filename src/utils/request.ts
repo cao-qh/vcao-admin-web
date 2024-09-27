@@ -66,7 +66,7 @@ request.interceptors.response.use(
 )
 
 // 对象转query字符串
-export const objToQuery = function (obj: { [x: string]: any } = {}) {
+export const obj2Query = function (obj: { [x: string]: any } = {}) {
   let query = ''
   const keys = Object.keys(obj)
   for (let i = 0; i < keys.length; i++) {

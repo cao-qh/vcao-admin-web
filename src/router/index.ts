@@ -4,7 +4,7 @@ import { constantRoute } from './routes'
 
 // 创建路由器
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(`/${import.meta.env.VITE_APP_BASE_URL}/`),
   routes: constantRoute,
   // 滚动行为
   scrollBehavior: () => ({ left: 0, top: 0 }),
