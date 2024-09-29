@@ -81,6 +81,108 @@ export const constantRoute = [
 
 // 管理员路由
 export const adminRoute = [
+  // 系统管理
+  {
+    path: '/system',
+    component: BaseLayout,
+    name: 'System',
+    meta: {
+      title: '系统管理',
+      icon: 'SettingOutlined',
+    },
+    redirect: '/system/interface',
+    children: [
+      // 接口模板
+      {
+        path: '/system/interface',
+        component: () => import('@/views/admin/system/interface/index.vue'),
+        name: 'Interface',
+        meta: {
+          title: '接口模板',
+        },
+      },
+      // 参数模板
+      {
+        path: '/system/params',
+        component: () => import('@/views/admin/system/params/index.vue'),
+        name: 'Params',
+        meta: {
+          title: '参数模板',
+        },
+      },
+      // 管理员日志
+      {
+        path: '/system/admin-logs',
+        component: () => import('@/views/admin/system/admin-logs/index.vue'),
+        name: 'AdminLogs',
+        meta: {
+          title: '管理员日志',
+        },
+      },
+      // 代理员日志
+      {
+        path: '/system/agent-logs',
+        component: () => import('@/views/admin/system/agent-logs/index.vue'),
+        name: 'AgentLogs',
+        meta: {
+          title: '代理员日志',
+        },
+      },
+    ],
+  },
+  // 渠道管理
+  {
+    path: '/channel',
+    component: BaseLayout,
+    name: 'Channel',
+    meta: {
+      title: '渠道管理',
+      icon: 'TeamOutlined',
+    },
+    redirect: '/channel/admin',
+    children: [
+      // 管理员管理
+      {
+        path: '/channel/admin',
+        component: () => import('@/views/admin/channel/admin/index.vue'),
+        name: 'Admin',
+        meta: {
+          title: '管理员管理',
+        },
+      },
+      // 代理员管理
+      {
+        path: '/channel/agent',
+        component: () => import('@/views/admin/channel/agent/index.vue'),
+        name: 'Agent',
+        meta: {
+          title: '代理员管理',
+        },
+      },
+    ],
+  },
+  // 订单管理
+  {
+    path: '/order',
+    component: BaseLayout,
+    name: 'Order',
+    meta: {
+      title: '订单管理',
+      icon: 'StarOutlined',
+    },
+    redirect: '/order/list',
+    children: [
+      // 订单列表
+      {
+        path: '/order/list',
+        component: () => import('@/views/admin/order/index.vue'),
+        name: 'OrderList',
+        meta: {
+          title: '订单列表',
+        },
+      },
+    ],
+  },
   // 套餐管理
   {
     path: '/goods',
@@ -96,7 +198,7 @@ export const adminRoute = [
       {
         path: '/goods/list',
         component: () => import('@/views/admin/goods/index.vue'),
-        name: 'List',
+        name: 'GoodsList',
         meta: {
           title: '套餐列表',
         },
@@ -118,7 +220,7 @@ export const adminRoute = [
       {
         path: '/statistics/collect',
         component: () => import('@/views/admin/statistics/collect/index.vue'),
-        name: 'collect',
+        name: 'Collect',
         meta: {
           title: '汇总统计',
         },
@@ -128,9 +230,31 @@ export const adminRoute = [
         path: '/statistics/day_collect',
         component: () =>
           import('@/views/admin/statistics/day_collect/index.vue'),
-        name: 'day_collect',
+        name: 'DayCollect',
         meta: {
           title: '日统计',
+        },
+      },
+    ],
+  },
+  // 个人管理
+  {
+    path: '/personal',
+    component: BaseLayout,
+    name: 'Personal',
+    meta: {
+      title: '个人管理',
+      icon: 'StarOutlined',
+    },
+    redirect: '/personal/info',
+    children: [
+      // 个人信息
+      {
+        path: '/personal/info',
+        component: () => import('@/views/admin/personal/index.vue'),
+        name: 'PersonalInfo',
+        meta: {
+          title: '个人信息',
         },
       },
     ],
@@ -138,50 +262,103 @@ export const adminRoute = [
 ]
 
 // 代理路由
-export const agentRoute = []
-
-/*
-// 异步路由
-export const asyncRoute = [
-  // 权限管理
+export const agentRoute = [
+  // 订单管理
   {
-    path: '/acl',
+    path: '/order',
     component: BaseLayout,
-    name: 'Acl',
+    name: 'Order',
     meta: {
-      title: '权限管理',
-      icon: 'LockOutlined',
+      title: '订单管理',
+      icon: 'StarOutlined',
     },
-    redirect: '/acl/user',
+    redirect: '/order/list',
     children: [
-      // 用户管理
+      // 订单列表
       {
-        path: '/acl/user',
-        component: () => import('@/views/acl/user/index.vue'),
-        name: 'User',
+        path: '/order/list',
+        component: () => import('@/views/agent/order/index.vue'),
+        name: 'OrderList',
         meta: {
-          title: '用户管理',
+          title: '订单列表',
         },
       },
-      // 角色管理
+    ],
+  },
+  // 套餐管理
+  {
+    path: '/goods',
+    component: BaseLayout,
+    name: 'Goods',
+    meta: {
+      title: '套餐管理',
+      icon: 'StarOutlined',
+    },
+    redirect: '/goods/list',
+    children: [
+      // 商品列表
       {
-        path: '/acl/role',
-        component: () => import('@/views/acl/role/index.vue'),
-        name: 'Role',
+        path: '/goods/list',
+        component: () => import('@/views/agent/goods/index.vue'),
+        name: 'GoodsList',
         meta: {
-          title: '角色管理',
+          title: '套餐列表',
         },
       },
-      // 菜单管理
+    ],
+  },
+  // 统计分析
+  {
+    path: '/statistics',
+    component: BaseLayout,
+    name: 'Statistics',
+    meta: {
+      title: '统计分析',
+      icon: 'StarOutlined',
+    },
+    redirect: '/statistics/collect',
+    children: [
+      // 汇总统计
       {
-        path: '/acl/permission',
-        component: () => import('@/views/acl/permission/index.vue'),
-        name: 'Permission',
+        path: '/statistics/collect',
+        component: () => import('@/views/agent/statistics/collect/index.vue'),
+        name: 'Collect',
         meta: {
-          title: '菜单管理',
+          title: '汇总统计',
+        },
+      },
+      // 日统计
+      {
+        path: '/statistics/day_collect',
+        component: () =>
+          import('@/views/agent/statistics/day_collect/index.vue'),
+        name: 'DayCollect',
+        meta: {
+          title: '日统计',
+        },
+      },
+    ],
+  },
+  // 个人管理
+  {
+    path: '/personal',
+    component: BaseLayout,
+    name: 'Personal',
+    meta: {
+      title: '个人管理',
+      icon: 'StarOutlined',
+    },
+    redirect: '/personal/info',
+    children: [
+      // 个人信息
+      {
+        path: '/personal/info',
+        component: () => import('@/views/agent/personal/index.vue'),
+        name: 'PersonalInfo',
+        meta: {
+          title: '个人信息',
         },
       },
     ],
   },
 ]
-*/

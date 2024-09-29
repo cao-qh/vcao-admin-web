@@ -2,17 +2,24 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 // 引入接口
-import { reqLogin } from '@/api/admin/user'
+import {
+  reqLogin as reqAdminLogin,
+  reqInfo as reqAdminInfo,
+} from '@/api/admin/user'
+import {
+  reqLogin as reqAgentLogin,
+  reqInfo as reqAgentInfo,
+} from '@/api/agent/user'
 
 // 引入路由（常量路由）
 // import { constantRoute, asyncRoute } from '@/router/routes'
-import { constantRoute } from '@/router/routes'
+import { constantRoute, agentRoute, adminRoute } from '@/router/routes'
 import router from '@/router'
-// import { deepCopy } from '@/utils/deepCopy'
+import { deepCopy } from '@/utils/deepCopy'
 import type { RouteRecordRaw } from 'vue-router'
 
 // 用于过滤当前用户需要展示的异步路由
-/* function filterAsyncRoute(asyncRoute: any, routes: string[]) {
+function filterAsyncRoute(asyncRoute: any, routes: string[]) {
   return asyncRoute.filter((item: any) => {
     if (routes.includes(item.name)) {
       if (item.children && item.children.length > 0) {
@@ -21,28 +28,40 @@ import type { RouteRecordRaw } from 'vue-router'
       return true
     }
   })
-}*/
+}
 
 // 创建用户小仓库
 const useUserStore: any = defineStore('user', () => {
   // 小仓库存储数据地方
   const token = ref(localStorage.getItem('TOKEN'))
-  // const menuRoutes = ref<RouteRecordRaw[]>([])
-  const menuRoutes = ref<RouteRecordRaw[]>(constantRoute)
+  // 角色
+  const role = ref(Number(localStorage.getItem('ROLE')))
+  const menuRoutes = ref<RouteRecordRaw[]>([])
   const username = ref('')
   const buttons = ref<string[]>([])
 
   // 用户登录的方法
   const userLogin = async (data: any) => {
+    let reqLogin = null
+    if (data.role == 1) {
+      reqLogin = reqAdminLogin
+    } else {
+      reqLogin = reqAgentLogin
+    }
+
     const result: any = await reqLogin(data)
     // 登录请求：成功200->token
     // 登录请求：失败201->错误信息
     if (result.code == 0) {
       // pinia仓库存储一下token
       // 由于pinia|vuex存储数据其实利用js对象
-      token.value = result.data as string
+      token.value = result.data.token as string
       // 本地存储持久化存储一份
-      localStorage.setItem('TOKEN', result.data as string)
+      localStorage.setItem('TOKEN', token.value)
+
+      role.value = result.data.role
+      localStorage.setItem('ROLE', String(role.value))
+
       // 能保证当前async函数返回一个成功的promise
       return 'ok'
     } else {
@@ -51,36 +70,55 @@ const useUserStore: any = defineStore('user', () => {
   }
 
   // 获取用户信息方法
-  /*const userInfo = async () => {
-    // 获取用户信息进行存储仓库当中
-    const result: any = await reqUserInfo()
-    // 如果获取用户信息成功，存储一下用户信息
-    if (result.code == 200) {
-      username.value = result.data.name
-      buttons.value = result.data.buttons
-      // 深拷贝asyncRoute
-      const cloneAsyncRoute = deepCopy(asyncRoute)
-
-      // 过滤异步路由
-      const userAsyncRoute = filterAsyncRoute(
-        cloneAsyncRoute,
-        result.data.routes,
-      )
-      menuRoutes.value = [...constantRoute, ...userAsyncRoute]
-      //目前路由器管理的只有常量路由:用户计算完毕异步路由、任意路由动态追加
-      userAsyncRoute.forEach((route: any) => {
-        router.addRoute(route)
-      })
+  const userInfo = async () => {
+    // 如果是代理没有权限
+    if (role.value === 2) {
+      const result: any = await reqAgentInfo()
+      if (result.code == 0) {
+        username.value = result.data.username
+        // 代理权限
+        menuRoutes.value = [...constantRoute, ...agentRoute]
+        agentRoute.forEach((route: any) => {
+          router.addRoute(route)
+        })
+      }
       return 'ok'
     } else {
-      return Promise.reject(new Error(result.message))
+      // 管理员权限
+      // 获取用户信息进行存储仓库当中
+      const result: any = await reqAdminInfo()
+      // 如果获取用户信息成功，存储一下用户信息
+      if (result.code == 0) {
+        username.value = result.data.username
+        buttons.value = result.data.buttons
+        // 深拷贝asyncRoute
+        const cloneAsyncRoute = deepCopy(adminRoute)
+
+        // 过滤异步路由
+        const userAsyncRoute = filterAsyncRoute(
+          cloneAsyncRoute,
+          result.data.routes,
+        )
+        menuRoutes.value = [...constantRoute, ...userAsyncRoute]
+        //目前路由器管理的只有常量路由:用户计算完毕异步路由、任意路由动态追加
+        userAsyncRoute.forEach((route: any) => {
+          router.addRoute(route)
+        })
+        return 'ok'
+      } else {
+        return Promise.reject(new Error(result.message))
+      }
     }
-  }*/
+  }
 
   // 退出登录
   const userLogout = async () => {
     token.value = ''
     localStorage.removeItem('TOKEN')
+    role.value = 0
+    localStorage.removeItem('ROLE')
+
+    username.value = ''
 
     router.push({
       path: '/user/login',
@@ -97,7 +135,7 @@ const useUserStore: any = defineStore('user', () => {
     buttons,
 
     userLogin,
-    // userInfo,
+    userInfo,
     userLogout,
   }
 })

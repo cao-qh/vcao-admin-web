@@ -9,7 +9,7 @@
       :scroll="{ y: 'calc(100vh - 290px)' }"
     >
       <template #toolbar>
-        <a-button type="primary" @click="() => add.show()">添加</a-button>
+        <a-button type="primary" @click="() => add.show()">导出</a-button>
       </template>
       <template #bodyCell="{ column, row }">
         <template v-if="column.dataIndex === 'shangXiaJia'">
@@ -52,36 +52,6 @@
         </template>
       </template>
     </STable>
-
-    <Add
-      ref="add"
-      :del="del"
-      :shangXiaJia="shangXiaJia"
-      :fanyongStatus="fanyongStatus"
-      :operate="operate"
-      :phonePool="phonePool"
-      :province="province"
-      @success="table.refresh()"
-    />
-
-    <Edit
-      ref="edit"
-      :del="del"
-      :shangXiaJia="shangXiaJia"
-      :fanyongStatus="fanyongStatus"
-      :operate="operate"
-      :phonePool="phonePool"
-      :province="province"
-      @success="table.refresh()"
-    />
-
-    <EditDetail
-      ref="editDetail"
-      :disPlatform="disPlatform"
-      @success="table.refresh()"
-    />
-
-    <Config ref="config" @success="table.refresh()" />
   </PageWrapper>
 </template>
 
@@ -89,22 +59,19 @@
 import { reactive, ref, onMounted, h } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import STable from '@/components/STable/index.vue'
-import { reqGoods, reqShangxiajia } from '@/api/admin/goods'
+import { reqGoods, reqShangxiajia } from '@/api/agent/goods'
 import {
   reqProvince,
   reqFanyongType,
   reqOperator,
   // reqPhonePool,
 } from '@/api/common'
-import EditDetail from './modules/EditDetail.vue'
-import Add from './modules/Add.vue'
-import Edit from './modules/Edit.vue'
-import Config from './modules/Config.vue'
 import { message } from 'ant-design-vue'
 import useUserStore from '@/store/modules/user'
+import dayjs, { Dayjs } from 'dayjs'
 
 defineOptions({
-  name: 'Goods',
+  name: 'Collect',
 })
 
 const baseUrl = import.meta.env.VITE_SERVE
@@ -189,39 +156,45 @@ const disPlatform = [
   },
 ]
 
-const phonePool = ref<any>([])
+onMounted(() => {})
 
-const fanyongStatus = ref<any>([])
-
-// const operate = ref<any>([])
-
-const province = ref<any>([])
-
-onMounted(() => {
-  // reqPhonePool().then((res: any) => {
-  //   if (res.code == 0) {
-  //     phonePool.value = res.data
-  //   }
-  // })
-  if (userStore.level == 0) {
-    columns.push({
-      title: '操作',
-      dataIndex: 'action',
-      width: '100px',
-      align: 'center',
-    })
-  }
-})
-
-const userStore = useUserStore()
+let startTime = ref(dayjs().format('YYYY-MM-DD'))
+let endTime = ref(dayjs().format('YYYY-MM-DD'))
 
 const formItems = reactive([
   {
-    type: 'input',
-    label: '产品名称',
-    filed: 'packageNickname',
-    value: '',
-    placeholder: '请输入',
+    type: 'datePicker',
+    label: '开始时间',
+    filed: 'startTime',
+    value: startTime,
+    disabledDate: (val: Dayjs) => {
+      return (
+        val < dayjs(endTime.value).subtract(31, 'days') ||
+        val > dayjs(endTime.value)
+      )
+    },
+    valueFormat: 'YYYY-MM-DD',
+    placeholder: '请选择',
+  },
+  {
+    type: 'datePicker',
+    label: '结束时间',
+    filed: 'endTime',
+    value: endTime,
+    disabledDate: (val: Dayjs) => {
+      return val > dayjs().endOf('year')
+    },
+    valueFormat: 'YYYY-MM-DD',
+    placeholder: '请选择',
+    onChange: (date: string) => {
+      console.log(date)
+      if (
+        dayjs(startTime.value) > dayjs(date) ||
+        dayjs(startTime.value).add(31, 'days') < dayjs(date)
+      ) {
+        startTime.value = dayjs(date).startOf('day').format('YYYY-MM-DD')
+      }
+    },
   },
   {
     type: 'input',
@@ -268,53 +241,6 @@ const formItems = reactive([
       })
     },
   },
-  // {
-  //   type: 'select',
-  //   label: '省份',
-  //   filed: 'provinceId',
-  //   value: '',
-  //   placeholder: '请选择',
-  //   defaultOption: {
-  //     value: '',
-  //     label: '全部',
-  //   },
-  //   options: async () => {
-  //     const res: any = await reqProvince()
-  //     if (res.code == 0) {
-  //       province.value = res.data.map((item: any) => {
-  //         return {
-  //           value: item.id,
-  //           label: item.name,
-  //         }
-  //       })
-  //     }
-  //     return province.value
-  //   },
-  // },
-  {
-    type: 'select',
-    label: '启禁用',
-    filed: 'del',
-    value: '',
-    placeholder: '请选择',
-    defaultOption: {
-      label: '全部',
-      value: '',
-    },
-    options: del,
-  },
-  {
-    type: 'select',
-    label: '上下架',
-    filed: 'shangXiaJia',
-    value: '',
-    placeholder: '请选择',
-    defaultOption: {
-      label: '全部',
-      value: '',
-    },
-    options: shangXiaJia,
-  },
 ])
 
 const columns = [
@@ -324,78 +250,54 @@ const columns = [
     align: 'center',
   },
   {
-    title: '上级产品名称',
+    title: '上级渠道名称',
     dataIndex: 'goodspic',
     align: 'center',
-    width: '100px',
   },
   {
-    title: '上级产品编号',
+    title: '上级渠道编码',
     dataIndex: 'packageNickname',
     align: 'center',
   },
   {
-    title: '兴投产品名称',
+    title: '产品编码',
     dataIndex: 'goodsName',
     align: 'center',
   },
   {
-    title: '兴投产品编号',
+    title: '产品名称',
     dataIndex: 'goodsName',
     align: 'center',
   },
   {
-    title: '运营商',
+    title: '资费',
     dataIndex: 'goodsName',
     align: 'center',
   },
   {
-    title: '渠道商',
+    title: '校验成功',
     dataIndex: 'goodsName',
     align: 'center',
   },
   {
-    title: '省份/地市',
+    title: '校验失败',
     dataIndex: 'goodsName',
     align: 'center',
   },
   {
-    title: '商品编码',
+    title: '订购成功',
     dataIndex: 'goodsName',
     align: 'center',
   },
   {
-    title: '产品月费',
+    title: '订购失败',
     dataIndex: 'goodsName',
     align: 'center',
   },
   {
-    title: '创建时间',
+    title: '未处理',
     dataIndex: 'createTime',
     align: 'center',
-  },
-  {
-    title: '修改时间',
-    dataIndex: 'updateTime',
-    align: 'center',
-  },
-  {
-    title: '启禁用',
-    dataIndex: 'del',
-    align: 'center',
-    customRender: ({ text }: { text: any }) => {
-      const item: any = del.find((item) => item.value === text)
-      return h('span', { style: { color: item.color } }, item.label)
-    },
-  },
-  {
-    title: '上下架',
-    dataIndex: 'shangXiaJia',
-    align: 'center',
-    customRender: ({ text }: { text: any }) => {
-      const item: any = shangXiaJia.find((item) => item.value === text)
-      return h('span', { style: { color: item.color } }, item.label)
-    },
   },
 ]
 

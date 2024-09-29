@@ -117,7 +117,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqAdd } from '@/api/admin/goods'
+import { reqAdd } from '@/api/agent/goods/index'
 
 defineOptions({ name: 'Add' })
 // 属性

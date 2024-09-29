@@ -21,7 +21,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqConfig, reqConfigEdit } from '@/api/admin/goods'
+import { reqConfig, reqConfigEdit } from '@/api/agent/goods/index'
 
 defineOptions({ name: 'Config' })
 

@@ -57,7 +57,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqDetail, reqEditDetail } from '@/api/admin/goods'
+import { reqDetail, reqEditDetail } from '@/api/agent/goods/index'
 import UploadImage from '@/components/UploadImage/index.vue'
 
 defineOptions({ name: 'EditDetail' })

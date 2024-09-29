@@ -89,7 +89,7 @@
 import { reactive, ref, onMounted, h } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import STable from '@/components/STable/index.vue'
-import { reqGoods, reqShangxiajia } from '@/api/admin/goods'
+import { reqGoods, reqShangxiajia } from '@/api/agent/goods/index'
 import {
   reqProvince,
   reqFanyongType,

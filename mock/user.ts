@@ -9,8 +9,26 @@ function createUserList() {
       desc: '平台管理员',
       role: 1,
       // roles: ['平台管理员'],
-      // buttons: ['cuser.detail'],
-      // routes: ['home'],
+      buttons: ['cuser.detail'],
+      routes: [
+        'Channel',
+        'Admin',
+        'Agent',
+        'System',
+        'Interface',
+        'Params',
+        'AdminLogs',
+        'AgentLogs',
+        'Order',
+        'OrderList',
+        'Goods',
+        'GoodsList',
+        'Statistics',
+        'Collect',
+        'DayCollect',
+        'Personal',
+        'PersonalInfo',
+      ],
       token: 'Admin Token',
     },
     {
@@ -57,13 +75,13 @@ export default [
       }
       //如果有返回成功信息
       const { token } = checkUser
-      return { code: 0, data: { token } }
+      return { code: 0, data: { token, role: 1 } }
     },
   },
-  // 获取用户信息
+  // 获取管理员信息
   {
-    url: '/api/user/info',
-    method: 'get',
+    url: '/api/admin/info',
+    method: 'post',
     response: (request) => {
       //获取请求头携带token
       const token = request.headers.token
@@ -74,7 +92,14 @@ export default [
         return { code: 201, data: { message: '获取用户信息失败' } }
       }
       //如果有返回成功信息
-      return { code: 200, data: { checkUser } }
+      return {
+        code: 0,
+        data: {
+          username: checkUser.username,
+          routes: checkUser.routes,
+          buttons: checkUser.buttons,
+        },
+      }
     },
   },
 
@@ -104,7 +129,27 @@ export default [
       }
       //如果有返回成功信息
       const { token } = checkUser
-      return { code: 0, data: { token } }
+      return { code: 0, data: { token, role: 2 } }
+    },
+  },
+  // 获取代理员信息
+  {
+    url: '/api/agent/info',
+    method: 'post',
+    response: (request) => {
+      //获取请求头携带token
+      const token = request.headers.token
+      //查看用户信息是否包含有次token用户
+      const checkUser = createUserList().find((item) => item.token === token)
+      //没有返回失败的信息
+      if (!checkUser) {
+        return { code: 201, data: { message: '获取用户信息失败' } }
+      }
+      //如果有返回成功信息
+      return {
+        code: 0,
+        data: { username: checkUser.username },
+      }
     },
   },
 ]

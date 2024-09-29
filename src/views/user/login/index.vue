@@ -4,7 +4,7 @@
     <a-typography-text class="h2">登录</a-typography-text>
 
     <div class="role">
-      <a-radio-group v-model:value="role" size="large">
+      <a-radio-group v-model:value="loginForm.role" size="large">
         <a-radio-button :value="1">管理员</a-radio-button>
         <a-radio-button :value="2">代理员</a-radio-button>
       </a-radio-group>
@@ -71,12 +71,9 @@ const $router = useRouter()
 // 获取路由对象
 const $route = useRoute()
 // 收集账户与密码的数据
-const loginForm = reactive({ username: '', password: '' })
+const loginForm = reactive({ username: '', password: '', role: 1 })
 
 const layoutSettingStore = useLayoutSettingStore()
-
-// 角色
-const role = ref(1)
 
 // 表单验证
 const rules = {

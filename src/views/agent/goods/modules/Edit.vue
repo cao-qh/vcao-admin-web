@@ -56,7 +56,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqEdit } from '@/api/admin/goods'
+import { reqEdit } from '@/api/agent/goods/index'
 
 defineOptions({ name: 'Edit' })
 
