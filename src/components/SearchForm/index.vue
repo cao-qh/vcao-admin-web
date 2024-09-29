@@ -59,6 +59,7 @@
               :valueFormat="item.valueFormat"
               :disabledDate="item.disabledDate"
               :allowClear="item.allowClear === false ? false : true"
+              @change="item.onChange"
             />
           </a-form-item>
         </a-col>

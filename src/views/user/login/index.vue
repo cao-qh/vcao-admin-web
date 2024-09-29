@@ -2,6 +2,14 @@
   <div class="login">
     <a-typography-text class="h1">{{ setting.title }}</a-typography-text>
     <a-typography-text class="h2">登录</a-typography-text>
+
+    <div class="role">
+      <a-radio-group v-model:value="role" size="large">
+        <a-radio-button :value="1">管理员</a-radio-button>
+        <a-radio-button :value="2">代理员</a-radio-button>
+      </a-radio-group>
+    </div>
+
     <a-form ref="formRef" :model="loginForm" :rules="rules" class="login-form">
       <a-form-item name="username">
         <a-input
@@ -66,6 +74,9 @@ const $route = useRoute()
 const loginForm = reactive({ username: '', password: '' })
 
 const layoutSettingStore = useLayoutSettingStore()
+
+// 角色
+const role = ref(1)
 
 // 表单验证
 const rules = {
@@ -182,6 +193,13 @@ const onRemembermimaChange = (e: any) => {
     text-align: center;
     display: block;
   }
+
+  .role {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+  }
+
   .login-form {
     .login-btn {
       width: 100%;

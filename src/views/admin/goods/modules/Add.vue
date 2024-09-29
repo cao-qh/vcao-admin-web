@@ -1,6 +1,6 @@
 <template>
   <a-modal
-    title="添加套餐"
+    title="添加"
     :open="open"
     @ok="submit"
     @cancel="open = false"
@@ -11,7 +11,7 @@
     <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
       <a-row>
         <a-col :xs="24" :sm="12">
-          <a-form-item label="自拟套餐编码" name="packageNickcode">
+          <a-form-item label="上级产品名称" name="packageNickcode">
             <a-input
               v-model:value="formState.packageNickcode"
               placeholder="请输入"
@@ -19,7 +19,7 @@
           </a-form-item>
         </a-col>
         <a-col :xs="24" :sm="12">
-          <a-form-item label="自拟套餐名称" name="packageNickname">
+          <a-form-item label="上级产品编号" name="packageNickname">
             <a-input
               v-model:value="formState.packageNickname"
               placeholder="请输入"
@@ -27,13 +27,45 @@
           </a-form-item>
         </a-col>
         <a-col :xs="24" :sm="12">
-          <a-form-item label="上级套餐编码" name="goodsCode">
+          <a-form-item label="兴投产品名称" name="goodsCode">
             <a-input v-model:value="formState.goodsCode" placeholder="请输入" />
           </a-form-item>
         </a-col>
         <a-col :xs="24" :sm="12">
-          <a-form-item label="上级套餐名称" name="goodsName">
+          <a-form-item label="兴投产品编号" name="goodsName">
             <a-input v-model:value="formState.goodsName" placeholder="请输入" />
+          </a-form-item>
+        </a-col>
+        <a-col :xs="24" :sm="12">
+          <a-form-item label="运营商" name="operateId">
+            <a-select v-model:value="formState.operateId" placeholder="请选择">
+              <a-select-option
+                v-for="(value, key) in operate"
+                :key="key"
+                :value="key"
+              >
+                {{ value }}
+              </a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-col>
+        <a-col :xs="24" :sm="12">
+          <a-form-item label="归属地" name="goodsName">
+            <a-input v-model:value="formState.goodsName" placeholder="请输入" />
+          </a-form-item>
+        </a-col>
+        <a-col :xs="24" :sm="12">
+          <a-form-item label="商品编码" name="goodsName">
+            <a-input v-model:value="formState.goodsName" placeholder="请输入" />
+          </a-form-item>
+        </a-col>
+        <a-col :xs="24" :sm="12">
+          <a-form-item label="订购价格" name="goodsName">
+            <a-input-number
+              :min="0"
+              v-model:value="formState.goodsName"
+              placeholder="请输入"
+            />
           </a-form-item>
         </a-col>
         <a-col :xs="24" :sm="12">
@@ -66,172 +98,16 @@
           </a-form-item>
         </a-col>
         <a-col :xs="24" :sm="12">
-          <a-form-item label="返佣类型" name="fanyongId">
-            <a-select v-model:value="formState.fanyongId" placeholder="请选择">
-              <a-select-option
-                v-for="item in fanyongStatus"
-                :key="item.value"
-                :value="item.value"
-              >
-                {{ item.label }}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="12">
-          <a-form-item label="运营商" name="operateId">
-            <a-select v-model:value="formState.operateId" placeholder="请选择">
-              <a-select-option
-                v-for="item in operate"
-                :key="item.value"
-                :value="item.value"
-              >
-                {{ item.label }}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="12">
-          <a-form-item label="返佣状态" name="fanyongStatus">
-            <a-select
-              v-model:value="formState.fanyongStatus"
-              placeholder="请选择"
-            >
-              <a-select-option :value="1">首充</a-select-option>
-              <a-select-option :value="2">激活</a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="12">
-          <a-form-item label="抓单sku编码" name="goodsSku">
+          <a-form-item label="渠道商" name="goodsSku">
             <a-input v-model:value="formState.goodsSku" placeholder="请输入" />
           </a-form-item>
         </a-col>
         <a-col :xs="24" :sm="12">
-          <a-form-item label="套餐佣金" name="goodsPrice">
+          <a-form-item label="接口" name="goodsPrice">
             <a-input
               v-model:value="formState.goodsPrice"
               placeholder="请输入"
             />
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="12">
-          <a-form-item label="套餐价格" name="price">
-            <a-input v-model:value="formState.price" placeholder="请输入" />
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="12">
-          <a-form-item label="是否需要证件照" name="picjudge">
-            <a-select v-model:value="formState.picjudge" placeholder="请选择">
-              <a-select-option :value="1">是</a-select-option>
-              <a-select-option :value="2">否</a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
-        <!-- <a-col :xs="24" :sm="12">
-          <a-form-item label="是否选号" name="phonelibs">
-            <a-select v-model:value="formState.phonelibs" placeholder="请选择">
-              <a-select-option :value="1">是</a-select-option>
-              <a-select-option :value="2">否</a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col> -->
-        <!-- <a-col :xs="24" :sm="12" v-if="formState.phonelibs == 1">
-          <a-form-item label="关联号池表ID" name="tPhonepoolId">
-            <a-select v-model:value="formState.phonePool" placeholder="请选择">
-              <a-select-option
-                v-for="item in phonePool"
-                :key="item.id"
-                :value="item.id"
-              >
-                {{ item.name }}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col> -->
-        <a-col :xs="24" :sm="12">
-          <a-form-item label="省份" name="provinceId">
-            <a-select v-model:value="formState.provinceId" placeholder="请选择">
-              <a-select-option
-                v-for="item in province"
-                :key="item.value"
-                :value="item.value"
-              >
-                {{ item.label }}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="12">
-          <a-form-item label="套餐图片" name="goodsFile">
-            <UploadImage v-model:value="formState.goodsFile" />
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="12">
-          <a-form-item label="套餐介绍" name="goodsDe">
-            <a-textarea
-              v-model:value="formState.goodsDe"
-              placeholder="请输入"
-            ></a-textarea>
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="12">
-          <a-form-item label="禁用平台" name="maidDetail">
-            <a-input
-              v-model:value="formState.maidDetail"
-              placeholder="请输入"
-            ></a-input>
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="12">
-          <a-form-item label="不发货地区" name="noAddress">
-            <a-textarea
-              v-model:value="formState.noAddress"
-              placeholder="请输入"
-            ></a-textarea>
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="12">
-          <a-form-item label="最高年龄" name="maxAge">
-            <a-input-number
-              v-model:value="formState.maxAge"
-              placeholder="请输入"
-              style="width: 100%"
-            ></a-input-number>
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="12">
-          <a-form-item label="最低年龄" name="minAge">
-            <a-input-number
-              v-model:value="formState.minAge"
-              placeholder="请输入"
-              style="width: 100%"
-            ></a-input-number>
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="12">
-          <a-form-item label="卖点" name="maiDian">
-            <a-input
-              v-model:value="formState.maiDian"
-              placeholder="请输入"
-              style="width: 100%"
-            ></a-input>
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="12">
-          <a-form-item label="商品备注" name="remark">
-            <a-textarea
-              v-model:value="formState.remark"
-              placeholder="请输入"
-            ></a-textarea>
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="12">
-          <a-form-item label="资料库链接" name="ziliaokuUrl">
-            <a-input
-              v-model:value="formState.ziliaokuUrl"
-              placeholder="请输入"
-            ></a-input>
           </a-form-item>
         </a-col>
       </a-row>
@@ -242,7 +118,6 @@
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { reqAdd } from '@/api/goods'
-import UploadImage from '@/components/UploadImage/index.vue'
 
 defineOptions({ name: 'Add' })
 // 属性

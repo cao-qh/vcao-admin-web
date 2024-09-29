@@ -134,17 +134,16 @@ const shangXiaJia = [
     color: 'red',
   },
 ]
+const guishudi = {
+  2: '分省',
+}
 
-const fanyongStatus2 = [
-  {
-    value: 1,
-    label: '首充',
-  },
-  {
-    value: 2,
-    label: '激活',
-  },
-]
+const operate = {
+  1: '移动',
+  2: '联通',
+  3: '电信',
+  4: '全网',
+}
 
 // 禁用平台
 const disPlatform = [
@@ -194,7 +193,7 @@ const phonePool = ref<any>([])
 
 const fanyongStatus = ref<any>([])
 
-const operate = ref<any>([])
+// const operate = ref<any>([])
 
 const province = ref<any>([])
 
@@ -219,45 +218,22 @@ const userStore = useUserStore()
 const formItems = reactive([
   {
     type: 'input',
-    label: '自拟套餐名称',
+    label: '产品名称',
     filed: 'packageNickname',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'input',
-    label: '上级套餐编码',
-    filed: 'goodsCode',
+    label: '产品编码',
+    filed: 'packageNickname',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'select',
-    label: '返佣类型',
-    filed: 'fanyongId',
-    value: '',
-    placeholder: '请选择',
-    defaultOption: {
-      value: '',
-      label: '全部',
-    },
-    options: async () => {
-      const res: any = await reqFanyongType()
-      if (res.code == 0) {
-        fanyongStatus.value = res.data.map((item: any) => {
-          return {
-            value: item.id,
-            label: item.name,
-          }
-        })
-      }
-      return fanyongStatus.value
-    },
-  },
-  {
-    type: 'select',
     label: '运营商',
-    filed: 'operateId',
+    filed: 'packageNickname',
     value: '',
     placeholder: '请选择',
     defaultOption: {
@@ -265,47 +241,61 @@ const formItems = reactive([
       label: '全部',
     },
     options: async () => {
-      const res: any = await reqOperator()
-      if (res.code == 0) {
-        operate.value = res.data.map((item: any) => {
-          return {
-            value: item.id,
-            label: item.name,
-          }
-        })
-      }
-      return operate.value
+      return Object.keys(operate).map((key) => {
+        return {
+          value: key,
+          label: operate[key],
+        }
+      })
     },
   },
   {
     type: 'select',
-    label: '省份',
-    filed: 'provinceId',
-    value: '',
+    label: '归属地',
+    filed: 'goodsCode',
+    value: 1,
     placeholder: '请选择',
     defaultOption: {
-      value: '',
-      label: '全部',
+      value: 1,
+      label: '全国',
     },
     options: async () => {
-      const res: any = await reqProvince()
-      if (res.code == 0) {
-        province.value = res.data.map((item: any) => {
-          return {
-            value: item.id,
-            label: item.name,
-          }
-        })
-      }
-      return province.value
+      return Object.keys(guishudi).map((key) => {
+        return {
+          value: key,
+          label: guishudi[key],
+        }
+      })
     },
   },
+  // {
+  //   type: 'select',
+  //   label: '省份',
+  //   filed: 'provinceId',
+  //   value: '',
+  //   placeholder: '请选择',
+  //   defaultOption: {
+  //     value: '',
+  //     label: '全部',
+  //   },
+  //   options: async () => {
+  //     const res: any = await reqProvince()
+  //     if (res.code == 0) {
+  //       province.value = res.data.map((item: any) => {
+  //         return {
+  //           value: item.id,
+  //           label: item.name,
+  //         }
+  //       })
+  //     }
+  //     return province.value
+  //   },
+  // },
   {
     type: 'select',
     label: '启禁用',
     filed: 'del',
-    hidden: userStore.level != 0,
-    value: null,
+    value: '',
     placeholder: '请选择',
     defaultOption: {
       label: '全部',
@@ -317,7 +307,7 @@ const formItems = reactive([
     type: 'select',
     label: '上下架',
     filed: 'shangXiaJia',
-    value: null,
+    value: '',
     placeholder: '请选择',
     defaultOption: {
       label: '全部',
@@ -334,81 +324,49 @@ const columns = [
     align: 'center',
   },
   {
-    title: '套餐图片',
+    title: '上级产品名称',
     dataIndex: 'goodspic',
     align: 'center',
     width: '100px',
   },
   {
-    title: '自拟套餐名称',
+    title: '上级产品编号',
     dataIndex: 'packageNickname',
     align: 'center',
   },
   {
-    title: '上级套餐名称',
+    title: '兴投产品名称',
     dataIndex: 'goodsName',
     align: 'center',
   },
   {
-    title: '启禁用',
-    dataIndex: 'del',
+    title: '兴投产品编号',
+    dataIndex: 'goodsName',
     align: 'center',
-    customRender: ({ text }: { text: any }) => {
-      const item: any = del.find((item) => item.value === text)
-      return h('span', { style: { color: item.color } }, item.label)
-    },
-  },
-  {
-    title: '返佣状态',
-    dataIndex: 'fanyongStatus',
-    align: 'center',
-    customRender: ({ text }: { text: any }) => {
-      return fanyongStatus2.find((item: any) => item.value === text)?.label
-    },
   },
   {
     title: '运营商',
-    dataIndex: 'operateId',
-    align: 'center',
-    customRender: ({ text }: { text: any }) => {
-      return operate.value.find((item: any) => item.value === text)?.label
-    },
-  },
-
-  {
-    title: '抓单sku编码',
-    dataIndex: 'goodsSku',
+    dataIndex: 'goodsName',
     align: 'center',
   },
   {
-    title: '套餐佣金(元)',
-    dataIndex: 'goodsPrice',
+    title: '渠道商',
+    dataIndex: 'goodsName',
     align: 'center',
   },
   {
-    title: '套餐价格(元)',
-    dataIndex: 'price',
+    title: '省份/地市',
+    dataIndex: 'goodsName',
     align: 'center',
   },
   {
-    title: '是否需要证件照',
-    dataIndex: 'picjudge',
+    title: '商品编码',
+    dataIndex: 'goodsName',
     align: 'center',
-    customRender: ({ text }: { text: any }) => {
-      return text && (text == 1 ? '需要' : '不需要')
-    },
   },
-  // {
-  //   title: '是否选号',
-  //   dataIndex: 'phonelibs',
-  //   align: 'center',
-  //   customRender: ({ text }: { text: any }) => {
-  //     return text && (text == 1 ? '选号' : '不选号')
-  //   },
-  // },
   {
-    title: '省份',
-    dataIndex: 'provinceIdName',
+    title: '产品月费',
+    dataIndex: 'goodsName',
     align: 'center',
   },
   {
@@ -422,20 +380,14 @@ const columns = [
     align: 'center',
   },
   {
-    title: '套餐介绍',
-    dataIndex: 'goodsDe',
+    title: '启禁用',
+    dataIndex: 'del',
     align: 'center',
+    customRender: ({ text }: { text: any }) => {
+      const item: any = del.find((item) => item.value === text)
+      return h('span', { style: { color: item.color } }, item.label)
+    },
   },
-  {
-    title: '我的佣金',
-    dataIndex: 'myYongJin',
-    align: 'center',
-  },
-  // {
-  //   title: '号池',
-  //   dataIndex: 'tphonepoolId',
-  //   align: 'center',
-  // },
   {
     title: '上下架',
     dataIndex: 'shangXiaJia',

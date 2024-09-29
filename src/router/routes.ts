@@ -69,6 +69,18 @@ export const constantRoute = [
       },
     ],
   },
+  {
+    path: '/:pathMatch(.*)*',
+    component: () => import('@/views/404/index.vue'),
+    meta: {
+      title: '404',
+      hidden: true,
+    },
+  },
+]
+
+// 管理员路由
+export const adminRoute = [
   // 套餐管理
   {
     path: '/goods',
@@ -83,7 +95,7 @@ export const constantRoute = [
       // 商品列表
       {
         path: '/goods/list',
-        component: () => import('@/views/goods/index.vue'),
+        component: () => import('@/views/admin/goods/index.vue'),
         name: 'List',
         meta: {
           title: '套餐列表',
@@ -91,16 +103,44 @@ export const constantRoute = [
       },
     ],
   },
+  // 统计分析
   {
-    path: '/:pathMatch(.*)*',
-    component: () => import('@/views/404/index.vue'),
+    path: '/statistics',
+    component: BaseLayout,
+    name: 'Statistics',
     meta: {
-      title: '404',
-      hidden: true,
+      title: '统计分析',
+      icon: 'StarOutlined',
     },
+    redirect: '/statistics/collect',
+    children: [
+      // 汇总统计
+      {
+        path: '/statistics/collect',
+        component: () => import('@/views/admin/statistics/collect/index.vue'),
+        name: 'collect',
+        meta: {
+          title: '汇总统计',
+        },
+      },
+      // 日统计
+      {
+        path: '/statistics/day_collect',
+        component: () =>
+          import('@/views/admin/statistics/day_collect/index.vue'),
+        name: 'day_collect',
+        meta: {
+          title: '日统计',
+        },
+      },
+    ],
   },
 ]
 
+// 代理路由
+export const agentRoute = []
+
+/*
 // 异步路由
 export const asyncRoute = [
   // 权限管理
@@ -144,3 +184,4 @@ export const asyncRoute = [
     ],
   },
 ]
+*/
