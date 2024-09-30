@@ -28,6 +28,8 @@ function createUserList() {
         'DayCollect',
         'Personal',
         'PersonalInfo',
+        'Download',
+        'DownloadList',
       ],
       token: 'Admin Token',
     },

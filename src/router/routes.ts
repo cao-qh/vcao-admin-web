@@ -237,6 +237,28 @@ export const adminRoute = [
       },
     ],
   },
+  // 下载管理
+  {
+    path: '/download',
+    component: BaseLayout,
+    name: 'Download',
+    meta: {
+      title: '下载管理',
+      icon: 'StarOutlined',
+    },
+    redirect: '/download/list',
+    children: [
+      // 下载列表
+      {
+        path: '/download/list',
+        component: () => import('@/views/admin/download/index.vue'),
+        name: 'DownloadList',
+        meta: {
+          title: '下载列表',
+        },
+      },
+    ],
+  },
   // 个人管理
   {
     path: '/personal',
@@ -251,10 +273,19 @@ export const adminRoute = [
       // 个人信息
       {
         path: '/personal/info',
-        component: () => import('@/views/admin/personal/index.vue'),
+        component: () => import('@/views/admin/personal/info/index.vue'),
         name: 'PersonalInfo',
         meta: {
           title: '个人信息',
+        },
+      },
+      // 个人日志
+      {
+        path: '/personal/logs',
+        component: () => import('@/views/admin/personal/logs/index.vue'),
+        name: 'PersonalLogs',
+        meta: {
+          title: '个人日志',
         },
       },
     ],
