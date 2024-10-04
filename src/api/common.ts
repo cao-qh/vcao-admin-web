@@ -11,6 +11,10 @@ enum API {
   operatorUrl = '/common/selectByOperate',
   // 号池
   phonePoolUrl = '/common/selectByPhonepool',
+  // 产品编码（启用）
+  goodsBianma = '/comm/selectQiYongChanPin',
+  // 上游渠道商
+  upQuDaoShang = '/comm/selectQiYongQuDao',
 }
 
 // 获取省份
@@ -24,3 +28,8 @@ export const reqOperator = () => request.post(API.operatorUrl)
 
 // 获取号池
 export const reqPhonePool = () => request.post(API.phonePoolUrl)
+
+// 产品编码（启用）
+export const reqGoodsBianma = () => request.post(API.goodsBianma)
+// 上游渠道商
+export const reqUpQuDaoShang = () => request.post(API.upQuDaoShang)

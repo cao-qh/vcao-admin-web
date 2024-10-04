@@ -384,10 +384,19 @@ export const agentRoute = [
       // 个人信息
       {
         path: '/personal/info',
-        component: () => import('@/views/agent/personal/index.vue'),
+        component: () => import('@/views/agent/personal/info/index.vue'),
         name: 'PersonalInfo',
         meta: {
           title: '个人信息',
+        },
+      },
+      // 个人日志
+      {
+        path: '/personal/log',
+        component: () => import('@/views/agent/personal/logs/index.vue'),
+        name: 'PersonalLog',
+        meta: {
+          title: '个人日志',
         },
       },
     ],

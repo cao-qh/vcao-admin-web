@@ -11,10 +11,10 @@
     </div>
 
     <a-form ref="formRef" :model="loginForm" :rules="rules" class="login-form">
-      <a-form-item name="username">
+      <a-form-item name="shoujihao">
         <a-input
           size="large"
-          v-model:value="loginForm.username"
+          v-model:value="loginForm.shoujihao"
           placeholder="用户名"
         >
           <template #prefix>
@@ -22,11 +22,11 @@
           </template>
         </a-input>
       </a-form-item>
-      <a-form-item name="password">
+      <a-form-item name="mima">
         <a-input-password
           size="large"
-          v-model:value="loginForm.password"
-          type="password"
+          v-model:value="loginForm.mima"
+          type="mima"
           placeholder="密码"
         >
           <template #prefix>
@@ -71,13 +71,13 @@ const $router = useRouter()
 // 获取路由对象
 const $route = useRoute()
 // 收集账户与密码的数据
-const loginForm = reactive({ username: '', password: '', role: 1 })
+const loginForm = reactive({ shoujihao: '', mima: '', role: 1 })
 
 const layoutSettingStore = useLayoutSettingStore()
 
 // 表单验证
 const rules = {
-  username: [
+  shoujihao: [
     {
       required: true,
       message: '用户名不能为空',
@@ -90,7 +90,7 @@ const rules = {
       trigger: 'change',
     },
   ],
-  password: [
+  mima: [
     {
       required: true,
       message: '密码不能为空',
@@ -111,13 +111,11 @@ const isRemembermima = ref(false)
 
 onMounted(() => {
   // 是否记住密码
-  const remembermima = JSON.parse(
-    localStorage.getItem('REMEMBER_PASSWORD') || '{}',
-  )
+  const remembermima = JSON.parse(localStorage.getItem('REMEMBER_mima') || '{}')
   if (remembermima.status) {
     isRemembermima.value = remembermima.status
-    loginForm.username = remembermima.username
-    loginForm.password = remembermima.password
+    loginForm.shoujihao = remembermima.shoujihao
+    loginForm.mima = remembermima.mima
   }
 })
 
@@ -134,11 +132,11 @@ const login = async () => {
       // 记住密码
       if (isRemembermima.value) {
         localStorage.setItem(
-          'REMEMBER_PASSWORD',
+          'REMEMBER_mima',
           JSON.stringify({
             status: true,
-            username: loginForm.username,
-            password: loginForm.password,
+            shoujihao: loginForm.shoujihao,
+            mima: loginForm.mima,
           }),
         )
       }
@@ -154,7 +152,7 @@ const login = async () => {
     } catch (error: any) {
       // 登录失败提示信息
       notification.error({
-        message: loginForm.username,
+        message: loginForm.shoujihao,
         description: error.message,
       })
     }
@@ -168,7 +166,7 @@ const onRemembermimaChange = (e: any) => {
   const remembermima = JSON.stringify({
     status: e.target?.checked,
   })
-  localStorage.setItem('REMEMBER_PASSWORD', remembermima)
+  localStorage.setItem('REMEMBER_mima', remembermima)
 }
 </script>
 

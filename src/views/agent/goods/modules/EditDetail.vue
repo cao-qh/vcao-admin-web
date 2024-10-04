@@ -1,6 +1,6 @@
 <template>
   <a-modal
-    title="修改详情"
+    title="详情"
     :open="open"
     @ok="submit"
     @cancel="open = false"

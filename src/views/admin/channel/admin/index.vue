@@ -11,7 +11,7 @@
       :scroll="{ y: 'calc(100vh - 408px)' }"
     >
       <template #toolbar>
-        <a-button type="primary">添加</a-button>
+        <a-button type="primary" @click="() => add.show()">添加</a-button>
       </template>
       <template #bodyCell="{ column, row }">
         <template v-if="column.dataIndex === 'qijinyong'">
@@ -25,21 +25,28 @@
           </a-popconfirm>
         </template>
         <template v-if="column.dataIndex === 'action'">
-          <a>修改</a>
+          <a @click="() => update.show(row)">修改</a>
           <a-divider type="vertical" />
-          <a>权限配置</a>
+          <a @click="() => permission.show(row)">权限配置</a>
         </template>
       </template>
     </STable>
+
+    <Add ref="add" @success="table.refresh()" />
+    <Update ref="update" @success="table.refresh()" />
+    <Permission ref="permission" @success="table.refresh()" />
   </PageWrapper>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
-import { reqSearch, reqQijinyong } from '@/api/table/search/index'
+import { reqSearch, reqQijinyong } from '@/api/admin/channel/admin'
 import { STable } from '@/components/STable'
 import { message } from 'ant-design-vue'
+import Add from './modules/Add.vue'
+import Update from './modules/Update.vue'
+import Permission from './modules/Permission.vue'
 
 const formItems = reactive([
   {
@@ -65,13 +72,13 @@ const columns = [
 
   {
     title: '昵称',
-    dataIndex: 'nicheng',
+    dataIndex: 'mingcheng',
     align: 'center',
   },
 
   {
     title: '电话',
-    dataIndex: 'dianhua',
+    dataIndex: 'shoujihao',
     align: 'center',
   },
   {
@@ -88,12 +95,10 @@ const columns = [
 
 const table = ref()
 
-const reqData = async (page: number, limit: number) => {
+const reqData = async (currentPage: number, pageSize: number) => {
   const data: any = {
-    page: page,
-    size: limit,
-    staticTime: '',
-    endTime: '',
+    currentPage,
+    pageSize,
   }
   formItems.forEach((item) => {
     if (item.value) {
@@ -102,7 +107,7 @@ const reqData = async (page: number, limit: number) => {
   })
 
   const res: any = await reqSearch(data)
-  if (res.code == 200) {
+  if (res.code == 0) {
     return {
       data: res.data.list,
       total: res.data.total,
@@ -122,6 +127,10 @@ const handelQijinyong = async (row: any) => {
     message.error(result.msg)
   }
 }
+
+const add = ref()
+const update = ref()
+const permission = ref()
 </script>
 
 <style></style>

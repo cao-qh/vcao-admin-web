@@ -12,14 +12,24 @@
         <a-button type="primary" @click="() => add.show()">添加</a-button>
       </template>
       <template #bodyCell="{ column, row }">
-        <template v-if="column.dataIndex === 'shangXiaJia'">
+        <template v-if="column.dataIndex === 'qijinyong'">
           <a-popconfirm
-            title="确定要上下架吗？"
+            :title="`确定要${row.qijinyong == 1 ? '启' : '禁'}用吗？`"
+            ok-text="是"
+            cancel-text="否"
+            @confirm="handelQqijinyong(row)"
+          >
+            <a-switch :checked="row.qijinyong === 1" />
+          </a-popconfirm>
+        </template>
+        <template v-if="column.dataIndex === 'shangxiajia'">
+          <a-popconfirm
+            :title="`确定要${row.shangxiajia == 1 ? '上' : '下'}架吗？`"
             ok-text="是"
             cancel-text="否"
             @confirm="handelShangxiajia(row)"
           >
-            <a-switch :checked="row.shangXiaJia === 1" />
+            <a-switch :checked="row.shangxiajia === 1" />
           </a-popconfirm>
         </template>
 
@@ -56,7 +66,7 @@
     <Add
       ref="add"
       :del="del"
-      :shangXiaJia="shangXiaJia"
+      :shangxiajia="shangXiaJia"
       :fanyongStatus="fanyongStatus"
       :operate="operate"
       :phonePool="phonePool"
@@ -89,7 +99,7 @@
 import { reactive, ref, onMounted, h } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import STable from '@/components/STable/index.vue'
-import { reqGoods, reqShangxiajia } from '@/api/admin/goods'
+import { selectGoods } from '@/api/admin/goods'
 import {
   reqProvince,
   reqFanyongType,
@@ -219,21 +229,21 @@ const formItems = reactive([
   {
     type: 'input',
     label: '产品名称',
-    filed: 'packageNickname',
+    filed: 'mingcheng',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'input',
     label: '产品编码',
-    filed: 'packageNickname',
+    filed: 'bianma',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'select',
     label: '运营商',
-    filed: 'packageNickname',
+    filed: 'yunyingshang',
     value: '',
     placeholder: '请选择',
     defaultOption: {
@@ -250,51 +260,29 @@ const formItems = reactive([
     },
   },
   {
-    type: 'select',
+    type: 'input',
     label: '归属地',
-    filed: 'goodsCode',
-    value: 1,
-    placeholder: '请选择',
-    defaultOption: {
-      value: 1,
-      label: '全国',
-    },
-    options: async () => {
-      return Object.keys(guishudi).map((key) => {
-        return {
-          value: key,
-          label: guishudi[key],
-        }
-      })
-    },
+    filed: 'guishudi',
+    value: '',
+    placeholder: '请输入',
+    // placeholder: '请选择',
+    // defaultOption: {
+    //   value: 1,
+    //   label: '全国',
+    // },
+    // options: async () => {
+    //   return Object.keys(guishudi).map((key) => {
+    //     return {
+    //       value: key,
+    //       label: guishudi[key],
+    //     }
+    //   })
+    // },
   },
-  // {
-  //   type: 'select',
-  //   label: '省份',
-  //   filed: 'provinceId',
-  //   value: '',
-  //   placeholder: '请选择',
-  //   defaultOption: {
-  //     value: '',
-  //     label: '全部',
-  //   },
-  //   options: async () => {
-  //     const res: any = await reqProvince()
-  //     if (res.code == 0) {
-  //       province.value = res.data.map((item: any) => {
-  //         return {
-  //           value: item.id,
-  //           label: item.name,
-  //         }
-  //       })
-  //     }
-  //     return province.value
-  //   },
-  // },
   {
     type: 'select',
     label: '启禁用',
-    filed: 'del',
+    filed: 'qijinyong',
     value: '',
     placeholder: '请选择',
     defaultOption: {
@@ -306,7 +294,7 @@ const formItems = reactive([
   {
     type: 'select',
     label: '上下架',
-    filed: 'shangXiaJia',
+    filed: 'shangxiajia',
     value: '',
     placeholder: '请选择',
     defaultOption: {
@@ -325,77 +313,70 @@ const columns = [
   },
   {
     title: '上级产品名称',
-    dataIndex: 'goodspic',
+    dataIndex: 'shangjiMingcheng',
     align: 'center',
     width: '100px',
   },
   {
     title: '上级产品编号',
-    dataIndex: 'packageNickname',
+    dataIndex: 'shangjiBianma',
     align: 'center',
   },
   {
     title: '兴投产品名称',
-    dataIndex: 'goodsName',
+    dataIndex: 'mingcheng',
     align: 'center',
   },
   {
     title: '兴投产品编号',
-    dataIndex: 'goodsName',
+    dataIndex: 'bianma',
     align: 'center',
   },
   {
     title: '运营商',
-    dataIndex: 'goodsName',
+    dataIndex: 'yunyingshang',
     align: 'center',
   },
   {
     title: '渠道商',
-    dataIndex: 'goodsName',
+    dataIndex: 'qudaoshangBianma',
     align: 'center',
   },
   {
-    title: '省份/地市',
-    dataIndex: 'goodsName',
-    align: 'center',
-  },
-  {
-    title: '商品编码',
-    dataIndex: 'goodsName',
+    title: '归属地',
+    dataIndex: 'guishudi',
     align: 'center',
   },
   {
     title: '产品月费',
-    dataIndex: 'goodsName',
+    dataIndex: 'dinggoujiage',
     align: 'center',
   },
   {
     title: '创建时间',
-    dataIndex: 'createTime',
+    dataIndex: 'chuangjianshijian',
     align: 'center',
   },
   {
     title: '修改时间',
-    dataIndex: 'updateTime',
+    dataIndex: 'gengxinshijian',
     align: 'center',
   },
   {
     title: '启禁用',
-    dataIndex: 'del',
+    dataIndex: 'qijinyong',
     align: 'center',
-    customRender: ({ text }: { text: any }) => {
-      const item: any = del.find((item) => item.value === text)
-      return h('span', { style: { color: item.color } }, item.label)
-    },
   },
   {
     title: '上下架',
-    dataIndex: 'shangXiaJia',
+    dataIndex: 'shangxiajia',
     align: 'center',
-    customRender: ({ text }: { text: any }) => {
-      const item: any = shangXiaJia.find((item) => item.value === text)
-      return h('span', { style: { color: item.color } }, item.label)
-    },
+  },
+  {
+    title: '操作',
+    dataIndex: 'action',
+    align: 'center',
+    width: 100,
   },
 ]
 
@@ -411,27 +392,27 @@ const getData = async (currentPage: number, pageSize: number) => {
     }
   })
 
-  const res: any = await reqGoods(data)
+  const res: any = await selectGoods(data)
   if (res.code == 0) {
     return {
       data: res.data.list,
-      total: res.data.total,
+      total: res.data.totalSize,
     }
   }
 }
 
 // 启禁用
-// const handelQqijinyong = async (row: any) => {
-//   const result: any = await reqQijinyong({
-//     id: row.id,
-//     del: row.del === 1 ? 2 : 1,
-//   })
-//   if (result.code == 200) {
-//     message.success(result.message)
-//   } else {
-//     message.error(result.message)
-//   }
-// }
+const handelQqijinyong = async (row: any) => {
+  const result: any = await reqQijinyong({
+    id: row.id,
+    del: row.del === 1 ? 2 : 1,
+  })
+  if (result.code == 200) {
+    message.success(result.message)
+  } else {
+    message.error(result.message)
+  }
+}
 
 // 上下架
 const handelShangxiajia = async (row: any) => {

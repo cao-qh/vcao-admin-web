@@ -9,98 +9,32 @@
       :scroll="{ y: 'calc(100vh - 290px)' }"
     >
       <template #toolbar>
-        <a-button type="primary" @click="() => add.show()">导出</a-button>
-      </template>
-      <template #bodyCell="{ column, row }">
-        <template v-if="column.dataIndex === 'shangXiaJia'">
-          <a-popconfirm
-            title="确定要上下架吗？"
-            ok-text="是"
-            cancel-text="否"
-            @confirm="handelShangxiajia(row)"
-          >
-            <a-switch :checked="row.shangXiaJia === 1" />
-          </a-popconfirm>
-        </template>
-
-        <template v-if="column.dataIndex === 'goodspic'">
-          <a-image
-            :src="baseUrl + row.goodspic"
-            width="60px"
-            height="60px"
-          ></a-image>
-        </template>
-        <template v-if="column.dataIndex === 'action'">
-          <div>
-            <div>
-              <a @click="() => edit.show(row)">修改套餐</a>
-              <br />
-              <a
-                @click="
-                  () => {
-                    editDetail.show(row)
-                  }
-                "
-              >
-                修改详情
-              </a>
-              <br />
-            </div>
-
-            <!-- <a v-partner @click="() => config.show(row)">配置</a> -->
-          </div>
-        </template>
+        <a-popconfirm
+          title="确定导出？"
+          ok-text="确定"
+          cancel-text="取消"
+          @confirm="handleDownload"
+        >
+          <a-button type="primary">导出</a-button>
+        </a-popconfirm>
       </template>
     </STable>
   </PageWrapper>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, onMounted, h } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import STable from '@/components/STable/index.vue'
-import { reqGoods, reqShangxiajia } from '@/api/agent/goods'
-import {
-  reqProvince,
-  reqFanyongType,
-  reqOperator,
-  // reqPhonePool,
-} from '@/api/common'
+import { collectSelect, collectDownload } from '@/api/agent/collect'
+import { reqGoodsBianma } from '@/api/common'
 import { message } from 'ant-design-vue'
-import useUserStore from '@/store/modules/user'
 import dayjs, { Dayjs } from 'dayjs'
 
 defineOptions({
   name: 'Collect',
 })
 
-const baseUrl = import.meta.env.VITE_SERVE
-
-const del = [
-  {
-    value: 1,
-    label: '启用',
-    color: 'green',
-  },
-  {
-    value: 2,
-    label: '禁用',
-    color: 'red',
-  },
-]
-
-const shangXiaJia = [
-  {
-    value: 1,
-    label: '上架',
-    color: 'green',
-  },
-  {
-    value: 2,
-    label: '下架',
-    color: 'red',
-  },
-]
 const guishudi = {
   2: '分省',
 }
@@ -112,65 +46,21 @@ const operate = {
   4: '全网',
 }
 
-// 禁用平台
-const disPlatform = [
-  {
-    value: 1,
-    label: '抖店',
-  },
-  {
-    value: 2,
-    label: '快手小店',
-  },
-  {
-    value: 3,
-    label: '直播',
-  },
-  {
-    value: 4,
-    label: '信息流',
-  },
-  {
-    value: 5,
-    label: '拼多多',
-  },
-  {
-    value: 6,
-    label: '京东',
-  },
-  {
-    value: 7,
-    label: '天猫',
-  },
-  {
-    value: 8,
-    label: '线下',
-  },
-  {
-    value: 9,
-    label: '推广连接',
-  },
-  {
-    value: 10,
-    label: '其他',
-  },
-]
-
 onMounted(() => {})
 
-let startTime = ref(dayjs().format('YYYY-MM-DD'))
-let endTime = ref(dayjs().format('YYYY-MM-DD'))
+let kaishiDate = ref(dayjs().format('YYYY-MM-DD'))
+let jieshuDate = ref(dayjs().format('YYYY-MM-DD'))
 
 const formItems = reactive([
   {
     type: 'datePicker',
     label: '开始时间',
-    filed: 'startTime',
-    value: startTime,
+    filed: 'kaishiDate',
+    value: kaishiDate,
     disabledDate: (val: Dayjs) => {
       return (
-        val < dayjs(endTime.value).subtract(31, 'days') ||
-        val > dayjs(endTime.value)
+        val < dayjs(jieshuDate.value).subtract(31, 'days') ||
+        val > dayjs(jieshuDate.value)
       )
     },
     valueFormat: 'YYYY-MM-DD',
@@ -179,8 +69,8 @@ const formItems = reactive([
   {
     type: 'datePicker',
     label: '结束时间',
-    filed: 'endTime',
-    value: endTime,
+    filed: 'jieshuDate',
+    value: jieshuDate,
     disabledDate: (val: Dayjs) => {
       return val > dayjs().endOf('year')
     },
@@ -189,24 +79,42 @@ const formItems = reactive([
     onChange: (date: string) => {
       console.log(date)
       if (
-        dayjs(startTime.value) > dayjs(date) ||
-        dayjs(startTime.value).add(31, 'days') < dayjs(date)
+        dayjs(kaishiDate.value) > dayjs(date) ||
+        dayjs(kaishiDate.value).add(31, 'days') < dayjs(date)
       ) {
-        startTime.value = dayjs(date).startOf('day').format('YYYY-MM-DD')
+        kaishiDate.value = dayjs(date).startOf('day').format('YYYY-MM-DD')
       }
     },
   },
   {
-    type: 'input',
+    type: 'select',
     label: '产品编码',
-    filed: 'packageNickname',
+    filed: 'chanpinbianma',
     value: '',
-    placeholder: '请输入',
+    placeholder: '请选择',
+    defaultOption: {
+      value: '',
+      label: '全部',
+    },
+    options: async () => {
+      const res = await reqGoodsBianma()
+      if (res.code === 0) {
+        return Object.keys(res.data).map((key) => {
+          return {
+            value: res.data[key]?.chanPinBianMa,
+            label:
+              res.data[key]?.chanPinName + ' - ' + res.data[key]?.chanPinBianMa,
+          }
+        })
+      } else {
+        return []
+      }
+    },
   },
   {
     type: 'select',
     label: '运营商',
-    filed: 'packageNickname',
+    filed: 'yunyingshang',
     value: '',
     placeholder: '请选择',
     defaultOption: {
@@ -222,24 +130,31 @@ const formItems = reactive([
       })
     },
   },
+  // {
+  //   type: 'select',
+  //   label: '归属地',
+  //   filed: 'guishudi',
+  //   value: 1,
+  //   placeholder: '请选择',
+  //   defaultOption: {
+  //     value: 1,
+  //     label: '全国',
+  //   },
+  //   options: async () => {
+  //     return Object.keys(guishudi).map((key) => {
+  //       return {
+  //         value: key,
+  //         label: guishudi[key],
+  //       }
+  //     })
+  //   },
+  // },
   {
-    type: 'select',
+    type: 'input',
     label: '归属地',
-    filed: 'goodsCode',
-    value: 1,
-    placeholder: '请选择',
-    defaultOption: {
-      value: 1,
-      label: '全国',
-    },
-    options: async () => {
-      return Object.keys(guishudi).map((key) => {
-        return {
-          value: key,
-          label: guishudi[key],
-        }
-      })
-    },
+    filed: 'guishudi',
+    value: '',
+    placeholder: '请输入',
   },
 ])
 
@@ -250,53 +165,43 @@ const columns = [
     align: 'center',
   },
   {
-    title: '上级渠道名称',
-    dataIndex: 'goodspic',
-    align: 'center',
-  },
-  {
-    title: '上级渠道编码',
-    dataIndex: 'packageNickname',
-    align: 'center',
-  },
-  {
     title: '产品编码',
-    dataIndex: 'goodsName',
+    dataIndex: 'chanpinbianma',
     align: 'center',
   },
   {
     title: '产品名称',
-    dataIndex: 'goodsName',
+    dataIndex: 'mingcheng',
     align: 'center',
   },
   {
     title: '资费',
-    dataIndex: 'goodsName',
+    dataIndex: 'zifei',
     align: 'center',
   },
   {
     title: '校验成功',
-    dataIndex: 'goodsName',
+    dataIndex: 'jiaoyanchenggong_num',
     align: 'center',
   },
   {
     title: '校验失败',
-    dataIndex: 'goodsName',
+    dataIndex: 'jiaoyanshibai_num',
     align: 'center',
   },
   {
     title: '订购成功',
-    dataIndex: 'goodsName',
+    dataIndex: 'shoulichenggong_num',
     align: 'center',
   },
   {
     title: '订购失败',
-    dataIndex: 'goodsName',
+    dataIndex: 'shoulishibai_num',
     align: 'center',
   },
   {
     title: '未处理',
-    dataIndex: 'createTime',
+    dataIndex: 'weichuli_num',
     align: 'center',
   },
 ]
@@ -313,11 +218,11 @@ const getData = async (currentPage: number, pageSize: number) => {
     }
   })
 
-  const res: any = await reqGoods(data)
+  const res: any = await collectSelect(data)
   if (res.code == 0) {
     return {
       data: res.data.list,
-      total: res.data.total,
+      total: res.data.totalSize,
     }
   }
 }
@@ -335,28 +240,19 @@ const getData = async (currentPage: number, pageSize: number) => {
 //   }
 // }
 
-// 上下架
-const handelShangxiajia = async (row: any) => {
-  const result: any = await reqShangxiajia({
-    goodsId: row.id,
-    shangXiaJia: row.shangXiaJia === 1 ? 2 : 1,
+// 导出
+const handleDownload = async () => {
+  const params = {}
+  formItems.forEach((i: any) => {
+    params[i.filed] = i.value
   })
+  const result: any = await collectDownload(params)
   if (result.code == 0) {
-    table.value.refresh()
     message.success(result.msg)
   } else {
     message.error(result.msg)
   }
 }
-
-// 查看详情
-const editDetail = ref()
-// 添加
-const add = ref()
-// 修改
-const edit = ref()
-// 配置
-const config = ref()
 </script>
 
 <style></style>

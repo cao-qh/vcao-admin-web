@@ -28,6 +28,7 @@ function createUserList() {
         'DayCollect',
         'Personal',
         'PersonalInfo',
+        'PersonalLog',
         'Download',
         'DownloadList',
       ],

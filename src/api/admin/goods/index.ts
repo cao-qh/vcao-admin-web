@@ -1,17 +1,12 @@
 // 统一管理咱们项目用户相关的接口
 import request, { obj2Query } from '@/utils/request'
-import pinia from '@/store'
-import useUserStore from '@/store/modules/user'
-const userStore = useUserStore(pinia)
 
 // 统一管理接口
 enum API {
-  // 代理查询套餐
-  agentGoodsUrl = '/tGoods/selectByGoods',
-  // 合伙人查询套餐
-  partnerGoodsUrl = '/tGoods/hh/selectByGoods',
+  // 查询套餐
+  selectGoods = '/tAdmin/tGoods/selectByAll',
   // 添加
-  addUrl = '/tGoods/insert',
+  addUrl = '/tAdmin/tGoods/saveTGoods',
   // 修改
   editUrl = '/tGoods/updateGoods',
   // 详情
@@ -28,41 +23,13 @@ enum API {
   partnerShangXiaJiaUrl = '/tGoods/hh/updateByGoods',
 }
 
-// 获取商品
-export const reqGoods = (data: any) => {
-  let url = ''
-  if (userStore.level == 0) {
-    url = API.agentGoodsUrl
-  } else {
-    url = API.partnerGoodsUrl
-  }
-  return request.post(url, obj2Query(data))
-}
-
-// 上下架
-export const reqShangxiajia = (data: any) => {
-  let url = ''
-  if (userStore.level == 0) {
-    url = API.agentShangXiaJiaUrl
-  } else {
-    url = API.partnerShangXiaJiaUrl
-  }
-  return request.post(url, obj2Query(data))
-}
-
-// 添加
-export const reqAdd = (data: any) => request.post<any, any>(API.addUrl, data)
-
-// 修改
-export const reqEdit = (data: any) => request.post<any, any>(API.editUrl, data)
-
-// 详情
-export const reqDetail = (data: any) =>
-  request.post(API.detailUrl, obj2Query(data))
-
-// 修改详情
-export const reqEditDetail = (data: any) =>
-  request.post<any, any>(API.editDetailUrl, data)
+// 查询套餐
+export const selectGoods = (data: any) =>
+  request.post(API.selectGoods, obj2Query(data))
+// 添加套餐
+export const reqAdd = (data: any) => request.post(API.addUrl, obj2Query(data))
+// 修改套餐
+export const reqEdit = (data: any) => request.post(API.editUrl, obj2Query(data))
 
 // 配置前查询
 export const reqConfig = (data: any) =>
@@ -71,3 +38,11 @@ export const reqConfig = (data: any) =>
 // 配置
 export const reqConfigEdit = (data: any) =>
   request.post<any, any>(API.configEditUrl, obj2Query(data))
+
+// 详情
+export const reqDetail = (data: any) =>
+  request.post<any, any>(API.detailUrl, obj2Query(data))
+
+// 修改详情
+export const reqEditDetail = (data: any) =>
+  request.post<any, any>(API.editDetailUrl, obj2Query(data))

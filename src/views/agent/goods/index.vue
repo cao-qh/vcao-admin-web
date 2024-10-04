@@ -8,9 +8,6 @@
       :data="getData"
       :scroll="{ y: 'calc(100vh - 290px)' }"
     >
-      <template #toolbar>
-        <a-button type="primary" @click="() => add.show()">添加</a-button>
-      </template>
       <template #bodyCell="{ column, row }">
         <template v-if="column.dataIndex === 'shangXiaJia'">
           <a-popconfirm
@@ -33,8 +30,6 @@
         <template v-if="column.dataIndex === 'action'">
           <div>
             <div>
-              <a @click="() => edit.show(row)">修改套餐</a>
-              <br />
               <a
                 @click="
                   () => {
@@ -42,7 +37,7 @@
                   }
                 "
               >
-                修改详情
+                详情
               </a>
               <br />
             </div>
@@ -53,55 +48,21 @@
       </template>
     </STable>
 
-    <Add
-      ref="add"
-      :del="del"
-      :shangXiaJia="shangXiaJia"
-      :fanyongStatus="fanyongStatus"
-      :operate="operate"
-      :phonePool="phonePool"
-      :province="province"
-      @success="table.refresh()"
-    />
-
-    <Edit
-      ref="edit"
-      :del="del"
-      :shangXiaJia="shangXiaJia"
-      :fanyongStatus="fanyongStatus"
-      :operate="operate"
-      :phonePool="phonePool"
-      :province="province"
-      @success="table.refresh()"
-    />
-
     <EditDetail
       ref="editDetail"
       :disPlatform="disPlatform"
       @success="table.refresh()"
     />
-
-    <Config ref="config" @success="table.refresh()" />
   </PageWrapper>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, onMounted, h } from 'vue'
+import { reactive, ref, h } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import STable from '@/components/STable/index.vue'
 import { reqGoods, reqShangxiajia } from '@/api/agent/goods/index'
-import {
-  reqProvince,
-  reqFanyongType,
-  reqOperator,
-  // reqPhonePool,
-} from '@/api/common'
 import EditDetail from './modules/EditDetail.vue'
-import Add from './modules/Add.vue'
-import Edit from './modules/Edit.vue'
-import Config from './modules/Config.vue'
 import { message } from 'ant-design-vue'
-import useUserStore from '@/store/modules/user'
 
 defineOptions({
   name: 'Goods',
@@ -189,32 +150,6 @@ const disPlatform = [
   },
 ]
 
-const phonePool = ref<any>([])
-
-const fanyongStatus = ref<any>([])
-
-// const operate = ref<any>([])
-
-const province = ref<any>([])
-
-onMounted(() => {
-  // reqPhonePool().then((res: any) => {
-  //   if (res.code == 0) {
-  //     phonePool.value = res.data
-  //   }
-  // })
-  if (userStore.level == 0) {
-    columns.push({
-      title: '操作',
-      dataIndex: 'action',
-      width: '100px',
-      align: 'center',
-    })
-  }
-})
-
-const userStore = useUserStore()
-
 const formItems = reactive([
   {
     type: 'input',
@@ -293,18 +228,6 @@ const formItems = reactive([
   // },
   {
     type: 'select',
-    label: '启禁用',
-    filed: 'del',
-    value: '',
-    placeholder: '请选择',
-    defaultOption: {
-      label: '全部',
-      value: '',
-    },
-    options: del,
-  },
-  {
-    type: 'select',
     label: '上下架',
     filed: 'shangXiaJia',
     value: '',
@@ -380,22 +303,19 @@ const columns = [
     align: 'center',
   },
   {
-    title: '启禁用',
-    dataIndex: 'del',
-    align: 'center',
-    customRender: ({ text }: { text: any }) => {
-      const item: any = del.find((item) => item.value === text)
-      return h('span', { style: { color: item.color } }, item.label)
-    },
-  },
-  {
     title: '上下架',
     dataIndex: 'shangXiaJia',
     align: 'center',
-    customRender: ({ text }: { text: any }) => {
-      const item: any = shangXiaJia.find((item) => item.value === text)
-      return h('span', { style: { color: item.color } }, item.label)
-    },
+    // customRender: ({ text }: { text: any }) => {
+    //   const item: any = shangXiaJia.find((item) => item.value === text)
+    //   return h('span', { style: { color: item.color } }, item.label)
+    // },
+  },
+  {
+    title: '操作',
+    dataIndex: 'action',
+    width: '100px',
+    align: 'center',
   },
 ]
 

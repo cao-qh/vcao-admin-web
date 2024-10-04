@@ -59,13 +59,13 @@ const useUserStore: any = defineStore('user', () => {
       // 本地存储持久化存储一份
       localStorage.setItem('TOKEN', token.value)
 
-      role.value = result.data.role
+      role.value = data.role
       localStorage.setItem('ROLE', String(role.value))
 
       // 能保证当前async函数返回一个成功的promise
       return 'ok'
     } else {
-      return Promise.reject(new Error(result.message))
+      return Promise.reject(new Error(result.msg))
     }
   }
 

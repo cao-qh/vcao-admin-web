@@ -11,34 +11,32 @@
     <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
       <a-row>
         <a-col :xs="24" :sm="12">
-          <a-form-item label="上级产品名称" name="packageNickcode">
+          <a-form-item label="产品名称" name="mingcheng">
+            <a-input v-model:value="formState.mingcheng" placeholder="请输入" />
+          </a-form-item>
+        </a-col>
+        <a-col :xs="24" :sm="12">
+          <a-form-item label="上级产品名称" name="shangjiMingcheng">
             <a-input
-              v-model:value="formState.packageNickcode"
+              v-model:value="formState.shangjiMingcheng"
               placeholder="请输入"
             />
           </a-form-item>
         </a-col>
         <a-col :xs="24" :sm="12">
-          <a-form-item label="上级产品编号" name="packageNickname">
+          <a-form-item label="上级产品编号" name="shangjiBianma">
             <a-input
-              v-model:value="formState.packageNickname"
+              v-model:value="formState.shangjiBianma"
               placeholder="请输入"
             />
           </a-form-item>
         </a-col>
         <a-col :xs="24" :sm="12">
-          <a-form-item label="兴投产品名称" name="goodsCode">
-            <a-input v-model:value="formState.goodsCode" placeholder="请输入" />
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="12">
-          <a-form-item label="兴投产品编号" name="goodsName">
-            <a-input v-model:value="formState.goodsName" placeholder="请输入" />
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="12">
-          <a-form-item label="运营商" name="operateId">
-            <a-select v-model:value="formState.operateId" placeholder="请选择">
+          <a-form-item label="运营商" name="yunyingshang">
+            <a-select
+              v-model:value="formState.yunyingshang"
+              placeholder="请选择"
+            >
               <a-select-option
                 v-for="(value, key) in operate"
                 :key="key"
@@ -50,27 +48,47 @@
           </a-form-item>
         </a-col>
         <a-col :xs="24" :sm="12">
-          <a-form-item label="归属地" name="goodsName">
-            <a-input v-model:value="formState.goodsName" placeholder="请输入" />
+          <a-form-item label="归属地" name="guishudi">
+            <a-input v-model:value="formState.guishudi" placeholder="请输入" />
           </a-form-item>
         </a-col>
         <a-col :xs="24" :sm="12">
-          <a-form-item label="商品编码" name="goodsName">
-            <a-input v-model:value="formState.goodsName" placeholder="请输入" />
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="12">
-          <a-form-item label="订购价格" name="goodsName">
+          <a-form-item label="订购价格" name="dinggoujiage">
             <a-input-number
               :min="0"
-              v-model:value="formState.goodsName"
+              v-model:value="formState.dinggoujiage"
+              placeholder="请输入"
+            />
+          </a-form-item>
+        </a-col>
+
+        <a-col :xs="24" :sm="12">
+          <a-form-item label="渠道商" name="qudaoshangBianma">
+            <a-input
+              v-model:value="formState.qudaoshangBianma"
               placeholder="请输入"
             />
           </a-form-item>
         </a-col>
         <a-col :xs="24" :sm="12">
-          <a-form-item label="状态" name="del">
-            <a-select v-model:value="formState.del" placeholder="请选择">
+          <a-form-item label="产品详情" name="chanpinXiangqing">
+            <a-textarea
+              v-model:value="formState.chanpinXiangqing"
+              placeholder="请输入"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :xs="24" :sm="12">
+          <a-form-item label="返佣详情" name="fanyongshuoming">
+            <a-textarea
+              v-model:value="formState.fanyongshuoming"
+              placeholder="请输入"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :xs="24" :sm="12">
+          <a-form-item label="启禁用" name="qijinyong">
+            <a-select v-model:value="formState.qijinyong" placeholder="请选择">
               <a-select-option
                 v-for="item in del"
                 :key="item.value"
@@ -82,32 +100,19 @@
           </a-form-item>
         </a-col>
         <a-col :xs="24" :sm="12">
-          <a-form-item label="上下架" name="shangXiaJia">
+          <a-form-item label="上下架" name="shangxiajia">
             <a-select
-              v-model:value="formState.shangXiaJia"
+              v-model:value="formState.shangxiajia"
               placeholder="请选择"
             >
               <a-select-option
-                v-for="item in shangXiaJia"
+                v-for="item in shangxiajia"
                 :key="item.value"
                 :value="item.value"
               >
                 {{ item.label }}
               </a-select-option>
             </a-select>
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="12">
-          <a-form-item label="渠道商" name="goodsSku">
-            <a-input v-model:value="formState.goodsSku" placeholder="请输入" />
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="12">
-          <a-form-item label="接口" name="goodsPrice">
-            <a-input
-              v-model:value="formState.goodsPrice"
-              placeholder="请输入"
-            />
           </a-form-item>
         </a-col>
       </a-row>
@@ -124,7 +129,7 @@ defineOptions({ name: 'Add' })
 withDefaults(
   defineProps<{
     del: any
-    shangXiaJia: any
+    shangxiajia: any
     fanyongStatus: any
     operate: any
     phonePool: any
@@ -132,7 +137,7 @@ withDefaults(
   }>(),
   {
     del: () => [],
-    shangXiaJia: () => [],
+    shangxiajia: () => [],
     fanyongStatus: () => [],
     operate: () => [],
     phonePool: () => [],
@@ -161,33 +166,30 @@ const formRef = ref()
 const formState = reactive<any>({})
 
 const rules = {
-  packageNickcode: [{ required: true, message: '不能为空' }],
-  packageNickname: [{ required: true, message: '不能为空' }],
-  goodsCode: [{ required: true, message: '不能为空' }],
-  goodsName: [{ required: true, message: '不能为空' }],
-  del: [{ required: true, message: '不能为空' }],
-  shangXiaJia: [{ required: true, message: '不能为空' }],
-  fanyongId: [{ required: true, message: '不能为空' }],
-  operateId: [{ required: true, message: '不能为空' }],
-  fanyongStatus: [{ required: true, message: '不能为空' }],
-  goodsPrice: [{ required: true, message: '不能为空' }],
-  picjudge: [{ required: true, message: '不能为空' }],
-  phonelibs: [{ required: true, message: '不能为空' }],
-  provinceId: [{ required: true, message: '不能为空' }],
-  price: [{ required: true, message: '不能为空' }],
+  shangjiMingcheng: [{ required: true, message: '不能为空' }],
+  shangjiBianma: [{ required: true, message: '不能为空' }],
+  mingcheng: [{ required: true, message: '不能为空' }],
+  yunyingshang: [{ required: true, message: '请选择' }],
+  guishudi: [{ required: true, message: '不能为空' }],
+  dinggoujiage: [{ required: true, message: '不能为空' }],
+  qudaoshangBianma: [{ required: true, message: '不能为空' }],
+  chanpinXiangqing: [{ required: true, message: '不能为空' }],
+  fanyongshuoming: [{ required: true, message: '不能为空' }],
+  qijinyong: [{ required: true, message: '请选择' }],
+  shangxiajia: [{ required: true, message: '请选择' }],
 }
 
 const show = () => {
   open.value = true
   Object.assign(formState, {
-    packageNickcode: '',
-    packageNickname: '',
-    goodsCode: '',
+    shangjiMingcheng: '',
+    shangjiBianma: '',
+    mingcheng: '',
     goodsName: '',
     del: '',
-    shangXiaJia: '',
+    shangxiajia: '',
     fanyongId: '',
-    operateId: '',
+    yunyingshang: '',
     fanyongStatus: '',
     goodsSku: '',
     goodsPrice: '',
@@ -215,14 +217,14 @@ const submit = async () => {
     console.log('formState :>> ', formState)
 
     const formData = new FormData()
-    formData.append('packageNickcode', formState.packageNickcode)
-    formData.append('packageNickname', formState.packageNickname)
-    formData.append('goodsCode', formState.goodsCode)
+    formData.append('shangjiMingcheng', formState.shangjiMingcheng)
+    formData.append('shangjiBianma', formState.shangjiBianma)
+    formData.append('mingcheng', formState.mingcheng)
     formData.append('goodsName', formState.goodsName)
     formData.append('del', formState.del)
-    formData.append('shangXiaJia', formState.shangXiaJia)
+    formData.append('shangxiajia', formState.shangxiajia)
     formData.append('fanyongId', formState.fanyongId)
-    formData.append('operateId', formState.operateId)
+    formData.append('yunyingshang', formState.yunyingshang)
     formData.append('fanyongStatus', formState.fanyongStatus)
     formState.goodsSku && formData.append('goodsSku', formState.goodsSku)
     formData.append('goodsPrice', formState.goodsPrice)
