@@ -21,15 +21,22 @@
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import { STable } from '@/components/STable'
-import { reqSearch } from '@/api/table/search/index'
+import { reqSearch } from '@/api/admin/system/interface'
 import Add from './modules/Add.vue'
 import Update from './modules/Update.vue'
 
 const formItems = reactive([
   {
     type: 'input',
-    label: '模板名',
-    filed: 'mobanming',
+    label: '接口编码',
+    filed: 'jiekouBianma',
+    value: '',
+    placeholder: '请输入',
+  },
+  {
+    type: 'input',
+    label: '接口名称',
+    filed: 'jiekouMingcheng',
     value: '',
     placeholder: '请输入',
   },
@@ -38,23 +45,28 @@ const formItems = reactive([
 const table = ref()
 const columns = [
   {
-    title: '序号',
+    title: '编号',
     dataIndex: 'id',
     align: 'center',
   },
   {
-    title: '模板名',
-    dataIndex: '模板名',
-    align: 'center',
-  },
-  {
     title: '中文参数',
-    dataIndex: '中文参数',
+    dataIndex: 'zhongwen',
     align: 'center',
   },
   {
     title: '英文参数',
-    dataIndex: '英文参数',
+    dataIndex: 'yingwen',
+    align: 'center',
+  },
+  {
+    title: '接口编码',
+    dataIndex: 'jiekouBianma',
+    align: 'center',
+  },
+  {
+    title: '接口名称',
+    dataIndex: 'jiekouMingcheng',
     align: 'center',
   },
   {
@@ -69,10 +81,10 @@ const columns = [
   },
 ]
 
-const reqData = async (page: number, limit: number) => {
+const reqData = async (currentPage: number, pageSize: number) => {
   const data: any = {
-    page: page,
-    size: limit,
+    currentPage,
+    pageSize,
   }
   formItems.forEach((item) => {
     if (item.value) {
@@ -81,7 +93,7 @@ const reqData = async (page: number, limit: number) => {
   })
 
   const res: any = await reqSearch(data)
-  if (res.code == 200) {
+  if (res.code == 0) {
     return {
       data: res.data.list,
       total: res.data.total,

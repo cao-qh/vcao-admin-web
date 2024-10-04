@@ -1,14 +1,50 @@
 <template>
-  <a-modal title="添加" :open="open" @ok="submit" @cancel="open = false">
+  <a-modal
+    title="添加"
+    :open="open"
+    @ok="submit"
+    @cancel="open = false"
+    :bodyStyle="{ height: '500px', overflow: 'auto' }"
+  >
     <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
-      <a-form-item label="参数模板名称" name="参数模板名称">
-        <a-input v-model:value="formState.参数模板名称" />
+      <a-form-item label="参数模板名称" name="canshuMingcheng">
+        <a-input
+          v-model:value="formState.canshuMingcheng"
+          placeholder="请输入"
+        />
       </a-form-item>
-      <a-form-item label="接口模板" name="接口模板">
-        <a-select v-model:value="formState.接口模板">
-          <a-select-option value="a">模板一</a-select-option>
-          <a-select-option value="b">模板二</a-select-option>
-        </a-select>
+      <a-form-item label="接口模板" name="jiekouBianma">
+        <a-select
+          v-model:value="formState.jiekouBianma"
+          :options="interfaceList"
+          :fieldNames="{ label: 'mc', value: 'bm' }"
+          placeholder="请选择"
+          @change="handleInterfaceChange"
+        ></a-select>
+      </a-form-item>
+      <template v-if="zhongyingwenParams.length">
+        <a-form-item label="参数值" name="canshuZhongyingwen" :autoLink="false">
+          <a-flex :vertical="true" gap="20">
+            <a-input
+              v-for="item in zhongyingwenParams"
+              :key="item.yw"
+              :addon-before="item.zw"
+              v-model:value="formState.canshuZhongyingwen[item.yw]"
+            />
+          </a-flex>
+        </a-form-item>
+      </template>
+      <a-form-item label="备注" name="canshuBeizhu">
+        <a-textarea
+          v-model:value="formState.canshuBeizhu"
+          placeholder="请输入"
+        ></a-textarea>
+      </a-form-item>
+      <a-form-item label="启禁用" name="qijinyong">
+        <a-radio-group v-model:value="formState.qijinyong">
+          <a-radio-button :value="1">启用</a-radio-button>
+          <a-radio-button :value="2">禁用</a-radio-button>
+        </a-radio-group>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -16,7 +52,8 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqAdd } from '@/api/table/search/index'
+import { reqAdd, reqSearchInterface } from '@/api/admin/system/params'
+import { reqInterface } from '@/api/common'
 
 defineOptions({ name: 'Add' })
 
@@ -39,40 +76,65 @@ const layout = {
 
 const formRef = ref()
 const formState = reactive<any>({})
+const interfaceList = ref<any>([])
+const zhongyingwenParams = ref<any>([])
 
 const rules = {
-  phone: [{ required: true, message: '请输入电话' }],
-  mianzhi: [{ required: true, message: '请选择面值' }],
-  tongdao: [{ required: true, message: '请选择通道' }],
-  address: [{ required: true, message: '请选择地址' }],
+  canshuMingcheng: [{ required: true, message: '请输入' }],
+  jiekouBianma: [{ required: true, message: '请选择' }],
+  canshuZhongyingwen: [{ required: true, message: '请输入' }],
 }
 
-const show = () => {
-  open.value = true
-  Object.assign(formState, {
-    phone: '',
-    mianzhi: '',
-    tongdao: '',
-    beizhu: '',
-    address: '',
-  })
-  formRef.value?.clearValidate()
+const show = async () => {
+  const res: any = await reqInterface()
+  if (res.code == 0) {
+    interfaceList.value = res.data
+    open.value = true
+    Object.assign(formState, {
+      canshuMingcheng: '',
+      jiekouBianma: null,
+      canshuZhongyingwen: null,
+      canshuBeizhu: '',
+      qijinyong: 1,
+    })
+    zhongyingwenParams.value = []
+    formRef.value?.clearValidate()
+  } else {
+    message.error(res.msg)
+  }
 }
 
 const submit = async () => {
   try {
     await formRef.value.validate()
     console.log('formState :>> ', formState)
-    const res = await reqAdd(formState)
-    if (res.code == 200) {
+
+    formState.canshuZhongyingwen = JSON.stringify(formState.canshuZhongyingwen)
+
+    const res: any = await reqAdd(formState)
+    if (res.code == 0) {
       $emit('success')
       open.value = false
-      message.success(res.message)
+      message.success(res.msg)
     } else {
       message.error(res.msg)
+      formState.canshuZhongyingwen = JSON.parse(formState.canshuZhongyingwen)
     }
   } catch (error) {
     console.log('error :>> ', error)
+  }
+}
+
+const handleInterfaceChange = async (value: any) => {
+  const res: any = await reqSearchInterface({ jiekouBianma: value })
+  if (res.code == 0) {
+    zhongyingwenParams.value = res.data
+    formState.canshuZhongyingwen = {}
+    res.data.forEach((item: any) => {
+      formState.canshuZhongyingwen[item.yw] = ''
+    })
+  } else {
+    message.error(res.msg)
   }
 }
 

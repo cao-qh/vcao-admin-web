@@ -1,17 +1,29 @@
 <template>
   <a-modal title="添加" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
-      <a-form-item label="模板名称" name="模板名称">
-        <a-input v-model:value="formState.模板名称" />
+      <a-form-item label="名称" name="jiekouMingcheng">
+        <a-input
+          v-model:value="formState.jiekouMingcheng"
+          placeholder="请输入"
+        />
       </a-form-item>
-      <a-form-item label="中文参数" name="中文参数">
-        <a-input v-model:value="formState.中文参数" />
+      <a-form-item label="中文参数" name="zhongwen">
+        <a-textarea
+          v-model:value="formState.zhongwen"
+          placeholder="请输入"
+        ></a-textarea>
       </a-form-item>
-      <a-form-item label="英文参数" name="英文参数">
-        <a-input v-model:value="formState.英文参数" />
+      <a-form-item label="英文参数" name="yingwen">
+        <a-textarea
+          v-model:value="formState.yingwen"
+          placeholder="请输入"
+        ></a-textarea>
       </a-form-item>
       <a-form-item label="备注" name="beizhu">
-        <a-textarea v-model:value="formState.beizhu"></a-textarea>
+        <a-textarea
+          v-model:value="formState.beizhu"
+          placeholder="请输入"
+        ></a-textarea>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -19,7 +31,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqAdd } from '@/api/table/search/index'
+import { reqAdd } from '@/api/admin/system/interface'
 
 defineOptions({ name: 'Add' })
 
@@ -44,20 +56,17 @@ const formRef = ref()
 const formState = reactive<any>({})
 
 const rules = {
-  phone: [{ required: true, message: '请输入电话' }],
-  mianzhi: [{ required: true, message: '请选择面值' }],
-  tongdao: [{ required: true, message: '请选择通道' }],
-  address: [{ required: true, message: '请选择地址' }],
+  jiekouMingcheng: [{ required: true, message: '必填项' }],
+  zhongwen: [{ required: true, message: '必填项' }],
+  yingwen: [{ required: true, message: '必填项' }],
 }
 
 const show = () => {
   open.value = true
   Object.assign(formState, {
-    phone: '',
-    mianzhi: '',
-    tongdao: '',
-    beizhu: '',
-    address: '',
+    jiekouMingcheng: '',
+    zhongwen: '',
+    yingwen: '',
   })
   formRef.value?.clearValidate()
 }
@@ -66,11 +75,11 @@ const submit = async () => {
   try {
     await formRef.value.validate()
     console.log('formState :>> ', formState)
-    const res = await reqAdd(formState)
-    if (res.code == 200) {
+    const res: any = await reqAdd(formState)
+    if (res.code == 0) {
       $emit('success')
       open.value = false
-      message.success(res.message)
+      message.success(res.msg)
     } else {
       message.error(res.msg)
     }

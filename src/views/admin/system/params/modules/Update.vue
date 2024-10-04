@@ -1,14 +1,11 @@
 <template>
   <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" v-bind="layout">
-      <a-form-item label="参数模板名称" name="参数模板名称">
-        <a-input v-model:value="formState.参数模板名称" />
+      <a-form-item label="参数模板名称" name="canshuMingcheng">
+        <a-input v-model:value="formState.canshuMingcheng" />
       </a-form-item>
-      <a-form-item label="接口模板" name="接口模板">
-        <a-select v-model:value="formState.接口模板">
-          <a-select-option value="a">模板一</a-select-option>
-          <a-select-option value="b">模板二</a-select-option>
-        </a-select>
+      <a-form-item label="备注" name="canshuBeizhu">
+        <a-textarea v-model:value="formState.canshuBeizhu"></a-textarea>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -16,7 +13,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqUpdateSubmit } from '@/api/table/search/index'
+import { reqUpdate } from '@/api/admin/system/params'
 
 defineOptions({ name: 'Update' })
 
@@ -42,24 +39,22 @@ const formState = reactive<any>({})
 
 const show = async (row: any) => {
   open.value = true
-  formState.dingdanhao = row.dingdanhao
-  formState.tongdao = row.tongdao
-  formState.mianzhi = row.mianzhi
-  formState.address = row.address
-  formState.beizhu = row.beizhu
+  formState.id = row.id
+  formState.canshuMingcheng = row.canshuMingcheng
+  formState.canshuBeizhu = row.canshuBeizhu
 }
 
 const submit = async () => {
   try {
     await formRef.value.validate()
 
-    const res = await reqUpdateSubmit(formState)
-    if (res.code == 200) {
+    const res: any = await reqUpdate(formState)
+    if (res.code == 0) {
       $emit('success')
       open.value = false
-      message.success(res.message)
+      message.success(res.msg)
     } else {
-      message.error(res.message)
+      message.error(res.msg)
     }
   } catch (error) {
     console.log('error :>> ', error)
