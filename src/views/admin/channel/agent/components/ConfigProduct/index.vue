@@ -5,30 +5,19 @@
     </a-button>
     <SearchForm :formItems="formItems" @search="table.refresh()"></SearchForm>
 
-    <STable
-      :columns="columns"
-      :data="reqData"
-      row-key="id"
-      :row-selection="{
-        selectedRowKeys: selectedRowKeys,
-        onChange: onSelectChange,
-      }"
-    >
-      <template #toolbar>
-        <a-popconfirm
-          :title="`确定要批量配置${selectedRowKeys.toString()}吗？`"
-          ok-text="是"
-          cancel-text="否"
-        >
-          <a-button type="primary" @click="handleBatchConfig">
-            批量配置
-          </a-button>
-        </a-popconfirm>
-      </template>
+    <STable ref="table" :columns="columns" :data="reqData">
       <template #bodyCell="{ column, row }">
-        <template v-if="column.dataIndex === 'action'">
-          <a-popconfirm title="确定要配置吗？" ok-text="是" cancel-text="否">
-            <a>配置</a>
+        <template v-if="column.dataIndex === 'xuanchuantuUrl'">
+          <a-image :src="baseUrl + row.xuanchuantuUrl" />
+        </template>
+        <template v-if="column.dataIndex === 'shangxiajia'">
+          <a-popconfirm
+            title="确定要修改吗？"
+            ok-text="是"
+            cancel-text="否"
+            @confirm="handelShangxiajia(row)"
+          >
+            <a-switch :checked="row.shangxiajia === 1" />
           </a-popconfirm>
         </template>
       </template>
@@ -40,11 +29,21 @@
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import { STable } from '@/components/STable'
-import { reqSearch } from '@/api/table/search/index'
+import {
+  reqSearchProduct,
+  reqConfigProductStatus,
+} from '@/api/admin/channel/agent'
+import { message } from 'ant-design-vue'
 
 defineOptions({ name: 'ConfigProduct' })
 
+const props = defineProps<{
+  DLbianma: string
+}>()
+
 const $emit = defineEmits(['back'])
+
+const baseUrl = import.meta.env.VITE_SERVE
 
 // 运营商
 const operators = [
@@ -64,6 +63,10 @@ const operators = [
     value: 4,
     label: '广电',
   },
+  {
+    value: 5,
+    label: '全网',
+  },
 ]
 
 // 结算方式
@@ -81,22 +84,22 @@ const settlement = [
 const formItems = reactive([
   {
     type: 'input',
-    label: '产品名称',
-    filed: 'name',
+    label: '产品编码',
+    filed: 'bianma',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'input',
-    label: '产品编码',
-    filed: 'name',
+    label: '产品名称',
+    filed: 'mingcheng',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'select',
     label: '运营商',
-    filed: 'name',
+    filed: 'yunyingshang',
     value: '',
     placeholder: '请输入',
     options: operators,
@@ -108,7 +111,7 @@ const formItems = reactive([
   {
     type: 'input',
     label: '归属地',
-    filed: 'name',
+    filed: 'guishudi',
     value: '',
     placeholder: '请输入',
   },
@@ -118,51 +121,54 @@ const table = ref()
 
 const columns = [
   {
-    title: '序号',
+    title: '编号',
     dataIndex: 'id',
     align: 'center',
   },
   {
     title: '引流图',
-    dataIndex: 'zahnghao',
+    dataIndex: 'xuanchuantuUrl',
     align: 'center',
   },
   {
     title: '产品名称',
-    dataIndex: '创建时间',
+    dataIndex: 'mingcheng',
     align: 'center',
   },
   {
     title: '结算方式',
-    dataIndex: 'qijinyong',
+    dataIndex: 'jiesuanfangshi',
     align: 'center',
+    customRender: ({ text }: { text: number }) => {
+      const item = settlement.find((item) => item.value === text)
+      return item ? item.label : ''
+    },
   },
   {
     title: '结算周期',
-    dataIndex: 'qijinyong',
+    dataIndex: 'jiesuanzhouqi',
     align: 'center',
   },
   {
     title: '结算价格',
-    dataIndex: 'qijinyong',
+    dataIndex: 'dailiYongjinJine',
     align: 'center',
   },
   {
-    title: '销售权限',
-    dataIndex: 'qijinyong',
+    title: '配置',
+    dataIndex: 'peizhi',
     align: 'center',
   },
   {
-    title: '操作',
-    dataIndex: 'action',
+    title: '上下架',
+    dataIndex: 'shangxiajia',
     align: 'center',
   },
 ]
 
-const reqData = async (page: number, limit: number) => {
+const reqData = async () => {
   const data: any = {
-    page: page,
-    size: limit,
+    DLbianma: props.DLbianma,
   }
   formItems.forEach((item) => {
     if (item.value) {
@@ -170,22 +176,29 @@ const reqData = async (page: number, limit: number) => {
     }
   })
 
-  const res: any = await reqSearch(data)
-  if (res.code == 200) {
+  const res: any = await reqSearchProduct(data)
+  if (res.code == 0) {
     return {
-      data: res.data.list,
-      total: res.data.total,
+      data: res.data,
+      total: res.data.length,
     }
   }
 }
 
-const selectedRowKeys = ref<any>([])
-
-const onSelectChange = (sRowKeys: any) => {
-  selectedRowKeys.value = sRowKeys
+// 上下架
+const handelShangxiajia = async (row: any) => {
+  const result = await reqConfigProductStatus({
+    id: row.id,
+    chanpinBianma: row.chanpinbianma,
+    shangxiajia: row.shangxiajia === 1 ? 2 : 1,
+  })
+  if (result.code == 0) {
+    message.success(result.msg)
+    table.value.refresh()
+  } else {
+    message.error(result.msg)
+  }
 }
-
-const handleBatchConfig = () => {}
 </script>
 
 <style></style>

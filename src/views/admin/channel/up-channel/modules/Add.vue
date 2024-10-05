@@ -1,14 +1,14 @@
 <template>
   <a-modal title="添加" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
-      <a-form-item label="手机号" name="shoujihao">
-        <a-input v-model:value="formState.shoujihao" placeholder="请输入" />
-      </a-form-item>
-      <a-form-item label="密码" name="mima">
-        <a-input-password v-model:value="formState.mima" placeholder="请输入" />
-      </a-form-item>
       <a-form-item label="名称" name="mingcheng">
         <a-input v-model:value="formState.mingcheng" placeholder="请输入" />
+      </a-form-item>
+      <a-form-item label="启禁用" name="qijinyong" placeholder="请选择">
+        <a-radio-group v-model:value="formState.qijinyong">
+          <a-radio-button :value="1">启用</a-radio-button>
+          <a-radio-button :value="2">禁用</a-radio-button>
+        </a-radio-group>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -16,7 +16,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqAdd } from '@/api/admin/channel/admin'
+import { reqAdd } from '@/api/admin/channel/up-channel'
 
 defineOptions({ name: 'Add' })
 
@@ -42,16 +42,14 @@ const formState = reactive<any>({})
 
 const rules = {
   mingcheng: [{ required: true, message: '请输入' }],
-  mima: [{ required: true, message: '请输入' }],
-  shoujihao: [{ required: true, message: '请输入' }],
+  qijinyong: [{ required: true, message: '请选择' }],
 }
 
 const show = () => {
   open.value = true
   Object.assign(formState, {
     mingcheng: '',
-    mima: '',
-    shoujihao: '',
+    qijinyong: 1,
   })
   formRef.value?.clearValidate()
 }

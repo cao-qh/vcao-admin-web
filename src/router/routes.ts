@@ -159,6 +159,15 @@ export const adminRoute = [
           title: '代理员管理',
         },
       },
+      // 上游渠道商
+      {
+        path: '/channel/up-channel',
+        component: () => import('@/views/admin/channel/up-channel/index.vue'),
+        name: 'UpChannel',
+        meta: {
+          title: '上游渠道商',
+        },
+      },
     ],
   },
   // 订单管理

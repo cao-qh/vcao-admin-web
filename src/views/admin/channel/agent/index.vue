@@ -1,17 +1,22 @@
 <template>
   <PageWrapper>
-    <div v-if="!isConfigProduct">
+    <div v-if="!isConfigProduct.show">
       <SearchForm :formItems="formItems" @search="table.refresh()"></SearchForm>
 
-      <STable :columns="columns" :data="reqData">
+      <STable
+        ref="table"
+        :columns="columns"
+        :data="reqData"
+        :show-pagination="true"
+      >
         <template #toolbar>
           <a-button type="primary" @click="add.show()">添加</a-button>
         </template>
         <template #bodyCell="{ column, row }">
           <template v-if="column.dataIndex === 'action'">
-            <a @click="update.show(row)">编辑</a>
+            <a @click="update.show(row)">修改</a>
             <a-divider type="vertical" />
-            <a @click="() => (isConfigProduct = true)">产品配置</a>
+            <a @click="handleConfigProduct(row)">产品配置</a>
           </template>
         </template>
       </STable>
@@ -21,7 +26,11 @@
       <Update ref="update" @success="table.refresh()" />
     </div>
 
-    <ConfigProduct v-else @back="isConfigProduct = false" />
+    <ConfigProduct
+      v-else
+      :DLbianma="isConfigProduct.DLbianma"
+      @back="isConfigProduct.show = false"
+    />
   </PageWrapper>
 </template>
 
@@ -29,12 +38,12 @@
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import { STable } from '@/components/STable'
-import { reqSearch } from '@/api/table/search/index'
+import { reqSearch } from '@/api/admin/channel/agent'
 import Add from './modules/Add.vue'
 import Update from './modules/Update.vue'
 import ConfigProduct from './components/ConfigProduct/index.vue'
 
-const status = [
+const qijinyong = [
   {
     value: 1,
     label: '启用',
@@ -48,8 +57,8 @@ const status = [
 const formItems = reactive([
   {
     type: 'input',
-    label: '代理账户',
-    filed: 'name',
+    label: '手机号',
+    filed: 'shoujihao',
     value: '',
     placeholder: '请输入',
   },
@@ -59,7 +68,7 @@ const formItems = reactive([
     filed: 'status',
     value: null,
     placeholder: '请选择',
-    options: status,
+    options: qijinyong,
     defaultOption: {
       value: '',
       label: '全部',
@@ -71,23 +80,27 @@ const table = ref()
 
 const columns = [
   {
-    title: '序号',
+    title: '编号',
     dataIndex: 'id',
     align: 'center',
   },
   {
-    title: '账号',
-    dataIndex: 'zahnghao',
-    align: 'center',
-  },
-  {
-    title: '创建时间',
-    dataIndex: '创建时间',
+    title: '手机号',
+    dataIndex: 'shoujihao',
     align: 'center',
   },
   {
     title: '启禁用',
     dataIndex: 'qijinyong',
+    align: 'center',
+    customRender: ({ text }: { text: any }) => {
+      const item: any = qijinyong.find((item) => item.value === text)
+      return item ? item.label : ''
+    },
+  },
+  {
+    title: '创建时间',
+    dataIndex: 'chuangjianshijian',
     align: 'center',
   },
   {
@@ -97,11 +110,12 @@ const columns = [
   },
 ]
 
-const reqData = async (page: number, limit: number) => {
+const reqData = async (currentPage: number, pageSize: number) => {
   const data: any = {
-    page: page,
-    size: limit,
+    currentPage,
+    pageSize,
   }
+
   formItems.forEach((item) => {
     if (item.value) {
       data[item.filed] = item.value
@@ -109,17 +123,25 @@ const reqData = async (page: number, limit: number) => {
   })
 
   const res: any = await reqSearch(data)
-  if (res.code == 200) {
+  if (res.code == 0) {
     return {
       data: res.data.list,
-      total: res.data.total,
+      total: res.data.totalSize,
     }
   }
 }
 
 const add = ref()
 const update = ref()
-const isConfigProduct = ref(false)
+const isConfigProduct = reactive({
+  show: false,
+  DLbianma: '',
+})
+
+const handleConfigProduct = (row: any) => {
+  isConfigProduct.DLbianma = row.bianma
+  isConfigProduct.show = true
+}
 </script>
 
 <style></style>

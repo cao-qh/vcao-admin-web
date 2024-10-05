@@ -2,22 +2,7 @@
   <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" v-bind="layout">
       <a-form-item label="名称" name="mingcheng">
-        <a-input v-model:value="formState.mingcheng" placeholder="请输入" />
-      </a-form-item>
-      <a-form-item label="邮箱" name="youxiang">
-        <a-input v-model:value="formState.youxiang" placeholder="请输入" />
-      </a-form-item>
-      <a-form-item label="启禁用" name="qijinyong" placeholder="请选择">
-        <a-radio-group v-model:value="formState.qijinyong">
-          <a-radio-button :value="1">启用</a-radio-button>
-          <a-radio-button :value="2">禁用</a-radio-button>
-        </a-radio-group>
-      </a-form-item>
-      <a-form-item label="备注" name="beizhu" placeholder="请输入">
-        <a-textarea
-          v-model:value="formState.beizhu"
-          placeholder="请输入"
-        ></a-textarea>
+        <a-input v-model:value="formState.mingcheng" />
       </a-form-item>
     </a-form>
   </a-modal>
@@ -25,7 +10,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqUpdate } from '@/api/admin/channel/agent'
+import { reqUpdate } from '@/api/admin/channel/up-channel'
 
 defineOptions({ name: 'Update' })
 
@@ -52,11 +37,7 @@ const formState = reactive<any>({})
 const show = async (row: any) => {
   open.value = true
   formState.id = row.id
-  formState.bianma = row.bianma
   formState.mingcheng = row.mingcheng
-  formState.youxiang = row.youxiang
-  formState.qijinyong = row.qijinyong
-  formState.beizhu = row.beizhu
 }
 
 const submit = async () => {

@@ -26,27 +26,23 @@
         </template>
         <template v-if="column.dataIndex === 'action'">
           <a @click="() => update.show(row)">修改</a>
-          <a-divider type="vertical" />
-          <a @click="() => permission.show(row)">权限配置</a>
         </template>
       </template>
     </STable>
 
     <Add ref="add" @success="table.refresh()" />
     <Update ref="update" @success="table.refresh()" />
-    <Permission ref="permission" @success="table.refresh()" />
   </PageWrapper>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
-import { reqSearch, reqQijinyong } from '@/api/admin/channel/admin'
+import { reqSearch, reqQijinyong } from '@/api/admin/channel/up-channel'
 import { STable } from '@/components/STable'
 import { message } from 'ant-design-vue'
 import Add from './modules/Add.vue'
 import Update from './modules/Update.vue'
-import Permission from './modules/Permission.vue'
 
 const qijinyong = [
   {
@@ -69,8 +65,8 @@ const formItems = reactive([
   },
   {
     type: 'input',
-    label: '手机号',
-    filed: 'shoujihao',
+    label: '编码',
+    filed: 'bianma',
     value: '',
     placeholder: '请输入',
   },
@@ -95,14 +91,14 @@ const columns = [
     align: 'center',
   },
   {
-    title: '昵称',
-    dataIndex: 'mingcheng',
+    title: '编码',
+    dataIndex: 'bianma',
     align: 'center',
   },
 
   {
-    title: '电话',
-    dataIndex: 'shoujihao',
+    title: '名称',
+    dataIndex: 'mingcheng',
     align: 'center',
   },
   {
@@ -155,7 +151,6 @@ const handelQijinyong = async (row: any) => {
 
 const add = ref()
 const update = ref()
-const permission = ref()
 </script>
 
 <style></style>
