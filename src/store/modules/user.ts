@@ -65,7 +65,7 @@ const useUserStore: any = defineStore('user', () => {
       // 能保证当前async函数返回一个成功的promise
       return 'ok'
     } else {
-      return Promise.reject(new Error(result.msg))
+      return Promise.reject(new Error(result.message))
     }
   }
 
@@ -75,7 +75,7 @@ const useUserStore: any = defineStore('user', () => {
     if (role.value === 2) {
       const result: any = await reqAgentInfo()
       if (result.code == 0) {
-        username.value = result.data.username
+        username.value = result.data.shoujihao
         // 代理权限
         menuRoutes.value = [...constantRoute, ...agentRoute]
         agentRoute.forEach((route: any) => {

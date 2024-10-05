@@ -379,6 +379,28 @@ export const agentRoute = [
       },
     ],
   },
+  // 下载管理
+  {
+    path: '/download',
+    component: BaseLayout,
+    name: 'Download',
+    meta: {
+      title: '下载管理',
+      icon: 'StarOutlined',
+    },
+    redirect: '/download/list',
+    children: [
+      // 下载列表
+      {
+        path: '/download/list',
+        component: () => import('@/views/admin/download/index.vue'),
+        name: 'DownloadList',
+        meta: {
+          title: '下载列表',
+        },
+      },
+    ],
+  },
   // 个人管理
   {
     path: '/personal',

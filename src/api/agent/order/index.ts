@@ -2,13 +2,13 @@ import request, { obj2Query } from '@/utils/request'
 
 const API = {
   // 订单查询
-  orderUrl: '/tAdmin/cunliang/tOrder/selectAdminOrder',
+  orderUrl: '/tAgent/cunliang/tOrder/selectAgentOrder',
   // 推送
-  pushUrl: '/tAdmin/cunliang/tOrder/tuiSongOrder',
+  pushUrl: '/tAgent/cunliang/tOrder/tuiSongOrder',
   // 批量推送
-  batchPushUrl: '/tAdmin/cunliang/tOrder/tuiSongOrderS',
+  batchPushUrl: '/tAgent/cunliang/tOrder/tuiSongOrderS',
   // 导出
-  exportUrl: '/tAdmin/cunliang/tOrder/dowOrderPC',
+  exportUrl: '/tAgent/cunliang/tOrder/dowOrder',
 }
 
 // 订单查询

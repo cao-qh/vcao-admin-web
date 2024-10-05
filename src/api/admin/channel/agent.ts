@@ -9,6 +9,8 @@ enum API {
   updateUrl = '/tAdmin/agent/updateTAgent',
   // 查询可配置产品
   searchProduct = '/tAdmin/agent/selectByTAgentGoods',
+  // 配置产品
+  configProduct = '/tAdmin/agent/peizhi',
   // 配置产品上下架
   configProductStatus = '/tAdmin/agent/updateTAdminTAgentGoods',
 }
@@ -28,6 +30,10 @@ export const reqUpdate = (data: any) =>
 // 查询可配置产品
 export const reqSearchProduct = (data: any) =>
   request.post<any, any>(API.searchProduct, obj2Query(data))
+
+// 配置产品
+export const reqConfigProduct = (data: any) =>
+  request.post<any, any>(API.configProduct, data)
 
 // 配置产品上下架
 export const reqConfigProductStatus = (data: any) =>

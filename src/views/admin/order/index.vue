@@ -4,7 +4,7 @@
 
     <STable
       ref="table"
-      row-key="id"
+      row-key="dingdanhao"
       :columns="columns"
       :data="getData"
       :showPagination="true"
@@ -17,9 +17,10 @@
       <template #toolbar>
         <a-space>
           <a-popconfirm
-            :title="`确定要批量配置${selectedRowKeys.toString()}吗？`"
+            :title="`确定要批量推送吗？`"
             ok-text="是"
             cancel-text="否"
+            @confirm="handleBatchPush"
           >
             <a-button type="primary" @click="handleExport">批量推送</a-button>
           </a-popconfirm>
@@ -27,7 +28,7 @@
         </a-space>
       </template>
       <template #bodyCell="{ column, row }">
-        <template v-if="column.dataIndex === 'ruwangInfo'">
+        <!-- <template v-if="column.dataIndex === 'ruwangInfo'">
           <MultipartTableCell>
             <template #label>
               <div>入网名：</div>
@@ -40,60 +41,14 @@
               <div>{{ row.netCardId }}</div>
             </template>
           </MultipartTableCell>
-        </template>
-        <template v-if="column.dataIndex === 'taocan'">
-          <MultipartTableCell>
-            <template #label>
-              <div>ID：</div>
-              <div>套餐名：</div>
-            </template>
-            <template #value>
-              <div>{{ row.goodsId }}</div>
-              <div>{{ row.packageNickname }}</div>
-            </template>
-          </MultipartTableCell>
-        </template>
-        <template v-if="column.dataIndex === 'receiveInfo'">
-          <MultipartTableCell>
-            <template #label>
-              <div>收货人：</div>
-              <div>收电话：</div>
-              <div>收地址：</div>
-            </template>
-            <template #value>
-              <div>{{ row.takeName }}</div>
-              <div>{{ row.takePhone }}</div>
-              <div>{{ row.takeAddress }}</div>
-            </template>
-          </MultipartTableCell>
-        </template>
-        <template v-if="column.dataIndex === 'shouchongInfo'">
-          <MultipartTableCell>
-            <template #label>
-              <div>首充状态：</div>
-              <div>首充时间：</div>
-              <div>首充金额：</div>
-            </template>
-            <template #value>
-              <div>
-                {{
-                  shouchongStatus.find(
-                    (item) => item.value === row.shouchongStatus,
-                  )?.label
-                }}
-              </div>
-              <div>{{ row.shouchongTime }}</div>
-              <div>{{ row.shouchongPrice }}</div>
-            </template>
-          </MultipartTableCell>
-        </template>
+        </template> -->
         <template v-if="column.dataIndex === 'action'">
           <div>
             <a-popconfirm
               title="确定推送吗？"
               ok-text="是"
               cancel-text="否"
-              @confirm="handlePush(row.orderId)"
+              @confirm="handlePush(row.dingdanhao)"
             >
               <a>推送</a>
             </a-popconfirm>
@@ -107,157 +62,49 @@
 <script setup lang="ts">
 import { reactive, ref, h } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
-import { STable, MultipartTableCell } from '@/components/STable'
+import { STable } from '@/components/STable'
 import dayjs from 'dayjs'
-import { reqSearch } from '@/api/table/search/index'
-// import { message } from 'ant-design-vue'
-// import { linkDownload } from '@/utils/download'
-import useUserStore from '@/store/modules/user'
+import { reqOrder, reqPush, reqBatchPush, reqExport } from '@/api/admin/order'
+import { message } from 'ant-design-vue'
 
 defineOptions({
   name: 'Order',
 })
 
-const userStore = useUserStore()
-
-//#region 状态数据
-
 // 订单状态
-const statusOne = [
+const status = [
   {
     value: 1,
-    label: '开卡失败',
+    label: '校验失败',
     color: 'red',
   },
   {
     value: 2,
-    label: '开卡中',
-    color: 'blue',
-  },
-  {
-    value: 3,
-    label: '已发货',
-    color: 'orange',
-  },
-  {
-    value: 4,
-    label: '已激活',
-    color: 'green',
-  },
-]
-
-// 二级订单状态
-const statusTwo = [
-  {
-    value: 1,
-    label: '失败已更换',
-    color: 'orange',
-  },
-  {
-    value: 2,
-    label: '待处理',
+    label: '校验成功',
     color: 'blue',
   },
   {
     value: 3,
     label: '受理成功',
-    color: 'green',
+    color: 'orange',
   },
   {
     value: 4,
     label: '受理失败',
-    color: 'red',
+    color: 'green',
   },
   {
     value: 5,
-    label: '未提交',
-    color: 'blue',
-  },
-  {
-    value: 6,
-    label: '提交中',
-    color: 'blue',
-  },
-  {
-    value: 7,
-    label: '处理中',
-    color: 'blue',
-  },
-]
-
-// 发货状态
-const sendStatus = [
-  {
-    value: 1,
-    label: '未发货',
-    color: 'blue',
-  },
-  {
-    value: 2,
-    label: '已发货',
-    color: 'orange',
-  },
-  {
-    value: 3,
-    label: '已签收',
-    color: 'green',
-  },
-  {
-    value: 4,
-    label: '签收失败',
-    color: 'red',
-  },
-]
-
-// 退款状态
-const tuikuanStatus = [
-  {
-    value: 1,
-    label: '未退款',
-    color: 'red',
-  },
-  {
-    value: 2,
-    label: '已退款',
+    label: '未处理',
     color: 'green',
   },
 ]
-
-// 激活状态
-const jihuoStatus = [
-  {
-    value: 1,
-    label: '未激活',
-    color: 'red',
-  },
-  {
-    value: 2,
-    label: '已激活',
-    color: 'green',
-  },
-]
-
-// 首充状态
-const shouchongStatus = [
-  {
-    value: 1,
-    label: '未首充',
-    color: 'red',
-  },
-  {
-    value: 2,
-    label: '已首充',
-    color: 'green',
-  },
-]
-
-//#endregion
 
 const formItems = reactive([
   {
     type: 'datePicker',
     label: '开始时间',
-    filed: 'starttime',
+    filed: 'kaishiDate',
     value: dayjs().subtract(15, 'day').format('YYYY-MM-DD'),
     valueFormat: 'YYYY-MM-DD',
     allowClear: false,
@@ -265,7 +112,7 @@ const formItems = reactive([
   {
     type: 'datePicker',
     label: '结束时间',
-    filed: 'endtime',
+    filed: 'jieshuDate',
     value: dayjs().format('YYYY-MM-DD'),
     valueFormat: 'YYYY-MM-DD',
     allowClear: false,
@@ -280,119 +127,61 @@ const formItems = reactive([
   {
     type: 'select',
     label: '订单状态',
-    filed: 'statusOne',
+    filed: 'zhuangtai',
     value: '',
     placeholder: '请选择',
     defaultOption: {
       label: '全部',
       value: '',
     },
-    options: statusOne,
-  },
-  {
-    type: 'select',
-    label: '角色',
-    filed: 'jueseStatus',
-    value: 1,
-    placeholder: '请选择',
-    allowClear: false,
-    options: [
-      {
-        value: 1,
-        label: '自己的订单',
-      },
-      {
-        value: 2,
-        label: '下级的订单',
-      },
-    ],
+    options: status,
   },
   {
     type: 'input',
-    label: '入网号',
-    filed: 'netPhone',
-    value: '',
-    placeholder: '请输入',
-  },
-  {
-    type: 'select',
-    label: '二级订单状态',
-    filed: 'statusTwo',
-    hidden: userStore.level != 0,
-    value: '',
-    placeholder: '请选择',
-    defaultOption: {
-      label: '全部',
-      value: '',
-    },
-    options: statusTwo,
-  },
-  {
-    type: 'input',
-    label: '收货电话',
-    filed: 'takePhone',
+    label: '兴投订单号',
+    filed: 'dingdanhao',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'input',
-    label: '套餐名称',
-    filed: 'packageNickname',
+    label: '下级订单号',
+    filed: 'dingdanhaoXiaji',
     value: '',
-    placeholder: '请选择',
-  },
-  {
-    type: 'select',
-    label: '退款状态',
-    filed: 'tuikuanStatus',
-    value: '',
-    placeholder: '请选择',
-    defaultOption: {
-      label: '全部',
-      value: '',
-    },
-    options: tuikuanStatus,
-  },
-  {
-    type: 'select',
-    label: '发货状态',
-    filed: 'sendStatus',
-    value: '',
-    placeholder: '请选择',
-    defaultOption: {
-      label: '全部',
-      value: '',
-    },
-    options: sendStatus,
-  },
-  {
-    type: 'select',
-    label: '激活状态',
-    filed: 'jihuoStatus',
-    value: '',
-    placeholder: '请选择',
-    defaultOption: {
-      label: '全部',
-      value: '',
-    },
-    options: jihuoStatus,
-  },
-  {
-    type: 'select',
-    label: '首充状态',
-    filed: 'shouchongStatus',
-    value: '',
-    placeholder: '请选择',
-    defaultOption: {
-      label: '全部',
-      value: '',
-    },
-    options: shouchongStatus,
+    placeholder: '请输入',
   },
   {
     type: 'input',
-    label: '证件号',
-    filed: 'netCardId',
+    label: '上级订单号',
+    filed: 'dingdanhaoShangji',
+    value: '',
+    placeholder: '请输入',
+  },
+  {
+    type: 'input',
+    label: '产品编码',
+    filed: 'chanpinbianma',
+    value: '',
+    placeholder: '请输入',
+  },
+  {
+    type: 'input',
+    label: '产品名称',
+    filed: 'chanpinmingcheng',
+    value: '',
+    placeholder: '请输入',
+  },
+  {
+    type: 'input',
+    label: '上游渠道商',
+    filed: 'shangyouqudaoshang',
+    value: '',
+    placeholder: '请输入',
+  },
+  {
+    type: 'input',
+    label: '手机号',
+    filed: 'shoujihao',
     value: '',
     placeholder: '请输入',
   },
@@ -402,151 +191,129 @@ const table = ref()
 
 const columns = [
   {
-    title: 'ID',
+    title: '编号',
     dataIndex: 'id',
     align: 'center',
   },
   {
-    title: '账户名',
-    dataIndex: 'userName',
+    title: '兴投订单编码',
+    dataIndex: 'dingdanhao',
     align: 'center',
   },
   {
-    title: '北斗店铺ID',
-    dataIndex: 'bdShopId',
+    title: '下级订单号',
+    dataIndex: 'dingdanhaoXiaji',
     align: 'center',
   },
   {
-    title: '订单号',
-    dataIndex: 'orderId',
+    title: '上级订单号',
+    dataIndex: 'dingdanhaoShangji',
     align: 'center',
   },
   {
-    title: '入网信息',
-    dataIndex: 'ruwangInfo',
+    title: '兴投产品编码',
+    dataIndex: 'chanpinbianma',
     align: 'center',
   },
   {
-    title: '订单备注',
-    dataIndex: 'note',
+    title: '上级产品编码',
+    dataIndex: 'shangJiChanpinBianMa',
     align: 'center',
   },
   {
-    title: '套餐',
-    dataIndex: 'taocan',
-    align: 'center',
-  },
-  // {
-  //   title: '订单状态',
-  //   dataIndex: 'statusOne',
-  //   align: 'center',
-  //   customRender: ({ text }: { text: any }) => {
-  //     const item: any = statusOne.find((item) => item.value === text)
-  //     return h('span', { style: { color: item.color } }, item.label)
-  //   },
-  // },
-  // {
-  //   title: '退款状态',
-  //   dataIndex: 'tuikuanStatus',
-  //   align: 'center',
-  //   customRender: ({ text }: { text: any }) => {
-  //     const item: any = tuikuanStatus.find((item) => item.value === text)
-  //     return h('span', { style: { color: item.color } }, item.label)
-  //   },
-  // },
-  // {
-  //   title: '发货状态',
-  //   dataIndex: 'sendStatus',
-  //   align: 'center',
-  //   customRender: ({ text }: { text: any }) => {
-  //     const item: any = sendStatus.find((item) => item.value === text)
-  //     return h('span', { style: { color: item.color } }, item.label)
-  //   },
-  // },
-  // {
-  //   title: '激活状态',
-  //   dataIndex: 'jihuoStatus',
-  //   align: 'center',
-  //   customRender: ({ text }: { text: any }) => {
-  //     const item: any = jihuoStatus.find((item) => item.value === text)
-  //     return h('span', { style: { color: item.color } }, item.label)
-  //   },
-  // },
-  {
-    title: '激活时间',
-    dataIndex: 'jihuoTime',
+    title: '下游渠道商',
+    dataIndex: 'xiayouqudaoshang',
     align: 'center',
   },
   {
-    title: '首充信息',
-    dataIndex: 'shouchongInfo',
+    title: '产品名称',
+    dataIndex: 'chanpinmingcheng',
     align: 'center',
-    width: '230px',
   },
-  // {
-  //   title: '首充状态',
-  //   dataIndex: 'shouchongStatus',
-  //   align: 'center',
-  //   customRender: ({ text }: { text: any }) => {
-  //     return shouchongStatus.find((item) => item.value === text)?.label
-  //   },
-  // },
-  // {
-  //   title: '首充时间',
-  //   dataIndex: 'shouchongTime',
-  //   align: 'center',
-  // },
-  // {
-  //   title: '首充金额',
-  //   dataIndex: 'shouchongPrice',
-  //   align: 'center',
-  // },
   {
-    title: '累充金额',
-    dataIndex: 'leichongPrice',
+    title: '上游渠道商',
+    dataIndex: 'shangyouqudaoshang',
+    align: 'center',
+  },
+  {
+    title: '办理手机号',
+    dataIndex: 'shoujihao',
+    align: 'center',
+  },
+  {
+    title: '验证码',
+    dataIndex: 'yanzhengma',
+    align: 'center',
+  },
+  {
+    title: '触点',
+    dataIndex: 'xiajiChudian',
+    align: 'center',
+  },
+  {
+    title: '产品页面链接',
+    dataIndex: 'xiajiLuodiyeUrl',
+    align: 'center',
+  },
+  {
+    title: '下级备注',
+    dataIndex: 'xiajiBeizhu',
+    align: 'center',
+  },
+  {
+    title: '订单状态',
+    dataIndex: 'zhuangtai',
+    align: 'center',
+    customRender: ({ text }: { text: any }) => {
+      const item: any = status.find((item) => item.value === text)
+      return h('span', { style: { color: item.color } }, item.label)
+    },
+  },
+  {
+    title: '校验结果',
+    dataIndex: 'jiaoyanJieguo',
+    align: 'center',
+  },
+  {
+    title: '结果返回',
+    dataIndex: 'shouliJieguo',
+    align: 'center',
+  },
+  {
+    title: '订购价格',
+    dataIndex: 'dinggoujiage',
+    align: 'center',
+  },
+  {
+    title: '下级佣金',
+    dataIndex: 'xiajiYongjin',
+    align: 'center',
+  },
+  {
+    title: '省份',
+    dataIndex: 'shengfen',
+    align: 'center',
+  },
+  {
+    title: '地址',
+    dataIndex: 'dishi',
     align: 'center',
   },
   {
     title: '创建时间',
-    dataIndex: 'createTime',
+    dataIndex: 'chuangjianshijian',
     align: 'center',
   },
   {
-    title: '反馈时间',
-    dataIndex: 'resultTime',
+    title: '校验时间',
+    dataIndex: 'jiaoyanshijian',
     align: 'center',
   },
   {
-    title: '订单描述',
-    dataIndex: 'remarks',
+    title: '返回时间',
+    dataIndex: 'shoulishijian',
     align: 'center',
   },
-  {
-    title: '收货信息',
-    dataIndex: 'receiveInfo',
-    align: 'center',
-  },
-  // {
-  //   title: '收货人',
-  //   dataIndex: 'takeName',
-  //   align: 'center',
-  // },
-  // {
-  //   title: '收货地址',
-  //   dataIndex: 'takeAddress',
-  //   align: 'center',
-  // },
-  // {
-  //   title: '收货电话',
-  //   dataIndex: 'takePhone',
-  //   align: 'center',
-  // },
-  {
-    title: '旺旺名',
-    dataIndex: 'wwName',
-    align: 'center',
-  },
-
   {
     title: '操作',
     width: '120px',
@@ -555,10 +322,10 @@ const columns = [
   },
 ]
 
-const getData = async (page: number, limit: number) => {
+const getData = async (currentPage: number, pageSize: number) => {
   const data: any = {
-    page: page,
-    size: limit,
+    currentPage,
+    pageSize,
   }
   formItems.forEach((item) => {
     if (item.value) {
@@ -566,50 +333,55 @@ const getData = async (page: number, limit: number) => {
     }
   })
 
-  const res: any = await reqSearch(data)
-  if (res.code == 200) {
+  const res: any = await reqOrder(data)
+  if (res.code == 0) {
     return {
       data: res.data.list,
-      total: res.data.total,
+      total: res.data.totalSize,
     }
   }
 }
 
-// 提单
-const handlePush = async (orderId: any) => {
-  /* const res = await reqSubmit({ orderId })
+// 推送
+const handlePush = async (tOrderId: any) => {
+  const res = await reqPush({ tOrderId })
   if (res.code == 0) {
-    message.success('提交成功')
+    message.success(res.msg)
     table.value.refresh()
   } else {
     message.error(res.msg)
-  } */
+  }
 }
 
 // 导出
 const handleExport = async () => {
-  /* const starttime = formItems.find((item) => item.filed === 'starttime')?.value
-  const endtime = formItems.find((item) => item.filed === 'endtime')?.value
-  const jueseStatus = formItems.find(
-    (item) => item.filed === 'jueseStatus',
-  )?.value
-
-  const res = await reqExport({
-    starttime,
-    endtime,
-    jueseStatus,
+  const data: any = {}
+  formItems.forEach((item) => {
+    if (item.value) {
+      data[item.filed] = item.value
+    }
   })
+
+  const res = await reqExport(data)
   if (res.code === 0) {
-    const url = `${import.meta.env.VITE_SERVE}/tOrder/download/?filename=${res.data}`
-    linkDownload(url)
+    message.success(res.msg)
   } else {
     message.error(res.msg)
-  } */
+  }
 }
 
 const selectedRowKeys = ref<any>([])
-
 const onSelectChange = (sRowKeys: any) => {
   selectedRowKeys.value = sRowKeys
+}
+// 批量推送
+const handleBatchPush = async () => {
+  const res = await reqBatchPush({ tOrderIds: selectedRowKeys.value.join(',') })
+  if (res.code == 0) {
+    message.success(res.msg)
+    table.value.refresh()
+  } else {
+    message.error(res.msg)
+  }
 }
 </script>

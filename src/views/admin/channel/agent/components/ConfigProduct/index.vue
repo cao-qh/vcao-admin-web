@@ -12,16 +12,30 @@
         </template>
         <template v-if="column.dataIndex === 'shangxiajia'">
           <a-popconfirm
+            :disabled="row.peizhi === 0"
             title="确定要修改吗？"
             ok-text="是"
             cancel-text="否"
             @confirm="handelShangxiajia(row)"
           >
-            <a-switch :checked="row.shangxiajia === 1" />
+            <a-switch
+              :disabled="row.peizhi === 0"
+              :checked="row.shangxiajia === 1"
+            />
           </a-popconfirm>
+        </template>
+        <template v-if="column.dataIndex === 'action'">
+          <a @click="() => config.show(row, DLbianma)">配置</a>
         </template>
       </template>
     </STable>
+
+    <Config
+      ref="config"
+      :settlement="settlement"
+      :jiesuanzhouqi="jiesuanzhouqi"
+      @success="table.refresh()"
+    />
   </div>
 </template>
 
@@ -34,6 +48,7 @@ import {
   reqConfigProductStatus,
 } from '@/api/admin/channel/agent'
 import { message } from 'ant-design-vue'
+import Config from './modules/Config.vue'
 
 defineOptions({ name: 'ConfigProduct' })
 
@@ -78,6 +93,30 @@ const settlement = [
   {
     value: 2,
     label: 'CPA一口价',
+  },
+]
+
+// 结算周期
+const jiesuanzhouqi = [
+  {
+    value: 1,
+    label: '实时',
+  },
+  {
+    value: 2,
+    label: '日结',
+  },
+  {
+    value: 3,
+    label: '周结',
+  },
+  {
+    value: 4,
+    label: '双周结',
+  },
+  {
+    value: 5,
+    label: '月结',
   },
 ]
 
@@ -148,20 +187,29 @@ const columns = [
     title: '结算周期',
     dataIndex: 'jiesuanzhouqi',
     align: 'center',
+    customRender: ({ text }: { text: number }) => {
+      const item = jiesuanzhouqi.find((item) => item.value === text)
+      return item ? item.label : ''
+    },
   },
   {
     title: '结算价格',
     dataIndex: 'dailiYongjinJine',
     align: 'center',
   },
-  {
-    title: '配置',
-    dataIndex: 'peizhi',
-    align: 'center',
-  },
+  // {
+  //   title: '配置',
+  //   dataIndex: 'peizhi',
+  //   align: 'center',
+  // },
   {
     title: '上下架',
     dataIndex: 'shangxiajia',
+    align: 'center',
+  },
+  {
+    title: '操作',
+    dataIndex: 'action',
     align: 'center',
   },
 ]
@@ -199,6 +247,9 @@ const handelShangxiajia = async (row: any) => {
     message.error(result.msg)
   }
 }
+
+// 配置
+const config = ref()
 </script>
 
 <style></style>
