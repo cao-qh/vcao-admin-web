@@ -9,6 +9,7 @@
     <a-tree
       :tree-data="menuArr"
       :fieldNames="fieldNames"
+      :autoExpandParent="true"
       checkable
       checkStrictly
       v-model:checkedKeys="checkedKeys"
@@ -43,27 +44,10 @@ const checkedKeys = reactive<{
 
 const phone = ref<string>('')
 
-const handleTreeCheckd = (checkedkeys: any, { node }: { node: any }) => {
-  checkedKeys.checked = checkedkeys.checked
-  checkedKeys.halfChecked = checkedkeys.halfChecked
-
-  if (node.checked) {
-    // 全部取消勾选子节点
-    unCheckAll(node.children)
-    // 取消勾选父节点
-    // unCheckParent(node.parent)
-  } else {
-    node.dataRef.select = true
-    // 全部勾选子节点
-    checkAll(node.children)
-    // 勾选父节点
-    if (node.parent) {
-      checkParent(node.parent)
-    }
-  }
-
-  // console.log('checkedKeys :>> ', checkedKeys)
-  //console.log('e :>> ', node)
+enum CheckState {
+  unchecked = 0,
+  checked = 1,
+  halfChecked = 2,
 }
 
 const show = async (row: any) => {
@@ -77,24 +61,6 @@ const show = async (row: any) => {
     phone.value = row.shoujihao
   } else {
     message.error(res.msg)
-  }
-}
-
-const submit = async () => {
-  try {
-    const res = await reqConfigPermission({
-      phone: phone.value,
-      codeS: [...checkedKeys.checked, ...checkedKeys.halfChecked].join(','),
-    })
-    if (res.code == 0) {
-      $emit('success')
-      open.value = false
-      message.success('配置成功')
-    } else {
-      message.error(res.msg)
-    }
-  } catch (error) {
-    console.log('error :>> ', error)
   }
 }
 
@@ -126,20 +92,33 @@ const isChildrenAllChecked = (node: any) => {
   return true
 }
 
+const handleTreeCheckd = (checkedkeys: any, { node }: { node: any }) => {
+  checkedKeys.checked = checkedkeys.checked
+  checkedKeys.halfChecked = checkedkeys.halfChecked
+
+  if (node.checked) {
+    node.dataRef.select = false
+    // 全部取消勾选子节点
+    unCheckAll(node.children)
+  } else {
+    node.dataRef.select = true
+    // 全部勾选子节点
+    checkAll(node.children)
+  }
+  // 勾选/取消勾选父节点
+  if (node.parent) {
+    checkParent(node.parent)
+  }
+}
+
 // 勾选所有子节点
 const checkAll = (list: any) => {
   list.forEach((item: any) => {
-    if (checkedKeys.halfChecked.indexOf(item.code) !== -1) {
-      checkedKeys.halfChecked.splice(
-        checkedKeys.halfChecked.indexOf(item.code),
-        1,
-      )
-    }
-
-    if (checkedKeys.checked.indexOf(item.code) == -1) {
-      checkedKeys.checked.push(item.code)
-      item.select = true
-    }
+    item.select = true
+    // 先重置状态
+    toggleChecked(item.code, CheckState.unchecked)
+    // 勾选子节点
+    toggleChecked(item.code, CheckState.checked)
 
     if (item.children && item.children.length > 0) {
       checkAll(item.children)
@@ -147,10 +126,15 @@ const checkAll = (list: any) => {
   })
 }
 
-// 勾选父节点
+// 勾选/取消勾选父节点
 const checkParent = (self: any) => {
   const { node, parent } = self
-  // 自己的勾选状态 0 不勾选 1 全部勾选 2 部分勾选
+  // 重置状态
+  node.select = false
+  // 设为不勾选
+  toggleChecked(node.code, CheckState.unchecked)
+
+  // 子节点的勾选数量
   let checkChildCount = 0
 
   node.children.forEach((item: any) => {
@@ -159,21 +143,20 @@ const checkParent = (self: any) => {
     }
   })
 
+  // 子节点全部勾选
   if (checkChildCount == node.children.length) {
     node.select = true
-    if (checkedKeys.checked.indexOf(node.code) == -1) {
-      checkedKeys.checked.push(node.code)
-    }
-  } else {
-    node.select = true
-    if (checkedKeys.checked.indexOf(node.code) == -1) {
-      checkedKeys.halfChecked.push(node.code)
-    }
+    // 设为勾选
+    toggleChecked(node.code, CheckState.checked)
   }
 
-  console.log('node :>> ', node)
+  // 子节点部分勾选
+  if (checkChildCount > 0 && checkChildCount < node.children.length) {
+    node.select = true
+    // 设为半勾选
+    toggleChecked(node.code, CheckState.halfChecked)
+  }
 
-  // console.log('checkChildCount :>> ', checkChildCount)
   if (parent) {
     checkParent(parent)
   }
@@ -182,10 +165,8 @@ const checkParent = (self: any) => {
 // 取消勾选所有子节点
 const unCheckAll = (list: any) => {
   list.forEach((item: any) => {
-    if (checkedKeys.checked.indexOf(item.code) !== -1) {
-      checkedKeys.checked.splice(checkedKeys.checked.indexOf(item.code), 1)
-      item.select = false
-    }
+    item.select = false
+    toggleChecked(item.code, CheckState.unchecked)
 
     if (item.children && item.children.length > 0) {
       unCheckAll(item.children)
@@ -193,8 +174,47 @@ const unCheckAll = (list: any) => {
   })
 }
 
-// 取消勾选父节点
-// const unCheckParent = (self: any) => {}
+// 切换节点勾选状态
+const toggleChecked = (code: string, state: CheckState) => {
+  if (state == CheckState.unchecked) {
+    if (checkedKeys.halfChecked.indexOf(code) !== -1) {
+      checkedKeys.halfChecked.splice(checkedKeys.halfChecked.indexOf(code), 1)
+    }
+    if (checkedKeys.checked.indexOf(code) !== -1) {
+      checkedKeys.checked.splice(checkedKeys.checked.indexOf(code), 1)
+    }
+  }
+
+  if (state == CheckState.checked) {
+    if (checkedKeys.checked.indexOf(code) == -1) {
+      checkedKeys.checked.push(code)
+    }
+  }
+
+  if (state == CheckState.halfChecked) {
+    if (checkedKeys.halfChecked.indexOf(code) == -1) {
+      checkedKeys.halfChecked.push(code)
+    }
+  }
+}
+
+const submit = async () => {
+  try {
+    const res = await reqConfigPermission({
+      phone: phone.value,
+      codeS: [...checkedKeys.checked, ...checkedKeys.halfChecked].join(','),
+    })
+    if (res.code == 0) {
+      $emit('success')
+      open.value = false
+      message.success('配置成功')
+    } else {
+      message.error(res.msg)
+    }
+  } catch (error) {
+    console.log('error :>> ', error)
+  }
+}
 
 defineExpose({
   show,
