@@ -9,7 +9,6 @@
     <a-tree
       :tree-data="menuArr"
       :fieldNames="fieldNames"
-      :autoExpandParent="true"
       checkable
       checkStrictly
       v-model:checkedKeys="checkedKeys"
@@ -51,6 +50,11 @@ enum CheckState {
 }
 
 const show = async (row: any) => {
+  // 清理数据
+  menuArr.value = []
+  checkedKeys.checked = []
+  checkedKeys.halfChecked = []
+
   const res = await reqConfigPermissionSearch({ shoujihao: row.shoujihao })
   if (res.code == 0) {
     open.value = true
@@ -59,25 +63,31 @@ const show = async (row: any) => {
     checkedKeys.checked = checked
     checkedKeys.halfChecked = halfChecked
     phone.value = row.shoujihao
+
+    console.log('checkedKeys.checked :>> ', checkedKeys.checked)
+    console.log('checkedKeys.halfChecked :>> ', checkedKeys.halfChecked)
   } else {
     message.error(res.msg)
   }
 }
 
 const filterCheckedArr = (allData: any, checkArr: any, halfCheckArr: any) => {
-  allData.forEach((item: any) => {
-    // 如果节点选中
+  for (let i = 0; i < allData.length; i++) {
+    const item = allData[i]
     if (item.select) {
       if (isChildrenAllChecked(item)) {
         checkArr.push(item.code)
+        item.state = CheckState.checked
       } else {
         halfCheckArr.push(item.code)
+        item.state = CheckState.halfChecked
       }
     }
     if (item.children && item.children.length > 0) {
       filterCheckedArr(item.children, checkArr, halfCheckArr)
     }
-  })
+  }
+
   return {
     checked: checkArr,
     halfChecked: halfCheckArr,
@@ -97,11 +107,11 @@ const handleTreeCheckd = (checkedkeys: any, { node }: { node: any }) => {
   checkedKeys.halfChecked = checkedkeys.halfChecked
 
   if (node.checked) {
-    node.dataRef.select = false
+    node.dataRef.state = CheckState.unchecked
     // 全部取消勾选子节点
     unCheckAll(node.children)
   } else {
-    node.dataRef.select = true
+    node.dataRef.state = CheckState.checked
     // 全部勾选子节点
     checkAll(node.children)
   }
@@ -114,7 +124,7 @@ const handleTreeCheckd = (checkedkeys: any, { node }: { node: any }) => {
 // 勾选所有子节点
 const checkAll = (list: any) => {
   list.forEach((item: any) => {
-    item.select = true
+    item.state = CheckState.checked
     // 先重置状态
     toggleChecked(item.code, CheckState.unchecked)
     // 勾选子节点
@@ -130,7 +140,7 @@ const checkAll = (list: any) => {
 const checkParent = (self: any) => {
   const { node, parent } = self
   // 重置状态
-  node.select = false
+  node.state = CheckState.unchecked
   // 设为不勾选
   toggleChecked(node.code, CheckState.unchecked)
 
@@ -138,21 +148,18 @@ const checkParent = (self: any) => {
   let checkChildCount = 0
 
   node.children.forEach((item: any) => {
-    if (item.select) {
+    if (item.state === CheckState.checked) {
       checkChildCount++
     }
   })
 
   // 子节点全部勾选
   if (checkChildCount == node.children.length) {
-    node.select = true
+    node.state = CheckState.checked
     // 设为勾选
     toggleChecked(node.code, CheckState.checked)
-  }
-
-  // 子节点部分勾选
-  if (checkChildCount > 0 && checkChildCount < node.children.length) {
-    node.select = true
+  } else {
+    node.state = CheckState.halfChecked
     // 设为半勾选
     toggleChecked(node.code, CheckState.halfChecked)
   }
@@ -165,7 +172,7 @@ const checkParent = (self: any) => {
 // 取消勾选所有子节点
 const unCheckAll = (list: any) => {
   list.forEach((item: any) => {
-    item.select = false
+    item.state = CheckState.unchecked
     toggleChecked(item.code, CheckState.unchecked)
 
     if (item.children && item.children.length > 0) {
@@ -199,7 +206,7 @@ const toggleChecked = (code: string, state: CheckState) => {
 }
 
 const submit = async () => {
-  try {
+  /* try {
     const res = await reqConfigPermission({
       phone: phone.value,
       codeS: [...checkedKeys.checked, ...checkedKeys.halfChecked].join(','),
@@ -213,7 +220,7 @@ const submit = async () => {
     }
   } catch (error) {
     console.log('error :>> ', error)
-  }
+  } */
 }
 
 defineExpose({
