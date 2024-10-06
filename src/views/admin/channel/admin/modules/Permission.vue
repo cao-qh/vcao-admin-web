@@ -12,12 +12,13 @@
       checkable
       checkStrictly
       v-model:checkedKeys="checkedKeys"
+      v-model:expandedKeys="expandedKeys"
       @check="handleTreeCheckd"
     ></a-tree>
   </a-modal>
 </template>
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import { message } from 'ant-design-vue'
 import {
   reqConfigPermissionSearch,
@@ -33,13 +34,14 @@ const open = ref<boolean>(false)
 
 const menuArr = ref<any>([])
 const fieldNames = { key: 'code', title: 'name' }
-const checkedKeys = reactive<{
+const checkedKeys = ref<{
   checked: string[]
   halfChecked: string[]
 }>({
   checked: [],
   halfChecked: [],
 })
+const expandedKeys = ref<string[]>([])
 
 const phone = ref<string>('')
 
@@ -52,20 +54,19 @@ enum CheckState {
 const show = async (row: any) => {
   // 清理数据
   menuArr.value = []
-  checkedKeys.checked = []
-  checkedKeys.halfChecked = []
+  checkedKeys.value.checked = []
+  checkedKeys.value.halfChecked = []
 
   const res = await reqConfigPermissionSearch({ shoujihao: row.shoujihao })
   if (res.code == 0) {
     open.value = true
     menuArr.value = res.data
     const { checked, halfChecked } = filterCheckedArr(menuArr.value, [], [])
-    checkedKeys.checked = checked
-    checkedKeys.halfChecked = halfChecked
+    checkedKeys.value.checked = checked
+    checkedKeys.value.halfChecked = halfChecked
     phone.value = row.shoujihao
 
-    console.log('checkedKeys.checked :>> ', checkedKeys.checked)
-    console.log('checkedKeys.halfChecked :>> ', checkedKeys.halfChecked)
+    expandedKeys.value = [...checked, ...halfChecked]
   } else {
     message.error(res.msg)
   }
@@ -103,8 +104,8 @@ const isChildrenAllChecked = (node: any) => {
 }
 
 const handleTreeCheckd = (checkedkeys: any, { node }: { node: any }) => {
-  checkedKeys.checked = checkedkeys.checked
-  checkedKeys.halfChecked = checkedkeys.halfChecked
+  checkedKeys.value.checked = checkedkeys.checked
+  checkedKeys.value.halfChecked = checkedkeys.halfChecked
 
   if (node.checked) {
     node.dataRef.state = CheckState.unchecked
@@ -184,32 +185,41 @@ const unCheckAll = (list: any) => {
 // 切换节点勾选状态
 const toggleChecked = (code: string, state: CheckState) => {
   if (state == CheckState.unchecked) {
-    if (checkedKeys.halfChecked.indexOf(code) !== -1) {
-      checkedKeys.halfChecked.splice(checkedKeys.halfChecked.indexOf(code), 1)
+    if (checkedKeys.value.halfChecked.indexOf(code) !== -1) {
+      checkedKeys.value.halfChecked.splice(
+        checkedKeys.value.halfChecked.indexOf(code),
+        1,
+      )
     }
-    if (checkedKeys.checked.indexOf(code) !== -1) {
-      checkedKeys.checked.splice(checkedKeys.checked.indexOf(code), 1)
+    if (checkedKeys.value.checked.indexOf(code) !== -1) {
+      checkedKeys.value.checked.splice(
+        checkedKeys.value.checked.indexOf(code),
+        1,
+      )
     }
   }
 
   if (state == CheckState.checked) {
-    if (checkedKeys.checked.indexOf(code) == -1) {
-      checkedKeys.checked.push(code)
+    if (checkedKeys.value.checked.indexOf(code) == -1) {
+      checkedKeys.value.checked.push(code)
     }
   }
 
   if (state == CheckState.halfChecked) {
-    if (checkedKeys.halfChecked.indexOf(code) == -1) {
-      checkedKeys.halfChecked.push(code)
+    if (checkedKeys.value.halfChecked.indexOf(code) == -1) {
+      checkedKeys.value.halfChecked.push(code)
     }
   }
 }
 
 const submit = async () => {
-  /* try {
+  try {
     const res = await reqConfigPermission({
       phone: phone.value,
-      codeS: [...checkedKeys.checked, ...checkedKeys.halfChecked].join(','),
+      codeS: [
+        ...checkedKeys.value.checked,
+        ...checkedKeys.value.halfChecked,
+      ].join(','),
     })
     if (res.code == 0) {
       $emit('success')
@@ -220,7 +230,7 @@ const submit = async () => {
     }
   } catch (error) {
     console.log('error :>> ', error)
-  } */
+  }
 }
 
 defineExpose({

@@ -111,6 +111,11 @@ const useUserStore: any = defineStore('user', () => {
     }
   }
 
+  // 是否包含用户按钮
+  const hasPermission = (button: string) => {
+    return buttons.value.includes(button)
+  }
+
   // 退出登录
   const userLogout = async () => {
     token.value = ''
@@ -137,6 +142,7 @@ const useUserStore: any = defineStore('user', () => {
     userLogin,
     userInfo,
     userLogout,
+    hasPermission,
   }
 })
 

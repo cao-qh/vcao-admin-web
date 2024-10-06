@@ -3,11 +3,17 @@
     <SearchForm :formItems="formItems" @search="table.refresh()" />
     <STable ref="table" :columns="columns" :data="reqData">
       <template #toolbar>
-        <a-button type="primary" @click="add.show()">添加</a-button>
+        <a-button
+          v-has="'Btn.Interface.Add'"
+          type="primary"
+          @click="add.show()"
+        >
+          添加
+        </a-button>
       </template>
       <template #bodyCell="{ column, row }">
         <template v-if="column.dataIndex === 'action'">
-          <a @click="update.show(row)">修改</a>
+          <a v-has="'Btn.Interface.Update'" @click="update.show(row)">修改</a>
         </template>
       </template>
     </STable>

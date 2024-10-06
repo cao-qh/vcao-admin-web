@@ -41,6 +41,9 @@ import Add from './modules/Add.vue'
 import Update from './modules/Update.vue'
 import UpdateJson from './modules/UpdateJson.vue'
 import { message } from 'ant-design-vue'
+import useUserStore from '@/store/modules/user'
+
+const userStore = useUserStore()
 
 const formItems = reactive([
   {
