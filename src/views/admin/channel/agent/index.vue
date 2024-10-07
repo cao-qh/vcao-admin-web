@@ -10,13 +10,17 @@
         :show-pagination="true"
       >
         <template #toolbar>
-          <a-button type="primary" @click="add.show()">添加</a-button>
+          <a-button v-has="'Btn.Agent.Add'" type="primary" @click="add.show()">
+            添加
+          </a-button>
         </template>
         <template #bodyCell="{ column, row }">
           <template v-if="column.dataIndex === 'action'">
-            <a @click="update.show(row)">修改</a>
+            <a v-has="'Btn.Agent.Update'" @click="update.show(row)">修改</a>
             <a-divider type="vertical" />
-            <a @click="handleConfigProduct(row)">产品配置</a>
+            <a v-has="'Btn.Agent.Config'" @click="handleConfigProduct(row)">
+              产品配置
+            </a>
           </template>
         </template>
       </STable>

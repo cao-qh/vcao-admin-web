@@ -11,11 +11,18 @@
       :scroll="{ y: 'calc(100vh - 408px)' }"
     >
       <template #toolbar>
-        <a-button type="primary" @click="() => add.show()">添加</a-button>
+        <a-button
+          v-has="'Btn.Admin.Add'"
+          type="primary"
+          @click="() => add.show()"
+        >
+          添加
+        </a-button>
       </template>
       <template #bodyCell="{ column, row }">
         <template v-if="column.dataIndex === 'qijinyong'">
           <a-popconfirm
+            v-if="userStore.hasPermission('Switch.Admin.Enable')"
             title="确定要修改吗？"
             ok-text="是"
             cancel-text="否"
@@ -23,11 +30,16 @@
           >
             <a-switch :checked="row.qijinyong === 1" />
           </a-popconfirm>
+          <span v-else>
+            {{ qijinyong.find((item) => item.value === row.qijinyong)?.label }}
+          </span>
         </template>
         <template v-if="column.dataIndex === 'action'">
-          <a @click="() => update.show(row)">修改</a>
+          <a v-has="'Btn.Admin.Update'" @click="() => update.show(row)">修改</a>
           <a-divider type="vertical" />
-          <a @click="() => permission.show(row)">权限配置</a>
+          <a v-has="'Btn.Admin.Permission'" @click="() => permission.show(row)">
+            权限配置
+          </a>
         </template>
       </template>
     </STable>
@@ -47,6 +59,9 @@ import { message } from 'ant-design-vue'
 import Add from './modules/Add.vue'
 import Update from './modules/Update.vue'
 import Permission from './modules/Permission.vue'
+import useUserStore from '@/store/modules/user'
+
+const userStore = useUserStore()
 
 const qijinyong = [
   {

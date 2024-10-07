@@ -5,7 +5,8 @@
     @ok="submit"
     @cancel="open = false"
     :width="880"
-    :bodyStyle="{ height: '500px', overflow: 'auto' }"
+    centered
+    :bodyStyle="{ height: '650px', overflow: 'auto' }"
     :maskClosable="false"
   >
     <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
@@ -24,9 +25,17 @@
           </a-form-item>
         </a-col>
         <a-col :xs="24" :sm="12">
-          <a-form-item label="上级产品编号" name="shangjiBianma">
+          <a-form-item label="上级产品编码" name="shangjiBianma">
             <a-input
               v-model:value="formState.shangjiBianma"
+              placeholder="请输入"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :xs="24" :sm="12">
+          <a-form-item label="参数模板编码" name="canshumobanBianma">
+            <a-input
+              v-model:value="formState.canshumobanBianma"
               placeholder="请输入"
             />
           </a-form-item>
@@ -55,6 +64,7 @@
         <a-col :xs="24" :sm="12">
           <a-form-item label="订购价格" name="dinggoujiage">
             <a-input-number
+              style="width: 100%"
               :min="0"
               v-model:value="formState.dinggoujiage"
               placeholder="请输入"
@@ -115,6 +125,21 @@
             </a-select>
           </a-form-item>
         </a-col>
+        <a-col :xs="24" :sm="12">
+          <a-form-item label="宣传图" name="fileXC">
+            <UploadImage v-model:value="formState.fileXC" />
+          </a-form-item>
+        </a-col>
+        <a-col :xs="24" :sm="12">
+          <a-form-item label="落地页图" name="fileLD">
+            <UploadImage v-model:value="formState.fileLD" />
+          </a-form-item>
+        </a-col>
+        <a-col :xs="24" :sm="12">
+          <a-form-item label="确认页面图" name="fileQR">
+            <UploadImage v-model:value="formState.fileQR" />
+          </a-form-item>
+        </a-col>
       </a-row>
     </a-form>
   </a-modal>
@@ -123,6 +148,7 @@
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { reqAdd } from '@/api/admin/goods'
+import UploadImage from '@/components/UploadImage/index.vue'
 
 defineOptions({ name: 'Add' })
 // 属性
@@ -130,18 +156,12 @@ withDefaults(
   defineProps<{
     del: any
     shangxiajia: any
-    fanyongStatus: any
     operate: any
-    phonePool: any
-    province: any
   }>(),
   {
     del: () => [],
     shangxiajia: () => [],
-    fanyongStatus: () => [],
-    operate: () => [],
-    phonePool: () => [],
-    province: () => [],
+    operate: () => ({}),
   },
 )
 
@@ -169,6 +189,7 @@ const rules = {
   shangjiMingcheng: [{ required: true, message: '不能为空' }],
   shangjiBianma: [{ required: true, message: '不能为空' }],
   mingcheng: [{ required: true, message: '不能为空' }],
+  canshumobanBianma: [{ required: true, message: '不能为空' }],
   yunyingshang: [{ required: true, message: '请选择' }],
   guishudi: [{ required: true, message: '不能为空' }],
   dinggoujiage: [{ required: true, message: '不能为空' }],
@@ -177,36 +198,29 @@ const rules = {
   fanyongshuoming: [{ required: true, message: '不能为空' }],
   qijinyong: [{ required: true, message: '请选择' }],
   shangxiajia: [{ required: true, message: '请选择' }],
+  fileXC: [{ required: true, message: '请选择' }],
+  fileLD: [{ required: true, message: '请选择' }],
+  fileQR: [{ required: true, message: '请选择' }],
 }
 
 const show = () => {
   open.value = true
   Object.assign(formState, {
+    mingcheng: '',
     shangjiMingcheng: '',
     shangjiBianma: '',
-    mingcheng: '',
-    goodsName: '',
-    del: '',
-    shangxiajia: '',
-    fanyongId: '',
-    yunyingshang: '',
-    fanyongStatus: '',
-    goodsSku: '',
-    goodsPrice: '',
-    picjudge: '',
-    phonelibs: '',
-    tPhonepoolId: '',
-    goodsFile: '',
-    provinceId: '',
-    goodsDe: '',
-    maidDetail: '',
-    noAddress: '',
-    maxAge: '',
-    minAge: '',
-    maiDian: '',
-    remark: '',
-    ziliaokuUrl: '',
-    price: '',
+    canshumobanBianma: '',
+    yunyingshang: '1',
+    guishudi: '',
+    qijinyong: 1,
+    shangxiajia: 1,
+    dinggoujiage: '',
+    qudaoshangBianma: '',
+    chanpinXiangqing: '',
+    fanyongshuoming: '',
+    fileXC: '',
+    fileLD: '',
+    fileQR: '',
   })
   formRef.value?.clearValidate()
 }
@@ -215,37 +229,14 @@ const submit = async () => {
   try {
     await formRef.value.validate()
     console.log('formState :>> ', formState)
-
     const formData = new FormData()
-    formData.append('shangjiMingcheng', formState.shangjiMingcheng)
-    formData.append('shangjiBianma', formState.shangjiBianma)
-    formData.append('mingcheng', formState.mingcheng)
-    formData.append('goodsName', formState.goodsName)
-    formData.append('del', formState.del)
-    formData.append('shangxiajia', formState.shangxiajia)
-    formData.append('fanyongId', formState.fanyongId)
-    formData.append('yunyingshang', formState.yunyingshang)
-    formData.append('fanyongStatus', formState.fanyongStatus)
-    formState.goodsSku && formData.append('goodsSku', formState.goodsSku)
-    formData.append('goodsPrice', formState.goodsPrice)
-    formData.append('price', formState.price)
-    formData.append('picjudge', formState.picjudge)
-    formData.append('phonelibs', formState.phonelibs)
-    formState.tPhonepoolId &&
-      formData.append('tPhonepoolId', formState.tPhonepoolId)
-    formState.goodsFile && formData.append('goodsFile', formState.goodsFile)
-    formData.append('provinceId', formState.provinceId)
-    formState.goodsDe && formData.append('goodsDe', formState.goodsDe)
-    formState.maidDetail && formData.append('maidDetail', formState.maidDetail)
-    formState.noAddress && formData.append('noAddress', formState.noAddress)
-    formState.maxAge && formData.append('maxAge', formState.maxAge)
-    formState.minAge && formData.append('minAge', formState.minAge)
-    formState.maiDian && formData.append('maiDian', formState.maiDian)
-    formState.remark && formData.append('remark', formState.remark)
-    formState.ziliaokuUrl &&
-      formData.append('ziliaokuUrl', formState.ziliaokuUrl)
-
-    const res = await reqAdd(formData)
+    Object.keys(formState).forEach((key) => {
+      if (formState[key] !== undefined && formState[key] !== null) {
+        formData.append(key, formState[key])
+      }
+    })
+    console.log(formData)
+    const res: any = await reqAdd(formData)
     if (res.code == 0) {
       $emit('success')
       open.value = false

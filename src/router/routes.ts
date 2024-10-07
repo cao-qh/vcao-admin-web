@@ -421,6 +421,15 @@ export const agentRoute = [
           title: '个人信息',
         },
       },
+      // API信息
+      {
+        path: '/personal/api',
+        component: () => import('@/views/agent/personal/api/index.vue'),
+        name: 'PersonalApi',
+        meta: {
+          title: 'API信息',
+        },
+      },
       // 个人日志
       {
         path: '/personal/log',

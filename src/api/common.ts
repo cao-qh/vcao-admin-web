@@ -10,7 +10,12 @@ enum API {
   searchExportUrl = '/comm/selectDowOrderPC',
   // 下载文件
   downloadUrl = '/comm/download',
+  // 查询商品
+  goodsUrl = 'comm/selectQiYongChanPin',
 }
+
+// 查询商品
+export const reqGoodsBianma = () => request.post(API.goodsUrl)
 
 // 获取省份
 export const reqInterface = () => request.post(API.interfaceUrl)

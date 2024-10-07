@@ -1,55 +1,47 @@
 <template>
   <a-modal
-    title="详情"
+    title="产品详情"
     :open="open"
-    @ok="submit"
+    :footer="null"
     @cancel="open = false"
     :maskClosable="false"
   >
-    <a-form ref="formRef" :model="formState" v-bind="layout">
-      <a-form-item label="禁用平台" name="maidDetail">
-        <!-- <a-input v-model:value="formState.maidDetail" /> -->
-        <a-select
-          v-model:value="formState.maidDetail"
-          mode="multiple"
-          style="width: 100%"
-          placeholder="请选择"
-          :options="disPlatform"
-        ></a-select>
+    <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
+      <a-form-item label="产品编码" name="chanpinBianma">
+        <a-input v-model:value="formState.chanpinBianma" disabled />
       </a-form-item>
-
-      <a-form-item label="最高年龄" name="maxAge">
-        <a-input-number
-          v-model:value="formState.maxAge"
-          :max="120"
-          style="width: 100%"
+      <a-form-item label="产品详情" name="chanpinXiangqing">
+        <a-textarea
+          v-model:value="formState.chanpinXiangqing"
+          readOnly
+        ></a-textarea>
+      </a-form-item>
+      <a-form-item label="返佣说明" name="fanyongshuoming">
+        <a-textarea
+          v-model:value="formState.fanyongshuoming"
+          readOnly
+        ></a-textarea>
+      </a-form-item>
+      <a-form-item label="宣传图" name="fileXC">
+        <img
+          style="width: 150px; height: auto"
+          :src="formState.fileXC"
+          alt="宣传图"
         />
       </a-form-item>
-      <a-form-item label="最低年龄" name="minAge">
-        <a-input-number
-          v-model:value="formState.minAge"
-          :min="1"
-          style="width: 100%"
+      <a-form-item label="落地页图" name="fileLD">
+        <img
+          style="width: 150px; height: auto"
+          :src="formState.fileLD"
+          alt="落地页图"
         />
       </a-form-item>
-      <a-form-item label="资料库链接" name="ziliaokuUrl">
-        <a-input v-model:value="formState.ziliaokuUrl" />
-      </a-form-item>
-      <a-form-item label="套餐介绍" name="goodsDe">
-        <a-textarea v-model:value="formState.goodsDe"></a-textarea>
-      </a-form-item>
-      <a-form-item label="不发货地区" name="noAddress">
-        <a-textarea v-model:value="formState.noAddress"></a-textarea>
-      </a-form-item>
-      <a-form-item label="卖点" name="maiDian">
-        <a-textarea v-model:value="formState.maiDian"></a-textarea>
-      </a-form-item>
-      <a-form-item label="商品备注" name="remark">
-        <a-textarea v-model:value="formState.remark"></a-textarea>
-      </a-form-item>
-
-      <a-form-item label="套餐详情图" name="goodsDetailFile">
-        <UploadImage v-model:value="formState.goodsDetailFile" />
+      <a-form-item label="确认页面图" name="fileQR">
+        <img
+          style="width: 150px; height: auto"
+          :src="formState.fileQR"
+          alt="确认页面图"
+        />
       </a-form-item>
     </a-form>
   </a-modal>
@@ -57,17 +49,10 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqDetail, reqEditDetail } from '@/api/agent/goods/index'
-import UploadImage from '@/components/UploadImage/index.vue'
+import { reqDetail } from '@/api/agent/goods'
 
+const imgBase = import.meta.env.VITE_APP_IMG_BASE
 defineOptions({ name: 'EditDetail' })
-
-defineProps<{
-  disPlatform: any
-}>()
-
-// 定义方法
-const $emit = defineEmits(['success'])
 
 const open = ref<boolean>(false)
 
@@ -85,65 +70,29 @@ const layout = {
 
 const formRef = ref()
 const formState = reactive<any>({})
-const baseUrl = import.meta.env.VITE_SERVE
 
 const show = async (row: any) => {
-  const res: any = await reqDetail({ goodsId: row.id })
+  const res: any = await reqDetail({ chanpinBianma: row.bianma })
   if (res.code == 0) {
     open.value = true
     formState.id = res.data.id
-    formState.goodsDe = res.data.goodsDe
-    formState.maidDetail = res.data.maidDetail
-    formState.noAddress = res.data.noAddress
-    formState.maxAge = res.data.maxAge
-    formState.minAge = res.data.minAge
-    formState.maiDian = res.data.maiDian
-    formState.remark = res.data.remark
-    formState.ziliaokuUrl = res.data.ziliaokuUrl
-    if (res.data.goodsDetailPic) {
-      formState.goodsDetailFile = baseUrl + res.data.goodsDetailPic
-    } else {
-      formState.goodsDetailFile = ''
-    }
-    formState.goodsId = res.data.goodsId
+    formState.chanpinBianma = res.data.chanpinBianma
+    formState.chanpinXiangqing = res.data.chanpinXiangqing
+    formState.fanyongshuoming = res.data.fanyongshuoming
+    formState.fileXC = imgBase + res.data.luodiyeUrl
+    formState.fileLD = imgBase + res.data.querentuUrl
+    formState.fileQR = imgBase + res.data.xuanchuantuUrl
   } else {
     message.error(res.message)
   }
 }
 
-const submit = async () => {
-  try {
-    await formRef.value.validate()
-
-    const formData = new FormData()
-    formData.append('id', formState.id)
-    formData.append('goodsDe', formState.goodsDe)
-    formData.append('maidDetail', formState.maidDetail)
-    formData.append('noAddress', formState.noAddress)
-    formData.append('maxAge', formState.maxAge)
-    formData.append('minAge', formState.minAge)
-    formData.append('maiDian', formState.maiDian)
-    formData.append('remark', formState.remark)
-    formData.append('ziliaokuUrl', formState.ziliaokuUrl)
-    if (
-      formState.goodsDetailFile &&
-      typeof formState.goodsDetailFile === 'object'
-    ) {
-      formData.append('goodsDetailFile', formState.goodsDetailFile)
-    }
-    formData.append('goodsId', formState.goodsId)
-
-    const res = await reqEditDetail(formData)
-    if (res.code == 0) {
-      $emit('success')
-      open.value = false
-      message.success('修改成功')
-    } else {
-      message.error(res.msg)
-    }
-  } catch (error) {
-    console.log('error :>> ', error)
-  }
+const rules = {
+  chanpinXiangqing: [{ required: true, message: '请输入' }],
+  fanyongshuoming: [{ required: true, message: '请输入' }],
+  fileXC: [{ required: true, message: '请选择' }],
+  fileLD: [{ required: true, message: '请选择' }],
+  fileQR: [{ required: true, message: '请选择' }],
 }
 
 defineExpose({

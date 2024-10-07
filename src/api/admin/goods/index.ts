@@ -8,26 +8,29 @@ enum API {
   // 添加
   addUrl = '/tAdmin/tGoods/saveTGoods',
   // 修改
-  editUrl = '/tGoods/updateGoods',
+  editUrl = '/tAdmin/tGoods/updateTGoods',
   // 详情
-  detailUrl = '/tGoods/selectByGoodsDetail',
+  detailUrl = '/tAdmin/tGoods/selectByGoodsDetail',
   // 修改详情
-  editDetailUrl = '/tGoods/updateByGoodsDetail',
+  editDetailUrl = '/tAdmin/tGoods/updateGoodsDetail',
   // 配置前查询
-  configUrl = '/tGoods/selectPeiZhiGoods',
+  configUrl = '/tAdmin/tGoods/selectBypeizhi',
   // 配置
-  configEditUrl = '/tGoods/peizhiGoods',
-  // 代理上下架套餐
-  agentShangXiaJiaUrl = '/tGoods/updateShangXiaJia',
-  // 合伙人上下架套餐
-  partnerShangXiaJiaUrl = '/tGoods/hh/updateByGoods',
+  configEditUrl = '/tAdmin/tGoods/peizhi',
+  // 启禁用
+  useBan = '/tAdmin/tGoods/updateQiJinYong',
+  // 上下架
+  shangxiajia = '/tAdmin/tGoods/updateShangXiaJia',
 }
 
 // 查询套餐
 export const selectGoods = (data: any) =>
   request.post(API.selectGoods, obj2Query(data))
 // 添加套餐
-export const reqAdd = (data: any) => request.post(API.addUrl, obj2Query(data))
+export const reqAdd = (data: any) =>
+  request.post(API.addUrl, data, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
 // 修改套餐
 export const reqEdit = (data: any) => request.post(API.editUrl, obj2Query(data))
 
@@ -37,7 +40,7 @@ export const reqConfig = (data: any) =>
 
 // 配置
 export const reqConfigEdit = (data: any) =>
-  request.post<any, any>(API.configEditUrl, obj2Query(data))
+  request.post<any, any>(API.configEditUrl, data)
 
 // 详情
 export const reqDetail = (data: any) =>
@@ -45,4 +48,14 @@ export const reqDetail = (data: any) =>
 
 // 修改详情
 export const reqEditDetail = (data: any) =>
-  request.post<any, any>(API.editDetailUrl, obj2Query(data))
+  request.post<any, any>(API.editDetailUrl, data, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+
+// 启禁用
+export const reqUseBan = (data: any) =>
+  request.post<any, any>(API.useBan, obj2Query(data))
+
+// 上下架
+export const reqShangxiajia = (data: any) =>
+  request.post<any, any>(API.shangxiajia, obj2Query(data))

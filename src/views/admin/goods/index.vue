@@ -9,22 +9,25 @@
       :scroll="{ y: 'calc(100vh - 290px)' }"
     >
       <template #toolbar>
-        <a-button type="primary" @click="() => add.show()">添加</a-button>
+        <a-button type="primary" @click="() => add.show()">
+          <PlusOutlined />
+          添加
+        </a-button>
       </template>
       <template #bodyCell="{ column, row }">
         <template v-if="column.dataIndex === 'qijinyong'">
           <a-popconfirm
-            :title="`确定要${row.qijinyong == 1 ? '启' : '禁'}用吗？`"
+            :title="`确定要${row.qijinyong == 2 ? '启' : '禁'}用吗？`"
             ok-text="是"
             cancel-text="否"
-            @confirm="handelQqijinyong(row)"
+            @confirm="handelQijinyong(row)"
           >
             <a-switch :checked="row.qijinyong === 1" />
           </a-popconfirm>
         </template>
         <template v-if="column.dataIndex === 'shangxiajia'">
           <a-popconfirm
-            :title="`确定要${row.shangxiajia == 1 ? '上' : '下'}架吗？`"
+            :title="`确定要${row.shangxiajia == 2 ? '上' : '下'}架吗？`"
             ok-text="是"
             cancel-text="否"
             @confirm="handelShangxiajia(row)"
@@ -42,22 +45,19 @@
         </template>
         <template v-if="column.dataIndex === 'action'">
           <div>
-            <div>
-              <a @click="() => edit.show(row)">修改套餐</a>
-              <br />
-              <a
-                @click="
-                  () => {
-                    editDetail.show(row)
-                  }
-                "
-              >
-                修改详情
-              </a>
-              <br />
-            </div>
-
-            <!-- <a v-partner @click="() => config.show(row)">配置</a> -->
+            <a @click="() => edit.show(row)">修改</a>
+            <br />
+            <a
+              @click="
+                () => {
+                  editDetail.show(row)
+                }
+              "
+            >
+              产品详情
+            </a>
+            <br />
+            <a @click="() => config.show(row)">配置代理</a>
           </div>
         </template>
       </template>
@@ -67,23 +67,11 @@
       ref="add"
       :del="del"
       :shangxiajia="shangXiaJia"
-      :fanyongStatus="fanyongStatus"
       :operate="operate"
-      :phonePool="phonePool"
-      :province="province"
       @success="table.refresh()"
     />
 
-    <Edit
-      ref="edit"
-      :del="del"
-      :shangXiaJia="shangXiaJia"
-      :fanyongStatus="fanyongStatus"
-      :operate="operate"
-      :phonePool="phonePool"
-      :province="province"
-      @success="table.refresh()"
-    />
+    <Edit ref="edit" :operate="operate" @success="table.refresh()" />
 
     <EditDetail
       ref="editDetail"
@@ -96,16 +84,10 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, onMounted, h } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import STable from '@/components/STable/index.vue'
-import { selectGoods } from '@/api/admin/goods'
-import {
-  reqProvince,
-  reqFanyongType,
-  reqOperator,
-  // reqPhonePool,
-} from '@/api/common'
+import { selectGoods, reqUseBan, reqShangxiajia } from '@/api/admin/goods'
 import EditDetail from './modules/EditDetail.vue'
 import Add from './modules/Add.vue'
 import Edit from './modules/Edit.vue'
@@ -336,6 +318,9 @@ const columns = [
     title: '运营商',
     dataIndex: 'yunyingshang',
     align: 'center',
+    customRender(obj: any) {
+      return operate[obj.text]
+    },
   },
   {
     title: '渠道商',
@@ -402,23 +387,24 @@ const getData = async (currentPage: number, pageSize: number) => {
 }
 
 // 启禁用
-const handelQqijinyong = async (row: any) => {
-  const result: any = await reqQijinyong({
+const handelQijinyong = async (row: any) => {
+  const result: any = await reqUseBan({
     id: row.id,
-    del: row.del === 1 ? 2 : 1,
+    qijinyong: row.qijinyong === 1 ? 2 : 1,
   })
-  if (result.code == 200) {
-    message.success(result.message)
+  if (result.code == 0) {
+    table.value.refresh()
+    message.success(result.msg)
   } else {
-    message.error(result.message)
+    message.error(result.msg)
   }
 }
 
 // 上下架
 const handelShangxiajia = async (row: any) => {
   const result: any = await reqShangxiajia({
-    goodsId: row.id,
-    shangXiaJia: row.shangXiaJia === 1 ? 2 : 1,
+    id: row.id,
+    shangxiajia: row.shangxiajia === 1 ? 2 : 1,
   })
   if (result.code == 0) {
     table.value.refresh()

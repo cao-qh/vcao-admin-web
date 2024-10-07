@@ -1,21 +1,39 @@
 <template>
   <a-modal
-    title="配置"
+    title="配置代理"
     :open="open"
     @ok="submit"
     @cancel="open = false"
     :maskClosable="false"
   >
-    <a-flex gap="20" wrap="wrap">
-      <a-checkbox
-        v-for="item in accountList"
-        :key="item.name"
-        :checked="item.type !== 0"
-        @change="handleChange(item)"
-      >
-        {{ item.name }}
-      </a-checkbox>
-    </a-flex>
+    <a-table :columns="columns" :data-source="data">
+      <template #bodyCell="{ column, row }">
+        <template v-if="column.key === 'dailiYongjinJine'">
+          <a-input v-model:value="row.dailiYongjinJine" />
+        </template>
+        <template v-if="column.key === 'jiesuanfangshi'">
+          <a-select v-model:value="row.jiesuanfangshi">
+            <a-select-option :value="1">长期分成</a-select-option>
+            <a-select-option :value="2">CPA一口价</a-select-option>
+          </a-select>
+        </template>
+        <template v-if="column.key === 'jiesuanzhouqi'">
+          <a-select v-model:value="row.jiesuanzhouqi">
+            <a-select-option :value="1">实时</a-select-option>
+            <a-select-option :value="2">日结</a-select-option>
+            <a-select-option :value="3">周结</a-select-option>
+            <a-select-option :value="4">双周结</a-select-option>
+            <a-select-option :value="5">月结</a-select-option>
+          </a-select>
+        </template>
+        <template v-if="column.dataIndex === 'shangxiajia'">
+          <a-switch
+            :checked="row.shangxiajia === 1"
+            @change="handleChange(row)"
+          />
+        </template>
+      </template>
+    </a-table>
   </a-modal>
 </template>
 <script lang="ts" setup>
@@ -29,40 +47,58 @@ defineOptions({ name: 'Config' })
 const $emit = defineEmits(['success'])
 
 const open = ref<boolean>(false)
-const accountList = ref<any>([])
-const goodsId = ref<number>(0)
+const data = ref([])
+const columns = [
+  {
+    title: 'ID',
+    dataIndex: 'id',
+    align: 'center',
+  },
+  {
+    title: '代理编码',
+    dataIndex: 'dailibianma',
+    align: 'center',
+    width: '100px',
+  },
+  {
+    title: '佣金',
+    dataIndex: 'dailiYongjinJine',
+    align: 'center',
+  },
+  {
+    title: '结算方式',
+    dataIndex: 'jiesuanfangshi',
+    align: 'center',
+  },
+  {
+    title: '结算周期',
+    dataIndex: 'jiesuanzhouqi',
+    align: 'center',
+  },
+  {
+    title: '上下架',
+    dataIndex: 'shangxiajia',
+    align: 'center',
+  },
+]
 
 const show = async (row: any) => {
-  const res: any = await reqConfig({ goodsId: row.id })
+  const res: any = await reqConfig({ chanpinBianma: row.bianma })
   if (res.code == 0) {
-    if (res.data.length == 0) {
-      message.error('您还没有合伙人，或合伙人未实名')
-      return
-    }
-
     open.value = true
-    accountList.value = res.data
-    goodsId.value = row.id
+    data.value = res.data
   } else {
-    message.error(res.message)
+    message.error(res.msg)
   }
 }
 
 const submit = async () => {
   try {
-    const data: any = {
-      goodsId: goodsId.value,
-    }
-
-    accountList.value.forEach((item: any) => {
-      data[item.name] = item.type
-    })
-
-    const res = await reqConfigEdit(data)
+    const res = await reqConfigEdit(data.value)
     if (res.code == 0) {
       $emit('success')
       open.value = false
-      message.success('修改成功')
+      message.success(res.msg)
     } else {
       message.error(res.msg)
     }
@@ -71,8 +107,8 @@ const submit = async () => {
   }
 }
 
-const handleChange = (item: any) => {
-  item.type = item.type === 0 ? 1 : 0
+const handleChange = (row: any) => {
+  row.shangxiajia = row.shangxiajia === 2 ? 1 : 2
 }
 
 defineExpose({

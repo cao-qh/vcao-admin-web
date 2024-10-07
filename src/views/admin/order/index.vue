@@ -22,9 +22,21 @@
             cancel-text="否"
             @confirm="handleBatchPush"
           >
-            <a-button type="primary" @click="handleExport">批量推送</a-button>
+            <a-button
+              v-has="'Btn.Order.BatchPush'"
+              type="primary"
+              @click="handleExport"
+            >
+              批量推送
+            </a-button>
           </a-popconfirm>
-          <a-button type="primary" @click="handleExport">导出</a-button>
+          <a-button
+            v-has="'Btn.Order.Download'"
+            type="primary"
+            @click="handleExport"
+          >
+            导出
+          </a-button>
         </a-space>
       </template>
       <template #bodyCell="{ column, row }">
@@ -50,7 +62,7 @@
               cancel-text="否"
               @confirm="handlePush(row.dingdanhao)"
             >
-              <a>推送</a>
+              <a v-has="'Btn.Order.Push'">推送</a>
             </a-popconfirm>
           </div>
         </template>

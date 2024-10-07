@@ -14,24 +14,16 @@
     <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
       <a-row>
         <a-col :xs="24" :sm="24">
-          <a-form-item label="IP" name="ipS">
+          <a-form-item label="回调地址" name="huitiaoUrl">
+            <a-input
+              v-model:value="formState.huitiaoUrl"
+              placeholder="请输入"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :xs="24" :sm="24">
+          <a-form-item label="IP白名单" name="ipS">
             <a-input v-model:value="formState.ipS" placeholder="请输入" />
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="24">
-          <a-form-item label="新密码" name="mima">
-            <a-input-password
-              v-model:value="formState.mima"
-              placeholder="请输入"
-            />
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="24">
-          <a-form-item label="确认密码" name="confirmPassword">
-            <a-input-password
-              v-model:value="formState.confirmPassword"
-              placeholder="请输入"
-            />
           </a-form-item>
         </a-col>
       </a-row>
@@ -41,8 +33,7 @@
 <script lang="ts" setup>
 import { reactive, ref, watch } from 'vue'
 import { message } from 'ant-design-vue'
-import { editUserInfo } from '@/api/admin/personal'
-import type { Rule } from 'ant-design-vue/es/form'
+import { editUserApi } from '@/api/agent/personal'
 
 defineOptions({ name: 'Edit' })
 // 定义方法
@@ -65,37 +56,23 @@ const formRef = ref()
 const formState = reactive<any>({})
 
 watch(open, (val) => {
-  console.log('open', val)
   if (val) {
+    formState.id = Props.userInfo.id
     formState.ipS = Props.userInfo.ipS
-    // formState.mima = Props.userInfo.mima
+    formState.huitiaoUrl = Props.userInfo.huitiaoUrl
   }
 })
 
 const rules = {
+  huitiaoUrl: [{ required: true, message: '请输入' }],
   // ipS: [{ required: true, message: '请输入' }],
-  // mima: [{ required: true, message: '请输入' }],
-  confirmPassword: [
-    // { required: true, message: '请输入' },
-    {
-      // required: true,
-      validator: async (_rule: Rule, value: string) => {
-        if (value !== formState.mima) {
-          return Promise.reject('两次输入不一致')
-        } else {
-          return Promise.resolve()
-        }
-      },
-      trigger: 'change',
-    },
-  ],
 }
 
 const submit = async () => {
   try {
     await formRef.value.validate()
 
-    const res = await editUserInfo(formState)
+    const res = await editUserApi(formState)
     if (res.code === 0) {
       $emit('reload')
       open.value = false

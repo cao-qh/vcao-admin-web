@@ -3,11 +3,14 @@
     <SearchForm :formItems="formItems" @search="table.refresh()" />
     <STable ref="table" :columns="columns" :data="reqData">
       <template #toolbar>
-        <a-button type="primary" @click="add.show()">添加</a-button>
+        <a-button v-has="'Btn.Params.Add'" type="primary" @click="add.show()">
+          添加
+        </a-button>
       </template>
       <template #bodyCell="{ column, row }">
         <template v-if="column.dataIndex === 'qijinyong'">
           <a-popconfirm
+            v-if="userStore.hasPermission('Switch.Params.Enable')"
             title="确定要修改吗？"
             ok-text="是"
             cancel-text="否"
@@ -15,11 +18,18 @@
           >
             <a-switch :checked="row.qijinyong === 1" />
           </a-popconfirm>
+          <span v-else>
+            {{ row.qijinyong === 1 ? '启用' : '禁用' }}
+          </span>
         </template>
         <template v-if="column.dataIndex === 'action'">
-          <a @click="update.show(row)">修改参数模板</a>
+          <a v-has="'Btn.Params.Update'" @click="update.show(row)">
+            修改参数模板
+          </a>
           <a-divider type="vertical" />
-          <a @click="updateJson.show(row)">修改json数据</a>
+          <a v-has="'Btn.Params.UpdateJson'" @click="updateJson.show(row)">
+            修改json数据
+          </a>
         </template>
       </template>
     </STable>
