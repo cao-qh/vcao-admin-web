@@ -108,6 +108,25 @@ const formItems = reactive([
     value: dayjs().subtract(15, 'day').format('YYYY-MM-DD'),
     valueFormat: 'YYYY-MM-DD',
     allowClear: false,
+    disabledDate: (val: any) => {
+      const jieshuDate: any = formItems.find(
+        (item) => item.filed === 'jieshuDate',
+      )
+
+      // 大于结束之间不可选
+      if (val.valueOf() > dayjs(jieshuDate.value).valueOf()) {
+        return true
+      }
+
+      // 小于接收时间31天内的都可以选择
+      if (
+        val.valueOf() < dayjs(jieshuDate.value).subtract(31, 'day').valueOf()
+      ) {
+        return true
+      }
+
+      return false
+    },
   },
   {
     type: 'datePicker',
@@ -116,6 +135,19 @@ const formItems = reactive([
     value: dayjs().format('YYYY-MM-DD'),
     valueFormat: 'YYYY-MM-DD',
     allowClear: false,
+    disabledDate: (val: any) => {
+      // 不可大于今天
+      if (val.valueOf() > dayjs().valueOf()) {
+        return true
+      }
+      return false
+    },
+    onChange: (date: string) => {
+      const kaiShiDate: any = formItems.find(
+        (item) => item.filed === 'kaiShiDate',
+      )
+      kaiShiDate.value = dayjs(date).subtract(31, 'day').format('YYYY-MM-DD')
+    },
   },
   {
     type: 'select',

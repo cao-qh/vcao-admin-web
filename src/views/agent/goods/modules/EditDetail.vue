@@ -23,25 +23,13 @@
         ></a-textarea>
       </a-form-item>
       <a-form-item label="宣传图" name="fileXC">
-        <img
-          style="width: 150px; height: auto"
-          :src="formState.fileXC"
-          alt="宣传图"
-        />
+        <a-image :width="150" :src="formState.fileXC" alt="宣传图" />
       </a-form-item>
       <a-form-item label="落地页图" name="fileLD">
-        <img
-          style="width: 150px; height: auto"
-          :src="formState.fileLD"
-          alt="落地页图"
-        />
+        <a-image :width="150" :src="formState.fileLD" alt="落地页图" />
       </a-form-item>
       <a-form-item label="确认页面图" name="fileQR">
-        <img
-          style="width: 150px; height: auto"
-          :src="formState.fileQR"
-          alt="确认页面图"
-        />
+        <a-image :width="150" :src="formState.fileQR" alt="确认页面图" />
       </a-form-item>
     </a-form>
   </a-modal>

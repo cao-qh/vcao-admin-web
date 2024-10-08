@@ -127,9 +127,9 @@ const submit = async () => {
     await formRef.value.validate()
     const res: any = await reqEdit(formState)
     if (res.code == 0) {
+      message.success(res.msg)
       $emit('success')
       open.value = false
-      message.success(res.msg)
     } else {
       message.error(res.msg)
     }

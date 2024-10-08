@@ -98,9 +98,9 @@ const submit = async () => {
     })
     const res = await reqEditDetail(formData)
     if (res.code == 0) {
+      message.success('修改成功')
       $emit('success')
       open.value = false
-      message.success('修改成功')
     } else {
       message.error(res.msg)
     }

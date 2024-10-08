@@ -15,6 +15,16 @@
           </a-button>
         </template>
         <template #bodyCell="{ column, row }">
+          <template v-if="column.dataIndex === 'qijinyong'">
+            <a-popconfirm
+              title="确定要修改吗？"
+              ok-text="是"
+              cancel-text="否"
+              @confirm="handelQijinyong(row)"
+            >
+              <a-switch :checked="row.qijinyong === 1" />
+            </a-popconfirm>
+          </template>
           <template v-if="column.dataIndex === 'action'">
             <a v-has="'Btn.Agent.Update'" @click="update.show(row)">修改</a>
             <a-divider type="vertical" />
@@ -42,10 +52,11 @@
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import { STable } from '@/components/STable'
-import { reqSearch } from '@/api/admin/channel/agent'
+import { reqSearch, reqQijinyong } from '@/api/admin/channel/agent'
 import Add from './modules/Add.vue'
 import Update from './modules/Update.vue'
 import ConfigProduct from './components/ConfigProduct/index.vue'
+import { message } from 'ant-design-vue'
 
 const qijinyong = [
   {
@@ -61,7 +72,7 @@ const qijinyong = [
 const formItems = reactive([
   {
     type: 'input',
-    label: '手机号',
+    label: '代理账户',
     filed: 'shoujihao',
     value: '',
     placeholder: '请输入',
@@ -69,7 +80,7 @@ const formItems = reactive([
   {
     type: 'select',
     label: '状态',
-    filed: 'status',
+    filed: 'qijinyong',
     value: null,
     placeholder: '请选择',
     options: qijinyong,
@@ -89,22 +100,18 @@ const columns = [
     align: 'center',
   },
   {
-    title: '手机号',
+    title: '代理账户',
     dataIndex: 'shoujihao',
+    align: 'center',
+  },
+  {
+    title: '创建时间',
+    dataIndex: 'chuangjianshijian',
     align: 'center',
   },
   {
     title: '启禁用',
     dataIndex: 'qijinyong',
-    align: 'center',
-    customRender: ({ text }: { text: any }) => {
-      const item: any = qijinyong.find((item) => item.value === text)
-      return item ? item.label : ''
-    },
-  },
-  {
-    title: '创建时间',
-    dataIndex: 'chuangjianshijian',
     align: 'center',
   },
   {
@@ -132,6 +139,20 @@ const reqData = async (currentPage: number, pageSize: number) => {
       data: res.data.list,
       total: res.data.totalSize,
     }
+  }
+}
+
+// 启禁用
+const handelQijinyong = async (row: any) => {
+  const result = await reqQijinyong({
+    id: row.id,
+    qijinyong: row.qijinyong === 1 ? 2 : 1,
+  })
+  if (result.code == 0) {
+    message.success(result.msg)
+    table.value.refresh()
+  } else {
+    message.error(result.msg)
   }
 }
 

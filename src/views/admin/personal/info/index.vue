@@ -23,7 +23,13 @@
     <div
       style="margin: 10px; width: 100%; display: flex; justify-content: center"
     >
-      <a-button type="primary" @click="open = true">修改</a-button>
+      <a-button
+        type="primary"
+        @click="open = true"
+        v-has="'Btn.PersonalInfo.Update'"
+      >
+        修改
+      </a-button>
     </div>
     <Edit v-model:open="open" :userInfo="userInfo" @reload="getData" />
   </PageWrapper>

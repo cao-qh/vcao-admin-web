@@ -5,10 +5,27 @@
     </a-button>
     <SearchForm :formItems="formItems" @search="table.refresh()"></SearchForm>
 
-    <STable ref="table" :columns="columns" :data="reqData">
+    <STable
+      ref="table"
+      :columns="columns"
+      :data="reqData"
+      row-key="chanpinBianma"
+      :row-selection="{
+        selectedRowKeys: selectedRowKeys,
+        onChange: onSelectChange,
+      }"
+    >
+      <template #toolbar>
+        <a-button
+          type="primary"
+          @click="batchConfig.show(DLbianma, selectedRows)"
+        >
+          批量配置
+        </a-button>
+      </template>
       <template #bodyCell="{ column, row }">
         <template v-if="column.dataIndex === 'xuanchuantuUrl'">
-          <a-image :src="baseUrl + row.xuanchuantuUrl" />
+          <a-image :width="80" :src="baseUrl + row.xuanchuantuUrl" />
         </template>
         <template v-if="column.dataIndex === 'shangxiajia'">
           <a-popconfirm
@@ -24,14 +41,14 @@
             />
           </a-popconfirm>
         </template>
-        <template v-if="column.dataIndex === 'action'">
+        <!-- <template v-if="column.dataIndex === 'action'">
           <a @click="() => config.show(row, DLbianma)">配置</a>
-        </template>
+        </template> -->
       </template>
     </STable>
 
-    <Config
-      ref="config"
+    <BatchConfig
+      ref="batchConfig"
       :settlement="settlement"
       :jiesuanzhouqi="jiesuanzhouqi"
       @success="table.refresh()"
@@ -48,7 +65,7 @@ import {
   reqConfigProductStatus,
 } from '@/api/admin/channel/agent'
 import { message } from 'ant-design-vue'
-import Config from './modules/Config.vue'
+import BatchConfig from './modules/BatchConfig.vue'
 
 defineOptions({ name: 'ConfigProduct' })
 
@@ -207,11 +224,11 @@ const columns = [
     dataIndex: 'shangxiajia',
     align: 'center',
   },
-  {
-    title: '操作',
-    dataIndex: 'action',
-    align: 'center',
-  },
+  // {
+  //   title: '操作',
+  //   dataIndex: 'action',
+  //   align: 'center',
+  // },
 ]
 
 const reqData = async () => {
@@ -237,7 +254,7 @@ const reqData = async () => {
 const handelShangxiajia = async (row: any) => {
   const result = await reqConfigProductStatus({
     id: row.id,
-    chanpinBianma: row.chanpinbianma,
+    chanpinBianma: row.chanpinBianma,
     shangxiajia: row.shangxiajia === 1 ? 2 : 1,
   })
   if (result.code == 0) {
@@ -248,8 +265,16 @@ const handelShangxiajia = async (row: any) => {
   }
 }
 
+const selectedRowKeys = ref<any>([])
+const selectedRows = ref<any>([])
+
+const onSelectChange = (selectedRowkeys: any, selectedrows: any) => {
+  selectedRowKeys.value = selectedRowkeys
+  selectedRows.value = selectedrows
+}
+
 // 配置
-const config = ref()
+const batchConfig = ref()
 </script>
 
 <style></style>

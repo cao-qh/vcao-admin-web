@@ -6,6 +6,7 @@
       :columns="columns"
       :data="reqData"
       :showPagination="true"
+      :scroll="{ y: 'calc(100vh - 408px)' }"
     ></STable>
   </PageWrapper>
 </template>
@@ -84,8 +85,26 @@ const formItems = reactive([
     type: 'datePicker',
     label: '开始时间',
     filed: 'kaiShiDate',
-    value: dayjs().subtract(15, 'day').format('YYYY-MM-DD'),
+    value: dayjs().subtract(31, 'day').format('YYYY-MM-DD'),
     valueFormat: 'YYYY-MM-DD',
+    disabledDate: (val: any) => {
+      const jieShuDate: any = formItems.find(
+        (item) => item.filed === 'jieShuDate',
+      )
+
+      // 大于结束之间不可选
+      if (val.valueOf() > dayjs(jieShuDate.value).valueOf()) {
+        return true
+      }
+      // 小于接收时间31天内的都可以选择
+      if (
+        val.valueOf() < dayjs(jieShuDate.value).subtract(31, 'day').valueOf()
+      ) {
+        return true
+      }
+
+      return false
+    },
   },
   {
     type: 'datePicker',
@@ -93,6 +112,19 @@ const formItems = reactive([
     filed: 'jieShuDate',
     value: dayjs().format('YYYY-MM-DD'),
     valueFormat: 'YYYY-MM-DD',
+    disabledDate: (val: any) => {
+      // 不可大于今天
+      if (val.valueOf() > dayjs().valueOf()) {
+        return true
+      }
+      return false
+    },
+    onChange: (date: string) => {
+      const kaiShiDate: any = formItems.find(
+        (item) => item.filed === 'kaiShiDate',
+      )
+      kaiShiDate.value = dayjs(date).subtract(31, 'day').format('YYYY-MM-DD')
+    },
   },
   {
     type: 'input',
@@ -143,7 +175,7 @@ const columns = [
     align: 'center',
   },
   {
-    title: '账户',
+    title: '编码',
     dataIndex: 'guanliyuanBianma',
     align: 'center',
   },

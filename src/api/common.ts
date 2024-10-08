@@ -6,19 +6,29 @@ import { linkDownload } from '@/utils/download'
 enum API {
   // 接口模板列表
   interfaceUrl = '/comm/selectByTemplateMode',
+  // 参数模板列表
+  canshumobanUrl = '/comm/selectByTemplate',
   // 查询导出文件
   searchExportUrl = '/comm/selectDowOrderPC',
   // 下载文件
   downloadUrl = '/comm/download',
   // 查询商品
-  goodsUrl = 'comm/selectQiYongChanPin',
+  goodsUrl = '/comm/selectQiYongChanPin',
+  // 查询渠道商
+  selectQudaoshang = '/comm/selectQiYongQuDao',
 }
+
+// 查询渠道商
+export const selectQudaoshang = () => request.post(API.selectQudaoshang)
 
 // 查询商品
 export const reqGoodsBianma = () => request.post(API.goodsUrl)
 
-// 获取省份
+// 查询接口模板
 export const reqInterface = () => request.post(API.interfaceUrl)
+
+// 查询参数模板
+export const reqCanshumoban = () => request.post(API.canshumobanUrl)
 
 // 查询导出文件
 export const reqSearchExport = () => request.post<any, any>(API.searchExportUrl)

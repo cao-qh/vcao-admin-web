@@ -7,6 +7,7 @@
       :columns="columns"
       :data="getData"
       :scroll="{ y: 'calc(100vh - 290px)' }"
+      :showPagination="true"
     >
       <template #toolbar>
         <a-popconfirm

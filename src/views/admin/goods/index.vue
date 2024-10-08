@@ -5,11 +5,16 @@
     <STable
       ref="table"
       :columns="columns"
+      :showPagination="true"
       :data="getData"
       :scroll="{ y: 'calc(100vh - 290px)' }"
     >
       <template #toolbar>
-        <a-button type="primary" @click="() => add.show()">
+        <a-button
+          type="primary"
+          @click="() => add.show()"
+          v-has="'Btn.Goods.Add'"
+        >
           <PlusOutlined />
           添加
         </a-button>
@@ -21,8 +26,12 @@
             ok-text="是"
             cancel-text="否"
             @confirm="handelQijinyong(row)"
+            :disabled="!userStore.hasPermission('Switch.Goods.Enable')"
           >
-            <a-switch :checked="row.qijinyong === 1" />
+            <a-switch
+              :checked="row.qijinyong === 1"
+              :disabled="!userStore.hasPermission('Switch.Goods.Enable')"
+            />
           </a-popconfirm>
         </template>
         <template v-if="column.dataIndex === 'shangxiajia'">
@@ -31,8 +40,12 @@
             ok-text="是"
             cancel-text="否"
             @confirm="handelShangxiajia(row)"
+            :disabled="!userStore.hasPermission('Switch.Goods.UpDown')"
           >
-            <a-switch :checked="row.shangxiajia === 1" />
+            <a-switch
+              :checked="row.shangxiajia === 1"
+              :disabled="!userStore.hasPermission('Switch.Goods.UpDown')"
+            />
           </a-popconfirm>
         </template>
 
@@ -45,9 +58,10 @@
         </template>
         <template v-if="column.dataIndex === 'action'">
           <div>
-            <a @click="() => edit.show(row)">修改</a>
+            <a @click="() => edit.show(row)" v-has="'Btn.Goods.Update'">修改</a>
             <br />
             <a
+              v-has="'Btn.Goods.DetailQuery'"
               @click="
                 () => {
                   editDetail.show(row)
@@ -57,7 +71,9 @@
               产品详情
             </a>
             <br />
-            <a @click="() => config.show(row)">配置代理</a>
+            <a @click="() => config.show(row)" v-has="'Btn.Goods.ConfigAgent'">
+              配置代理
+            </a>
           </div>
         </template>
       </template>
@@ -84,7 +100,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import STable from '@/components/STable/index.vue'
 import { selectGoods, reqUseBan, reqShangxiajia } from '@/api/admin/goods'
@@ -94,6 +110,8 @@ import Edit from './modules/Edit.vue'
 import Config from './modules/Config.vue'
 import { message } from 'ant-design-vue'
 import useUserStore from '@/store/modules/user'
+
+const userStore = useUserStore()
 
 defineOptions({
   name: 'Goods',
@@ -180,32 +198,6 @@ const disPlatform = [
     label: '其他',
   },
 ]
-
-const phonePool = ref<any>([])
-
-const fanyongStatus = ref<any>([])
-
-// const operate = ref<any>([])
-
-const province = ref<any>([])
-
-onMounted(() => {
-  // reqPhonePool().then((res: any) => {
-  //   if (res.code == 0) {
-  //     phonePool.value = res.data
-  //   }
-  // })
-  if (userStore.level == 0) {
-    columns.push({
-      title: '操作',
-      dataIndex: 'action',
-      width: '100px',
-      align: 'center',
-    })
-  }
-})
-
-const userStore = useUserStore()
 
 const formItems = reactive([
   {
@@ -305,12 +297,12 @@ const columns = [
     align: 'center',
   },
   {
-    title: '兴投产品名称',
+    title: '产品名称',
     dataIndex: 'mingcheng',
     align: 'center',
   },
   {
-    title: '兴投产品编号',
+    title: '产品编号',
     dataIndex: 'bianma',
     align: 'center',
   },

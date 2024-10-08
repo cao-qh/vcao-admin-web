@@ -1,7 +1,7 @@
 <template>
   <a-modal title="添加" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
-      <a-form-item label="手机号" name="shoujihao">
+      <a-form-item label="账户/手机号" name="shoujihao">
         <a-input v-model:value="formState.shoujihao" placeholder="请输入" />
       </a-form-item>
       <a-form-item label="密码" name="mima">
@@ -32,6 +32,7 @@
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { reqAdd } from '@/api/admin/channel/agent'
+import { phone, email } from '@/utils/regexp'
 
 defineOptions({ name: 'Add' })
 
@@ -57,9 +58,27 @@ const formState = reactive<any>({})
 
 const rules = {
   mingcheng: [{ required: true, message: '请输入' }],
-  mima: [{ required: true, message: '请输入' }],
-  shoujihao: [{ required: true, message: '请输入' }],
+  mima: [
+    {
+      required: true,
+      min: 6,
+      message: '请输入6位以上密码',
+    },
+  ],
+  shoujihao: [
+    { required: true, message: '请输入' },
+    {
+      pattern: phone,
+      message: '请输入正确的手机号',
+    },
+  ],
   qijinyong: [{ required: true, message: '请选择' }],
+  youxiang: [
+    {
+      pattern: email,
+      message: '请输入正确的邮箱',
+    },
+  ],
 }
 
 const show = () => {

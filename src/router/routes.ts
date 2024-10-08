@@ -27,48 +27,48 @@ export const constantRoute = [
     ],
   },
   // 测试
-  {
-    path: '/',
-    component: BaseLayout,
-    name: 'Home',
-    meta: {
-      title: '测试',
-      icon: 'ExperimentOutlined',
-    },
-    redirect: '/test',
-    children: [
-      {
-        path: '/test',
-        component: () => import('@/views/test/index.vue'),
-        name: 'Test',
-        meta: {
-          title: '测试',
-        },
-      },
-    ],
-  },
+  // {
+  //   path: '/',
+  //   component: BaseLayout,
+  //   name: 'Home',
+  //   meta: {
+  //     title: '测试',
+  //     icon: 'ExperimentOutlined',
+  //   },
+  //   redirect: '/test',
+  //   children: [
+  //     {
+  //       path: '/test',
+  //       component: () => import('@/views/test/index.vue'),
+  //       name: 'Test',
+  //       meta: {
+  //         title: '测试',
+  //       },
+  //     },
+  //   ],
+  // },
   // 数据表格
-  {
-    path: '/table',
-    component: BaseLayout,
-    name: 'Table',
-    meta: {
-      title: '数据表格',
-      icon: 'TableOutlined',
-    },
-    redirect: '/table/search',
-    children: [
-      // 查询表格
-      {
-        path: '/table/search',
-        component: () => import('@/views/table/search/index.vue'),
-        name: 'Search',
-        meta: {
-          title: '查询表格',
-        },
-      },
-    ],
-  },
+  // {
+  //   path: '/table',
+  //   component: BaseLayout,
+  //   name: 'Table',
+  //   meta: {
+  //     title: '数据表格',
+  //     icon: 'TableOutlined',
+  //   },
+  //   redirect: '/table/search',
+  //   children: [
+  //     // 查询表格
+  //     {
+  //       path: '/table/search',
+  //       component: () => import('@/views/table/search/index.vue'),
+  //       name: 'Search',
+  //       meta: {
+  //         title: '查询表格',
+  //       },
+  //     },
+  //   ],
+  // },
   {
     path: '/:pathMatch(.*)*',
     component: () => import('@/views/404/index.vue'),
@@ -83,7 +83,7 @@ export const constantRoute = [
 export const adminRoute = [
   // 系统管理
   {
-    path: '/system',
+    path: '/',
     component: BaseLayout,
     name: 'System',
     meta: {
@@ -305,7 +305,7 @@ export const adminRoute = [
 export const agentRoute = [
   // 订单管理
   {
-    path: '/order',
+    path: '/',
     component: BaseLayout,
     name: 'Order',
     meta: {

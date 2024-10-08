@@ -1,6 +1,7 @@
 <template>
   <div>
     <a-upload
+      v-if="show"
       ref="upload"
       accept="image/png, image/jpeg"
       list-type="picture-card"
@@ -40,10 +41,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 import type { UploadProps } from 'ant-design-vue'
 import file2base64 from '@/utils/file2base64'
 import ImageViewer from '@/components/ImageViewer/index.vue'
+import { message } from 'ant-design-vue'
 
 defineOptions({
   name: 'UploadImage',
@@ -51,6 +53,7 @@ defineOptions({
 
 withDefaults(defineProps<{ deleteable?: boolean }>(), { deleteable: false })
 
+const show = ref(true)
 const model = defineModel<object | string | null>('value')
 const upload = ref()
 
@@ -64,8 +67,19 @@ watch(model, (val) => {
 
 // 上传前回调
 const handleBeforeUpload: UploadProps['beforeUpload'] = async (file) => {
-  model.value = file
-  return false
+  console.log(file)
+  if (file.size > 1 * 1024 * 1024) {
+    message.warning('图片大小不能超过2MB')
+    // 重置 上传组件 防止超过大小限制的图片显示上去
+    show.value = false
+    nextTick(() => {
+      show.value = true
+    })
+    return false
+  } else {
+    model.value = file
+    return false
+  }
 }
 
 // 处理删除

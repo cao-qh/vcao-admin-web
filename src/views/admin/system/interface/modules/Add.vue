@@ -10,13 +10,13 @@
       <a-form-item label="中文参数" name="zhongwen">
         <a-textarea
           v-model:value="formState.zhongwen"
-          placeholder="请输入"
+          placeholder="以-分隔，例如xx-xx-xx"
         ></a-textarea>
       </a-form-item>
       <a-form-item label="英文参数" name="yingwen">
         <a-textarea
           v-model:value="formState.yingwen"
-          placeholder="请输入"
+          placeholder="以-分隔，例如aa-bb-cc"
         ></a-textarea>
       </a-form-item>
       <a-form-item label="备注" name="beizhu">

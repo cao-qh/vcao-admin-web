@@ -110,7 +110,7 @@ const columns = [
     align: 'center',
   },
   {
-    title: '昵称',
+    title: '名称',
     dataIndex: 'mingcheng',
     align: 'center',
   },

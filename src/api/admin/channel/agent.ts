@@ -7,6 +7,8 @@ enum API {
   addUrl = '/tAdmin/agent/saveTAgent',
   // 修改
   updateUrl = '/tAdmin/agent/updateTAgent',
+  // 启禁用
+  qijinyongUrl = '/tAdmin/agent/updateTAgentQiJinYong',
   // 查询可配置产品
   searchProduct = '/tAdmin/agent/selectByTAgentGoods',
   // 配置产品
@@ -26,6 +28,10 @@ export const reqAdd = (data: any) =>
 // 修改
 export const reqUpdate = (data: any) =>
   request.post<any, any>(API.updateUrl, obj2Query(data))
+
+// 启禁用
+export const reqQijinyong = (data: any) =>
+  request.post<any, any>(API.qijinyongUrl, obj2Query(data))
 
 // 查询可配置产品
 export const reqSearchProduct = (data: any) =>

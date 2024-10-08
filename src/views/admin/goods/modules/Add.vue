@@ -34,10 +34,18 @@
         </a-col>
         <a-col :xs="24" :sm="12">
           <a-form-item label="参数模板编码" name="canshumobanBianma">
-            <a-input
+            <a-select
               v-model:value="formState.canshumobanBianma"
-              placeholder="请输入"
-            />
+              placeholder="请选择"
+            >
+              <a-select-option
+                v-for="canshumoban in canshumobanList"
+                :key="canshumoban.bm"
+                :value="canshumoban.bm"
+              >
+                {{ canshumoban.mc }}
+              </a-select-option>
+            </a-select>
           </a-form-item>
         </a-col>
         <a-col :xs="24" :sm="12">
@@ -74,10 +82,18 @@
 
         <a-col :xs="24" :sm="12">
           <a-form-item label="渠道商" name="qudaoshangBianma">
-            <a-input
+            <a-select
               v-model:value="formState.qudaoshangBianma"
-              placeholder="请输入"
-            />
+              placeholder="请选择"
+            >
+              <a-select-option
+                v-for="qudao in qudaoList"
+                :key="qudao.quDaoBianMa"
+                :value="qudao.quDaoBianMa"
+              >
+                {{ qudao.quDaoName }}
+              </a-select-option>
+            </a-select>
           </a-form-item>
         </a-col>
         <a-col :xs="24" :sm="12">
@@ -149,6 +165,7 @@ import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { reqAdd } from '@/api/admin/goods'
 import UploadImage from '@/components/UploadImage/index.vue'
+import { selectQudaoshang, reqCanshumoban } from '@/api/common'
 
 defineOptions({ name: 'Add' })
 // 属性
@@ -185,15 +202,18 @@ const layout = {
 const formRef = ref()
 const formState = reactive<any>({})
 
+const qudaoList = ref<any>([])
+const canshumobanList = ref<any>([])
+
 const rules = {
   shangjiMingcheng: [{ required: true, message: '不能为空' }],
   shangjiBianma: [{ required: true, message: '不能为空' }],
   mingcheng: [{ required: true, message: '不能为空' }],
-  canshumobanBianma: [{ required: true, message: '不能为空' }],
+  canshumobanBianma: [{ required: true, message: '请选择' }],
   yunyingshang: [{ required: true, message: '请选择' }],
   guishudi: [{ required: true, message: '不能为空' }],
   dinggoujiage: [{ required: true, message: '不能为空' }],
-  qudaoshangBianma: [{ required: true, message: '不能为空' }],
+  qudaoshangBianma: [{ required: true, message: '请选择' }],
   chanpinXiangqing: [{ required: true, message: '不能为空' }],
   fanyongshuoming: [{ required: true, message: '不能为空' }],
   qijinyong: [{ required: true, message: '请选择' }],
@@ -204,7 +224,19 @@ const rules = {
 }
 
 const show = () => {
-  open.value = true
+  Promise.all([selectQudaoshang(), reqCanshumoban()]).then((res) => {
+    res.forEach((i: any, index) => {
+      if (i.code === 0) {
+        if (index === 0) {
+          qudaoList.value = i.data
+        }
+        if (index === 1) {
+          canshumobanList.value = i.data
+        }
+      }
+      open.value = true
+    })
+  })
   Object.assign(formState, {
     mingcheng: '',
     shangjiMingcheng: '',
@@ -238,9 +270,9 @@ const submit = async () => {
     console.log(formData)
     const res: any = await reqAdd(formData)
     if (res.code == 0) {
+      message.success(res.msg)
       $emit('success')
       open.value = false
-      message.success(res.msg)
     } else {
       message.error(res.msg)
     }

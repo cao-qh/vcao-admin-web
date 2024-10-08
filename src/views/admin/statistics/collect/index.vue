@@ -7,6 +7,7 @@
       :columns="columns"
       :data="getData"
       :scroll="{ y: 'calc(100vh - 290px)' }"
+      :showPagination="true"
     >
       <template #toolbar>
         <a-popconfirm
@@ -15,7 +16,9 @@
           cancel-text="取消"
           @confirm="handleDownload"
         >
-          <a-button type="primary">导出</a-button>
+          <a-button v-has="'Btn.Collect.Download'" type="primary">
+            导出
+          </a-button>
         </a-popconfirm>
       </template>
     </STable>
@@ -27,7 +30,7 @@ import { reactive, ref, onMounted } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import STable from '@/components/STable/index.vue'
 import { collectSelect, collectDownload } from '@/api/admin/collect'
-import { reqGoodsBianma } from '@/api/common'
+import { reqGoodsBianma, selectQudaoshang } from '@/api/common'
 import { message } from 'ant-design-vue'
 import dayjs, { Dayjs } from 'dayjs'
 
@@ -104,6 +107,30 @@ const formItems = reactive([
             value: res.data[key]?.chanPinBianMa,
             label:
               res.data[key]?.chanPinName + ' - ' + res.data[key]?.chanPinBianMa,
+          }
+        })
+      } else {
+        return []
+      }
+    },
+  },
+  {
+    type: 'select',
+    label: '渠道商',
+    filed: 'shangyouqudaoshang',
+    value: '',
+    placeholder: '请选择',
+    defaultOption: {
+      value: '',
+      label: '全部',
+    },
+    options: async () => {
+      const res = await selectQudaoshang()
+      if (res.code === 0) {
+        return Object.keys(res.data).map((key) => {
+          return {
+            value: res.data[key]?.quDaoBianMa,
+            label: res.data[key]?.quDaoName,
           }
         })
       } else {

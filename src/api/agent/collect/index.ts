@@ -19,7 +19,7 @@ export const collectSelect = (data: any) =>
 
 // 汇总统计 下载
 export const collectDownload = (data: any) =>
-  request.post<any, any>(API.collectDownload, data)
+  request.post<any, any>(API.collectDownload, obj2Query(data))
 
 // 日汇总 查
 export const collectDaySelect = (data: any) =>

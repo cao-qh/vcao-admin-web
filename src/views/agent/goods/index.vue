@@ -7,6 +7,7 @@
       :columns="columns"
       :data="getData"
       :scroll="{ y: 'calc(100vh - 290px)' }"
+      :showPagination="true"
     >
       <template #bodyCell="{ column, row }">
         <template v-if="column.dataIndex === 'shangxiajia'">
@@ -154,24 +155,14 @@ const columns = [
     align: 'center',
   },
   {
-    title: '上级产品名称',
+    title: '产品名称',
     dataIndex: 'shangjiMingcheng',
     align: 'center',
     width: '100px',
   },
   {
-    title: '上级产品编号',
+    title: '产品编号',
     dataIndex: 'shangjiBianma',
-    align: 'center',
-  },
-  {
-    title: '兴投产品名称',
-    dataIndex: 'mingcheng',
-    align: 'center',
-  },
-  {
-    title: '兴投产品编号',
-    dataIndex: 'bianma',
     align: 'center',
   },
   {

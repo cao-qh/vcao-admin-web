@@ -22,11 +22,7 @@
             cancel-text="否"
             @confirm="handleBatchPush"
           >
-            <a-button
-              v-has="'Btn.Order.BatchPush'"
-              type="primary"
-              @click="handleExport"
-            >
+            <a-button v-has="'Btn.Order.BatchPush'" type="primary">
               批量推送
             </a-button>
           </a-popconfirm>
@@ -78,6 +74,7 @@ import { STable } from '@/components/STable'
 import dayjs from 'dayjs'
 import { reqOrder, reqPush, reqBatchPush, reqExport } from '@/api/admin/order'
 import { message } from 'ant-design-vue'
+import { selectQudaoshang } from '@/api/common'
 
 defineOptions({
   name: 'Order',
@@ -120,6 +117,25 @@ const formItems = reactive([
     value: dayjs().subtract(15, 'day').format('YYYY-MM-DD'),
     valueFormat: 'YYYY-MM-DD',
     allowClear: false,
+    disabledDate: (val: any) => {
+      const jieshuDate: any = formItems.find(
+        (item) => item.filed === 'jieshuDate',
+      )
+
+      // 大于结束之间不可选
+      if (val.valueOf() > dayjs(jieshuDate.value).valueOf()) {
+        return true
+      }
+
+      // 小于接收时间31天内的都可以选择
+      if (
+        val.valueOf() < dayjs(jieshuDate.value).subtract(31, 'day').valueOf()
+      ) {
+        return true
+      }
+
+      return false
+    },
   },
   {
     type: 'datePicker',
@@ -128,19 +144,25 @@ const formItems = reactive([
     value: dayjs().format('YYYY-MM-DD'),
     valueFormat: 'YYYY-MM-DD',
     allowClear: false,
-  },
-  {
-    type: 'input',
-    label: '订单号',
-    filed: 'orderId',
-    value: '',
-    placeholder: '请输入',
+    disabledDate: (val: any) => {
+      // 不可大于今天
+      if (val.valueOf() > dayjs().valueOf()) {
+        return true
+      }
+      return false
+    },
+    onChange: (date: string) => {
+      const kaiShiDate: any = formItems.find(
+        (item) => item.filed === 'kaiShiDate',
+      )
+      kaiShiDate.value = dayjs(date).subtract(31, 'day').format('YYYY-MM-DD')
+    },
   },
   {
     type: 'select',
     label: '订单状态',
     filed: 'zhuangtai',
-    value: '',
+    value: null,
     placeholder: '请选择',
     defaultOption: {
       label: '全部',
@@ -171,7 +193,7 @@ const formItems = reactive([
   },
   {
     type: 'input',
-    label: '产品编码',
+    label: '兴投产品编码',
     filed: 'chanpinbianma',
     value: '',
     placeholder: '请输入',
@@ -184,15 +206,28 @@ const formItems = reactive([
     placeholder: '请输入',
   },
   {
-    type: 'input',
+    type: 'select',
     label: '上游渠道商',
     filed: 'shangyouqudaoshang',
-    value: '',
-    placeholder: '请输入',
+    value: null,
+    placeholder: '请选择',
+    defaultOption: {
+      label: '全部',
+      value: '',
+    },
+    options: async () => {
+      const res: any = await selectQudaoshang()
+      if (res.code == 0) {
+        return res.data.map((item) => ({
+          value: item.quDaoBianMa,
+          label: item.quDaoName,
+        }))
+      }
+    },
   },
   {
     type: 'input',
-    label: '手机号',
+    label: '办理手机号',
     filed: 'shoujihao',
     value: '',
     placeholder: '请输入',
@@ -228,6 +263,11 @@ const columns = [
     align: 'center',
   },
   {
+    title: '产品名称',
+    dataIndex: 'chanpinmingcheng',
+    align: 'center',
+  },
+  {
     title: '上级产品编码',
     dataIndex: 'shangJiChanpinBianMa',
     align: 'center',
@@ -235,11 +275,6 @@ const columns = [
   {
     title: '下游渠道商',
     dataIndex: 'xiayouqudaoshang',
-    align: 'center',
-  },
-  {
-    title: '产品名称',
-    dataIndex: 'chanpinmingcheng',
     align: 'center',
   },
   {

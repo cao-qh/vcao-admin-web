@@ -1,7 +1,12 @@
 <template>
   <PageWrapper>
     <SearchForm :formItems="formItems" @search="table.refresh()" />
-    <STable ref="table" :columns="columns" :data="reqData">
+    <STable
+      ref="table"
+      :columns="columns"
+      :data="reqData"
+      :showPagination="true"
+    >
       <template #toolbar>
         <a-button
           v-has="'Btn.Interface.Add'"
@@ -56,16 +61,6 @@ const columns = [
     align: 'center',
   },
   {
-    title: '中文参数',
-    dataIndex: 'zhongwen',
-    align: 'center',
-  },
-  {
-    title: '英文参数',
-    dataIndex: 'yingwen',
-    align: 'center',
-  },
-  {
     title: '接口编码',
     dataIndex: 'jiekouBianma',
     align: 'center',
@@ -73,6 +68,16 @@ const columns = [
   {
     title: '接口名称',
     dataIndex: 'jiekouMingcheng',
+    align: 'center',
+  },
+  {
+    title: '中文参数',
+    dataIndex: 'zhongwen',
+    align: 'center',
+  },
+  {
+    title: '英文参数',
+    dataIndex: 'yingwen',
     align: 'center',
   },
   {

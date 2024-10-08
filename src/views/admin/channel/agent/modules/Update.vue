@@ -4,14 +4,12 @@
       <a-form-item label="名称" name="mingcheng">
         <a-input v-model:value="formState.mingcheng" placeholder="请输入" />
       </a-form-item>
-      <a-form-item label="邮箱" name="youxiang">
+      <a-form-item
+        label="邮箱"
+        name="youxiang"
+        :rules="[{ pattern: email, message: '请输入正确的邮箱' }]"
+      >
         <a-input v-model:value="formState.youxiang" placeholder="请输入" />
-      </a-form-item>
-      <a-form-item label="启禁用" name="qijinyong" placeholder="请选择">
-        <a-radio-group v-model:value="formState.qijinyong">
-          <a-radio-button :value="1">启用</a-radio-button>
-          <a-radio-button :value="2">禁用</a-radio-button>
-        </a-radio-group>
       </a-form-item>
       <a-form-item label="备注" name="beizhu" placeholder="请输入">
         <a-textarea
@@ -26,6 +24,7 @@
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { reqUpdate } from '@/api/admin/channel/agent'
+import { email } from '@/utils/regexp'
 
 defineOptions({ name: 'Update' })
 
@@ -55,7 +54,6 @@ const show = async (row: any) => {
   formState.bianma = row.bianma
   formState.mingcheng = row.mingcheng
   formState.youxiang = row.youxiang
-  formState.qijinyong = row.qijinyong
   formState.beizhu = row.beizhu
 }
 

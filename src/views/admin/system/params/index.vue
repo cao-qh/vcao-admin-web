@@ -1,7 +1,13 @@
 <template>
   <PageWrapper>
     <SearchForm :formItems="formItems" @search="table.refresh()" />
-    <STable ref="table" :columns="columns" :data="reqData">
+
+    <STable
+      ref="table"
+      :columns="columns"
+      :data="reqData"
+      :showPagination="true"
+    >
       <template #toolbar>
         <a-button v-has="'Btn.Params.Add'" type="primary" @click="add.show()">
           添加
@@ -100,6 +106,7 @@ const columns = [
     title: '中英文参数',
     dataIndex: 'canshuZhongyingwen',
     align: 'center',
+    width: '200px',
   },
   {
     title: '备注',
@@ -138,7 +145,7 @@ const reqData = async (currentPage: number, pageSize: number) => {
   if (res.code == 0) {
     return {
       data: res.data.list,
-      total: res.data.total,
+      total: res.data.totalSize,
     }
   }
 }

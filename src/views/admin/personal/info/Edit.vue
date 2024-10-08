@@ -74,7 +74,7 @@ watch(open, (val) => {
 
 const rules = {
   // ipS: [{ required: true, message: '请输入' }],
-  // mima: [{ required: true, message: '请输入' }],
+  mima: [{ min: 6, message: '密码不少于6位' }],
   confirmPassword: [
     // { required: true, message: '请输入' },
     {

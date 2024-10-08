@@ -29,21 +29,21 @@
           </a-form-item>
         </a-col>
         <a-col :xs="24" :sm="24">
-          <a-form-item label="新密码" name="mima">
+          <a-form-item label="密码" name="mima">
             <a-input-password
               v-model:value="formState.mima"
               placeholder="请输入"
             />
           </a-form-item>
         </a-col>
-        <a-col :xs="24" :sm="24">
+        <!-- <a-col :xs="24" :sm="24">
           <a-form-item label="确认密码" name="confirmPassword">
             <a-input-password
               v-model:value="formState.confirmPassword"
               placeholder="请输入"
             />
           </a-form-item>
-        </a-col>
+        </a-col> -->
       </a-row>
     </a-form>
   </a-modal>
@@ -80,7 +80,9 @@ watch(open, (val) => {
     formState.mingcheng = Props.userInfo.mingcheng
     formState.youxiang = Props.userInfo.youxiang
     formState.beizhu = Props.userInfo.beizhu
-    // formState.mima = Props.userInfo.mima
+    formState.id = Props.userInfo.id
+    formState.bianma = Props.userInfo.bianma
+    formState.mima = Props.userInfo.mima
   }
 })
 
@@ -88,7 +90,10 @@ const rules = {
   mingcheng: [{ required: true, message: '请输入' }],
   youxiang: [{ required: true, message: '请输入' }],
   // beizhu: [{ required: true, message: '请输入' }],
-  // mima: [{ required: true, message: '请输入' }],
+  mima: [
+    { min: 6, message: '密码不少于6位' },
+    { required: true, message: '请输入' },
+  ],
   confirmPassword: [
     {
       // required: true,

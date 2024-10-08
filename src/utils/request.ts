@@ -32,6 +32,15 @@ request.interceptors.response.use(
     // 关闭PageLoading
     const appStore = useAppStore()
     appStore.pageLoading = false
+
+    if (
+      response.data.data === -120 ||
+      response.data.data === -130 ||
+      response.data.data === -140
+    ) {
+      const userStore = useUserStore()
+      userStore.userLogout()
+    }
     // 简化数据
     return response.data
   },

@@ -6,6 +6,7 @@
       :columns="columns"
       :data="reqData"
       :showPagination="true"
+      :scroll="{ y: 'calc(100vh - 408px)' }"
     ></STable>
   </PageWrapper>
 </template>
@@ -86,6 +87,20 @@ const formItems = reactive([
     filed: 'startTime',
     value: dayjs().subtract(15, 'day').format('YYYY-MM-DD'),
     valueFormat: 'YYYY-MM-DD',
+    disabledDate: (val: any) => {
+      const endTime: any = formItems.find((item) => item.filed === 'endTime')
+
+      // 大于结束之间不可选
+      if (val.valueOf() > dayjs(endTime.value).valueOf()) {
+        return true
+      }
+      // 小于接收时间31天内的都可以选择
+      if (val.valueOf() < dayjs(endTime.value).subtract(31, 'day').valueOf()) {
+        return true
+      }
+
+      return false
+    },
   },
   {
     type: 'datePicker',
@@ -93,6 +108,19 @@ const formItems = reactive([
     filed: 'endTime',
     value: dayjs().format('YYYY-MM-DD'),
     valueFormat: 'YYYY-MM-DD',
+    disabledDate: (val: any) => {
+      // 不可大于今天
+      if (val.valueOf() > dayjs().valueOf()) {
+        return true
+      }
+      return false
+    },
+    onChange: (date: string) => {
+      const startTime: any = formItems.find(
+        (item) => item.filed === 'startTime',
+      )
+      startTime.value = dayjs(date).subtract(31, 'day').format('YYYY-MM-DD')
+    },
   },
   {
     type: 'input',

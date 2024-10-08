@@ -15,7 +15,7 @@
         <a-input
           size="large"
           v-model:value="loginForm.shoujihao"
-          placeholder="用户名"
+          placeholder="手机号"
         >
           <template #prefix>
             <UserOutlined style="color: gray" />
@@ -42,7 +42,6 @@
         >
           记住密码
         </a-checkbox>
-        <RouterLink to="/user/register">注册账号</RouterLink>
       </a-flex>
 
       <a-form-item>
@@ -64,6 +63,7 @@ import { notification } from 'ant-design-vue'
 import { getTime } from '@/utils/time'
 import setting from '@/setting'
 import useLayoutSettingStore from '@/store/modules/setting'
+import { phone } from '@/utils/regexp'
 
 const useStore = useUserStore()
 // 获取路由器
@@ -80,13 +80,12 @@ const rules = {
   shoujihao: [
     {
       required: true,
-      message: '用户名不能为空',
+      message: '手机号不能为空',
       trigger: 'change',
     },
     {
-      min: 5,
-      max: 15,
-      message: '用户名长度为5-15位',
+      pattern: phone,
+      message: '手机号格式不正确',
       trigger: 'change',
     },
   ],
@@ -97,9 +96,9 @@ const rules = {
       trigger: 'change',
     },
     {
-      min: 5,
+      min: 6,
       max: 15,
-      message: '密码长度为5-15位',
+      message: '密码长度为6-15位',
       trigger: 'change',
     },
   ],

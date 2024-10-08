@@ -73,15 +73,15 @@ const qijinyong = [
 const formItems = reactive([
   {
     type: 'input',
-    label: '名称',
-    filed: 'mingcheng',
+    label: '编码',
+    filed: 'bianma',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'input',
-    label: '编码',
-    filed: 'bianma',
+    label: '名称',
+    filed: 'mingcheng',
     value: '',
     placeholder: '请输入',
   },
