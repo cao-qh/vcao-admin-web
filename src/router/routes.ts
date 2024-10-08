@@ -96,7 +96,7 @@ export const adminPersonalRoute = {
   name: 'Personal',
   meta: {
     title: '个人管理',
-    icon: 'StarOutlined',
+    icon: 'UserOutlined',
   },
   redirect: '/personal/info',
   children: [
@@ -219,7 +219,7 @@ export const adminRoute = [
     name: 'Order',
     meta: {
       title: '订单管理',
-      icon: 'StarOutlined',
+      icon: 'UnorderedListOutlined',
     },
     redirect: '/order/list',
     children: [
@@ -263,7 +263,7 @@ export const adminRoute = [
     name: 'Statistics',
     meta: {
       title: '统计分析',
-      icon: 'StarOutlined',
+      icon: 'BarChartOutlined',
     },
     redirect: '/statistics/collect',
     children: [
@@ -295,7 +295,7 @@ export const adminRoute = [
     name: 'Download',
     meta: {
       title: '下载管理',
-      icon: 'StarOutlined',
+      icon: 'DownloadOutlined',
     },
     redirect: '/download/list',
     children: [
@@ -321,7 +321,7 @@ export const agentRoute = [
     name: 'Order',
     meta: {
       title: '订单管理',
-      icon: 'StarOutlined',
+      icon: 'UnorderedListOutlined',
     },
     redirect: '/order/list',
     children: [
@@ -365,7 +365,7 @@ export const agentRoute = [
     name: 'Statistics',
     meta: {
       title: '统计分析',
-      icon: 'StarOutlined',
+      icon: 'BarChartOutlined',
     },
     redirect: '/statistics/collect',
     children: [
@@ -397,7 +397,7 @@ export const agentRoute = [
     name: 'Download',
     meta: {
       title: '下载管理',
-      icon: 'StarOutlined',
+      icon: 'DownloadOutlined',
     },
     redirect: '/download/list',
     children: [
@@ -419,7 +419,7 @@ export const agentRoute = [
     name: 'Personal',
     meta: {
       title: '个人管理',
-      icon: 'StarOutlined',
+      icon: 'UserOutlined',
     },
     redirect: '/personal/info',
     children: [

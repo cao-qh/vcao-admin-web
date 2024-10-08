@@ -27,6 +27,9 @@ import {
   LoadingOutlined,
   StarOutlined,
   TeamOutlined,
+  UnorderedListOutlined,
+  BarChartOutlined,
+  DownloadOutlined,
 } from '@ant-design/icons-vue'
 
 const antDesignIconsVue = {
@@ -58,6 +61,9 @@ const antDesignIconsVue = {
   LoadingOutlined,
   StarOutlined,
   TeamOutlined,
+  UnorderedListOutlined,
+  BarChartOutlined,
+  DownloadOutlined,
 }
 
 // 对外暴漏插件对象
