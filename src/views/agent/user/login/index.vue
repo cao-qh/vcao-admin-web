@@ -1,14 +1,7 @@
 <template>
   <div class="login">
     <a-typography-text class="h1">{{ setting.title }}</a-typography-text>
-    <a-typography-text class="h2">登录</a-typography-text>
-
-    <div class="role">
-      <a-radio-group v-model:value="loginForm.role" size="large">
-        <a-radio-button :value="1">管理员</a-radio-button>
-        <a-radio-button :value="2">代理员</a-radio-button>
-      </a-radio-group>
-    </div>
+    <a-typography-text class="h2">代理员登录</a-typography-text>
 
     <a-form ref="formRef" :model="loginForm" :rules="rules" class="login-form">
       <a-form-item name="shoujihao">
@@ -71,7 +64,7 @@ const $router = useRouter()
 // 获取路由对象
 const $route = useRoute()
 // 收集账户与密码的数据
-const loginForm = reactive({ shoujihao: '', mima: '', role: 1 })
+const loginForm = reactive({ shoujihao: '', mima: '', role: 2 })
 
 const layoutSettingStore = useLayoutSettingStore()
 

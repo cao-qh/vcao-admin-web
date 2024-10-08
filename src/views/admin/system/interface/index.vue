@@ -74,11 +74,13 @@ const columns = [
     title: '中文参数',
     dataIndex: 'zhongwen',
     align: 'center',
+    width: '30%',
   },
   {
     title: '英文参数',
     dataIndex: 'yingwen',
     align: 'center',
+    width: '30%',
   },
   {
     title: '备注',

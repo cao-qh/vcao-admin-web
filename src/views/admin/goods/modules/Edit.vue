@@ -8,7 +8,7 @@
   >
     <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
       <a-row>
-        <a-col :xs="24" :sm="24">
+        <!-- <a-col :xs="24" :sm="24">
           <a-form-item label="ID" name="id">
             <a-input
               v-model:value="formState.id"
@@ -16,7 +16,7 @@
               placeholder="请输入"
             />
           </a-form-item>
-        </a-col>
+        </a-col> -->
         <a-col :xs="24" :sm="24">
           <a-form-item label="上级编码" name="shangjiBianma">
             <a-input

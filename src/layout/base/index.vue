@@ -40,7 +40,7 @@ import Logo from './Logo/index.vue'
 import MenuNav from './MenuNav/index.vue'
 import Navbar from './Navbar/index.vue'
 import Side from './Side/index.vue'
-import MultiTab from '@/components/MultiTab/index.vue'
+import MultiTab from './MultiTab/index.vue'
 
 // 获取用户相关的小仓库
 import useUserStore from '@/store/modules/user'

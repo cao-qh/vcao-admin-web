@@ -15,13 +15,22 @@ export const constantRoute = [
       hidden: true, //代表路由标题在菜单中是否隐藏  true:隐藏 false:不隐藏
     },
     children: [
-      // 登录
+      // 管理员登录
       {
-        path: '/user/login',
-        component: () => import('@/views/user/login/index.vue'),
-        name: 'Login',
+        path: '/user/admin/login',
+        component: () => import('@/views/admin/user/login/index.vue'),
+        name: 'AdminLogin',
         meta: {
-          title: '登录',
+          title: '管理员登录',
+        },
+      },
+      // 代理员登录
+      {
+        path: '/user/agent/login',
+        component: () => import('@/views/agent/user/login/index.vue'),
+        name: 'AgentLogin',
+        meta: {
+          title: '代理员登录',
         },
       },
     ],
@@ -79,11 +88,44 @@ export const constantRoute = [
   },
 ]
 
+// 管理员个人管理路由（单独添加，不参与权限筛选）
+// 个人管理
+export const adminPersonalRoute = {
+  path: '/',
+  component: BaseLayout,
+  name: 'Personal',
+  meta: {
+    title: '个人管理',
+    icon: 'StarOutlined',
+  },
+  redirect: '/personal/info',
+  children: [
+    // 个人信息
+    {
+      path: '/personal/info',
+      component: () => import('@/views/admin/personal/info/index.vue'),
+      name: 'PersonalInfo',
+      meta: {
+        title: '个人信息',
+      },
+    },
+    // 个人日志
+    {
+      path: '/personal/logs',
+      component: () => import('@/views/admin/personal/logs/index.vue'),
+      name: 'PersonalLogs',
+      meta: {
+        title: '个人日志',
+      },
+    },
+  ],
+}
+
 // 管理员路由
 export const adminRoute = [
   // 系统管理
   {
-    path: '/',
+    path: '/system',
     component: BaseLayout,
     name: 'System',
     meta: {
@@ -264,37 +306,6 @@ export const adminRoute = [
         name: 'DownloadList',
         meta: {
           title: '下载列表',
-        },
-      },
-    ],
-  },
-  // 个人管理
-  {
-    path: '/personal',
-    component: BaseLayout,
-    name: 'Personal',
-    meta: {
-      title: '个人管理',
-      icon: 'StarOutlined',
-    },
-    redirect: '/personal/info',
-    children: [
-      // 个人信息
-      {
-        path: '/personal/info',
-        component: () => import('@/views/admin/personal/info/index.vue'),
-        name: 'PersonalInfo',
-        meta: {
-          title: '个人信息',
-        },
-      },
-      // 个人日志
-      {
-        path: '/personal/logs',
-        component: () => import('@/views/admin/personal/logs/index.vue'),
-        name: 'PersonalLogs',
-        meta: {
-          title: '个人日志',
         },
       },
     ],

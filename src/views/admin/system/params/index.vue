@@ -14,6 +14,11 @@
         </a-button>
       </template>
       <template #bodyCell="{ column, row }">
+        <template v-if="column.dataIndex === 'canshuZhongyingwen'">
+          <span style="word-break: break-all">
+            {{ row.canshuZhongyingwen }}
+          </span>
+        </template>
         <template v-if="column.dataIndex === 'qijinyong'">
           <a-popconfirm
             v-if="userStore.hasPermission('Switch.Params.Enable')"
@@ -106,7 +111,7 @@ const columns = [
     title: '中英文参数',
     dataIndex: 'canshuZhongyingwen',
     align: 'center',
-    width: '200px',
+    width: '30%',
   },
   {
     title: '备注',

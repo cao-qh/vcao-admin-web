@@ -5,6 +5,7 @@
     :footer="null"
     @cancel="open = false"
     :maskClosable="false"
+    :bodyStyle="{ height: '600px', overflow: 'auto' }"
   >
     <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
       <a-form-item label="产品编码" name="chanpinBianma">

@@ -12,11 +12,16 @@ import {
 } from '@/api/agent/user'
 
 // 引入路由（常量路由）
-// import { constantRoute, asyncRoute } from '@/router/routes'
-import { constantRoute, agentRoute, adminRoute } from '@/router/routes'
-import router from '@/router'
+import {
+  constantRoute,
+  agentRoute,
+  adminRoute,
+  adminPersonalRoute,
+} from '@/router/routes'
+import router, { resetRouter } from '@/router'
 import { deepCopy } from '@/utils/deepCopy'
 import type { RouteRecordRaw } from 'vue-router'
+import useLayoutSettingStore from '@/store/modules/setting'
 
 // 用于过滤当前用户需要展示的异步路由
 function filterAsyncRoute(asyncRoute: any, routes: string[]) {
@@ -32,10 +37,13 @@ function filterAsyncRoute(asyncRoute: any, routes: string[]) {
 
 // 创建用户小仓库
 const useUserStore: any = defineStore('user', () => {
+  // 使用设置仓库
+  const setting = useLayoutSettingStore()
+
   // 小仓库存储数据地方
   const token = ref(localStorage.getItem('TOKEN'))
   // 角色
-  const role = ref(Number(localStorage.getItem('ROLE')))
+  const role = ref(Number(localStorage.getItem('ROLE')) || 1)
   const menuRoutes = ref<RouteRecordRaw[]>([])
   const username = ref('')
   const buttons = ref<string[]>([])
@@ -99,11 +107,16 @@ const useUserStore: any = defineStore('user', () => {
           cloneAsyncRoute,
           result.data.routes,
         )
-        menuRoutes.value = [...constantRoute, ...userAsyncRoute]
+        menuRoutes.value = [
+          ...constantRoute,
+          ...userAsyncRoute,
+          adminPersonalRoute,
+        ]
         //目前路由器管理的只有常量路由:用户计算完毕异步路由、任意路由动态追加
         userAsyncRoute.forEach((route: any) => {
           router.addRoute(route)
         })
+        router.addRoute(adminPersonalRoute)
         return 'ok'
       } else {
         return Promise.reject(new Error(result.msg))
@@ -120,16 +133,19 @@ const useUserStore: any = defineStore('user', () => {
   const userLogout = async () => {
     token.value = ''
     localStorage.removeItem('TOKEN')
-    role.value = 0
-    localStorage.removeItem('ROLE')
-
     username.value = ''
 
+    // 清除tabList
+    setting.tabList = []
+
+    // 重置路由
+    resetRouter()
+
     router.push({
-      path: '/user/login',
-      query: {
-        redirect: router.currentRoute.value.path,
-      },
+      path: role.value === 1 ? '/user/admin/login' : '/user/agent/login',
+      // query: {
+      //   redirect: router.currentRoute.value.path,
+      // },
     })
   }
 

@@ -109,6 +109,11 @@ const formItems = reactive([
     valueFormat: 'YYYY-MM-DD',
     allowClear: false,
     disabledDate: (val: any) => {
+      // 年份小于2024则不可选
+      if (val.year() < 2024) {
+        return true
+      }
+
       const jieshuDate: any = formItems.find(
         (item) => item.filed === 'jieshuDate',
       )
@@ -136,6 +141,11 @@ const formItems = reactive([
     valueFormat: 'YYYY-MM-DD',
     allowClear: false,
     disabledDate: (val: any) => {
+      // 年份小于2024则不可选
+      if (val.year() < 2024) {
+        return true
+      }
+
       // 不可大于今天
       if (val.valueOf() > dayjs().valueOf()) {
         return true

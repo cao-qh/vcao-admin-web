@@ -70,9 +70,9 @@ const show = async (row: any) => {
     formState.chanpinBianma = res.data.chanpinBianma
     formState.chanpinXiangqing = res.data.chanpinXiangqing
     formState.fanyongshuoming = res.data.fanyongshuoming
-    formState.fileXC = imgBase + res.data.luodiyeUrl
-    formState.fileLD = imgBase + res.data.querentuUrl
-    formState.fileQR = imgBase + res.data.xuanchuantuUrl
+    formState.fileXC = imgBase + res.data.xuanchuantuUrl
+    formState.fileLD = imgBase + res.data.luodiyeUrl
+    formState.fileQR = imgBase + res.data.querentuUrl
   } else {
     message.error(res.message)
   }

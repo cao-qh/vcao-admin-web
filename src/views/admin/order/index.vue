@@ -8,7 +8,7 @@
       :columns="columns"
       :data="getData"
       :showPagination="true"
-      :scroll="{ x: 2500 }"
+      :scroll="{ x: 3000 }"
       :row-selection="{
         selectedRowKeys: selectedRowKeys,
         onChange: onSelectChange,
@@ -118,6 +118,11 @@ const formItems = reactive([
     valueFormat: 'YYYY-MM-DD',
     allowClear: false,
     disabledDate: (val: any) => {
+      // 年份小于2024则不可选
+      if (val.year() < 2024) {
+        return true
+      }
+
       const jieshuDate: any = formItems.find(
         (item) => item.filed === 'jieshuDate',
       )
@@ -145,6 +150,11 @@ const formItems = reactive([
     valueFormat: 'YYYY-MM-DD',
     allowClear: false,
     disabledDate: (val: any) => {
+      // 年份小于2024则不可选
+      if (val.year() < 2024) {
+        return true
+      }
+
       // 不可大于今天
       if (val.valueOf() > dayjs().valueOf()) {
         return true
@@ -218,7 +228,7 @@ const formItems = reactive([
     options: async () => {
       const res: any = await selectQudaoshang()
       if (res.code == 0) {
-        return res.data.map((item) => ({
+        return res.data.map((item: any) => ({
           value: item.quDaoBianMa,
           label: item.quDaoName,
         }))

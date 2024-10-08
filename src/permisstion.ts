@@ -21,9 +21,12 @@ router.beforeEach(async (to, from, next) => {
   const token = userStore.token
   // 获取用户名称
   const username = userStore.username
+  // 角色
+  const role = userStore.role
+
   if (token) {
     // 登录成功，访问login，不能访问，指向首页
-    if (to.path === '/user/login') {
+    if (to.path === '/user/admin/login' || to.path === '/user/agent/login') {
       next({ path: '/' })
     } else {
       // 登录成功，访问除了登录页的其他页面
@@ -41,7 +44,10 @@ router.beforeEach(async (to, from, next) => {
         } catch (error) {
           // token过期了，或者用户手动修改了token
           await userStore.userLogout()
-          next({ path: '/user/login', query: { redirect: to.path } })
+          next({
+            path: role === 1 ? '/user/admin/login' : '/user/agent/login',
+            query: { redirect: to.path },
+          })
           notification.error({
             message: '登录失效',
             description: `登录已过期，请重新登录`,
@@ -51,10 +57,13 @@ router.beforeEach(async (to, from, next) => {
     }
   } else {
     // 用户未登录判断
-    if (to.path === '/user/login') {
+    if (to.path === '/user/admin/login' || to.path === '/user/agent/login') {
       next()
     } else {
-      next({ path: '/user/login', query: { redirect: to.path } })
+      next({
+        path: role === 1 ? '/user/admin/login' : '/user/agent/login',
+        query: { redirect: to.path },
+      })
     }
   }
 })
