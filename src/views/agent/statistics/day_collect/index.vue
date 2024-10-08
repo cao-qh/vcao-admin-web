@@ -36,9 +36,42 @@ defineOptions({
   name: 'Collect',
 })
 
-const guishudi = {
-  2: '分省',
-}
+const guishudi = [
+  '北京市',
+  '天津市',
+  '上海市',
+  '重庆市',
+  '河北省',
+  '山西省',
+  '辽宁省',
+  '吉林省',
+  '黑龙江省',
+  '江苏省',
+  '浙江省',
+  '安徽省',
+  '福建省',
+  '江西省',
+  '山东省',
+  '河南省',
+  '湖北省',
+  '湖南省',
+  '广东省',
+  '海南省',
+  '四川省',
+  '贵州省',
+  '云南省',
+  '陕西省',
+  '甘肃省',
+  '青海省',
+  '台湾省',
+  '内蒙古自治区',
+  '广西壮族自治区',
+  '西藏自治区',
+  '宁夏回族自治区',
+  '新疆维吾尔自治区',
+  '香港特别行政区',
+  '澳门特别行政区',
+]
 
 const operate = {
   1: '移动',
@@ -53,7 +86,7 @@ let kaishiDate = ref(dayjs().format('YYYY-MM-DD'))
 let jieshuDate = ref(dayjs().format('YYYY-MM-DD'))
 
 const formItems = reactive([
-  /* {
+  {
     type: 'datePicker',
     label: '开始时间',
     filed: 'kaishiDate',
@@ -86,7 +119,7 @@ const formItems = reactive([
         kaishiDate.value = dayjs(date).startOf('day').format('YYYY-MM-DD')
       }
     },
-  }, */
+  },
   {
     type: 'select',
     label: '产品编码',
@@ -131,31 +164,24 @@ const formItems = reactive([
       })
     },
   },
-  // {
-  //   type: 'select',
-  //   label: '归属地',
-  //   filed: 'guishudi',
-  //   value: 1,
-  //   placeholder: '请选择',
-  //   defaultOption: {
-  //     value: 1,
-  //     label: '全国',
-  //   },
-  //   options: async () => {
-  //     return Object.keys(guishudi).map((key) => {
-  //       return {
-  //         value: key,
-  //         label: guishudi[key],
-  //       }
-  //     })
-  //   },
-  // },
   {
-    type: 'input',
+    type: 'select',
     label: '归属地',
     filed: 'guishudi',
     value: '',
-    placeholder: '请输入',
+    placeholder: '请选择',
+    defaultOption: {
+      value: '',
+      label: '全国',
+    },
+    options: async () => {
+      return guishudi.map((item) => {
+        return {
+          value: item,
+          label: item,
+        }
+      })
+    },
   },
 ])
 
@@ -164,6 +190,14 @@ const columns = [
     title: 'ID',
     dataIndex: 'id',
     align: 'center',
+  },
+  {
+    title: '日期',
+    dataIndex: 'tongjiriqi',
+    align: 'center',
+    customRender({ text }) {
+      return dayjs(text).format('YYYY-MM-DD')
+    },
   },
   {
     title: '产品编码',
@@ -218,8 +252,6 @@ const getData = async (currentPage: number, pageSize: number) => {
       data[item.filed] = item.value
     }
   })
-  data.kaishiDate = kaishiDate
-  data.jieshuDate = jieshuDate
 
   const res: any = await collectDaySelect(data)
   if (res.code == 0) {

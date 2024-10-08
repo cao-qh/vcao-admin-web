@@ -66,7 +66,25 @@
         </a-col>
         <a-col :xs="24" :sm="12">
           <a-form-item label="归属地" name="guishudi">
-            <a-input v-model:value="formState.guishudi" placeholder="请输入" />
+            <a-select
+              v-model:value="formState.guishudi"
+              placeholder="请选择"
+              :filterOption="
+                (input: string, option: any) => {
+                  return (
+                    option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  )
+                }
+              "
+            >
+              <a-select-option
+                v-for="privince in guishudi"
+                :key="privince"
+                :value="privince"
+              >
+                {{ privince }}
+              </a-select-option>
+            </a-select>
           </a-form-item>
         </a-col>
         <a-col :xs="24" :sm="12">
@@ -174,10 +192,12 @@ withDefaults(
     del: any
     shangxiajia: any
     operate: any
+    guishudi: any
   }>(),
   {
     del: () => [],
     shangxiajia: () => [],
+    guishudi: () => [],
     operate: () => ({}),
   },
 )

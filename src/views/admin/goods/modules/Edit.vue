@@ -8,7 +8,7 @@
   >
     <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
       <a-row>
-        <!-- <a-col :xs="24" :sm="24">
+        <a-col :xs="24" :sm="24">
           <a-form-item label="ID" name="id">
             <a-input
               v-model:value="formState.id"
@@ -16,7 +16,7 @@
               placeholder="请输入"
             />
           </a-form-item>
-        </a-col> -->
+        </a-col>
         <a-col :xs="24" :sm="24">
           <a-form-item label="上级编码" name="shangjiBianma">
             <a-input
@@ -60,7 +60,25 @@
         </a-col>
         <a-col :xs="24" :sm="24">
           <a-form-item label="归属地" name="guishudi">
-            <a-input v-model:value="formState.guishudi" placeholder="请输入" />
+            <a-select
+              v-model:value="formState.guishudi"
+              placeholder="请选择"
+              :filterOption="
+                (input: string, option: any) => {
+                  return (
+                    option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  )
+                }
+              "
+            >
+              <a-select-option
+                v-for="privince in guishudi"
+                :key="privince"
+                :value="privince"
+              >
+                {{ privince }}
+              </a-select-option>
+            </a-select>
           </a-form-item>
         </a-col>
       </a-row>
@@ -78,9 +96,11 @@ defineOptions({ name: 'Edit' })
 withDefaults(
   defineProps<{
     operate: any
+    guishudi: any
   }>(),
   {
     operate: () => ({}),
+    guishudi: () => [],
   },
 )
 
@@ -93,7 +113,7 @@ const rules = {
   shangjiBianma: [{ required: true, message: '请输入' }],
   shangjiMingcheng: [{ required: true, message: '请输入' }],
   yunyingshang: [{ required: true, message: '请选择' }],
-  guishudi: [{ required: true, message: '请输入' }],
+  guishudi: [{ required: true, message: '请选择' }],
   dinggoujiage: [{ required: true, message: '请输入' }],
 }
 
