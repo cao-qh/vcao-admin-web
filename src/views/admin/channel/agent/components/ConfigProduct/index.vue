@@ -16,12 +16,7 @@
       }"
     >
       <template #toolbar>
-        <a-button
-          type="primary"
-          @click="batchConfig.show(DLbianma, selectedRows)"
-        >
-          批量配置
-        </a-button>
+        <a-button type="primary" @click="handleBatchConfig">批量配置</a-button>
       </template>
       <template #bodyCell="{ column, row }">
         <template v-if="column.dataIndex === 'xuanchuantuUrl'">
@@ -275,6 +270,12 @@ const onSelectChange = (selectedRowkeys: any, selectedrows: any) => {
 
 // 配置
 const batchConfig = ref()
+const handleBatchConfig = () => {
+  if (selectedRows.value.length == 0) {
+    return message.error('请选择产品')
+  }
+  batchConfig.value.show(props.DLbianma, selectedRows.value)
+}
 </script>
 
 <style></style>

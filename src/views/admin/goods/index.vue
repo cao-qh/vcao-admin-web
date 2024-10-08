@@ -188,7 +188,7 @@ const guishudi = [
   '澳门特别行政区',
 ]
 
-const operate = {
+const operate: any = {
   1: '移动',
   2: '联通',
   3: '电信',
@@ -320,7 +320,7 @@ const formItems = reactive([
 
 const columns = [
   {
-    title: 'ID',
+    title: '编号',
     dataIndex: 'id',
     align: 'center',
   },

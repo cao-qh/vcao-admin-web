@@ -37,6 +37,11 @@ const columns = [
     align: 'center',
   },
   {
+    title: '创建时间',
+    dataIndex: 'dateTime',
+    align: 'center',
+  },
+  {
     title: '操作',
     dataIndex: 'action',
     align: 'center',

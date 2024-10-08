@@ -2,6 +2,7 @@
   <a-modal
     title="添加"
     :open="open"
+    width="50%"
     @ok="submit"
     @cancel="open = false"
     :bodyStyle="{ height: '500px', overflow: 'auto' }"
@@ -15,15 +16,21 @@
       </a-form-item>
       <a-form-item label="接口模板" name="jiekouBianma">
         <a-select
+          showSearch
           v-model:value="formState.jiekouBianma"
           :options="interfaceList"
           :fieldNames="{ label: 'mc', value: 'bm' }"
+          :filterOption="filterOption"
           placeholder="请选择"
           @change="handleInterfaceChange"
         ></a-select>
       </a-form-item>
       <template v-if="zhongyingwenParams.length">
-        <a-form-item label="参数值" name="canshuZhongyingwen" :autoLink="false">
+        <a-form-item
+          label="中英文参数"
+          name="canshuZhongyingwen"
+          :autoLink="false"
+        >
           <a-flex :vertical="true" gap="20">
             <a-input
               v-for="item in zhongyingwenParams"
@@ -66,11 +73,11 @@ const open = ref<boolean>(false)
 const layout = {
   labelCol: {
     xs: { span: 24 },
-    sm: { span: 7 },
+    sm: { span: 5 },
   },
   wrapperCol: {
     xs: { span: 24 },
-    sm: { span: 13 },
+    sm: { span: 16 },
   },
 }
 
@@ -136,6 +143,10 @@ const handleInterfaceChange = async (value: any) => {
   } else {
     message.error(res.msg)
   }
+}
+
+const filterOption = (input: string, option: any) => {
+  return option.mc.toLowerCase().indexOf(input.toLowerCase()) >= 0
 }
 
 defineExpose({

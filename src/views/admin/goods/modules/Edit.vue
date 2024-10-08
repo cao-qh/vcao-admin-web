@@ -63,6 +63,7 @@
             <a-select
               v-model:value="formState.guishudi"
               placeholder="请选择"
+              showSearch
               :filterOption="
                 (input: string, option: any) => {
                   return (
@@ -75,6 +76,7 @@
                 v-for="privince in guishudi"
                 :key="privince"
                 :value="privince"
+                :label="privince"
               >
                 {{ privince }}
               </a-select-option>

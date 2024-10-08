@@ -2,11 +2,16 @@
   <a-modal
     title="修改Json数据"
     :open="open"
+    width="50%"
     @ok="submit"
     @cancel="open = false"
   >
     <a-form ref="formRef" :model="formState" v-bind="layout">
-      <a-form-item label="参数值" name="canshuZhongyingwen" :autoLink="false">
+      <a-form-item
+        label="中英文参数"
+        name="canshuZhongyingwen"
+        :autoLink="false"
+      >
         <a-flex :vertical="true" gap="20">
           <a-input
             v-for="item in zhongyingwenParams"
@@ -35,11 +40,11 @@ const open = ref<boolean>(false)
 const layout = {
   labelCol: {
     xs: { span: 24 },
-    sm: { span: 7 },
+    sm: { span: 4 },
   },
   wrapperCol: {
     xs: { span: 24 },
-    sm: { span: 13 },
+    sm: { span: 16 },
   },
 }
 

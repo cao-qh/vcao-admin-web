@@ -35,7 +35,7 @@ import { reqDetail, reqEditDetail } from '@/api/admin/goods'
 import UploadImage from '@/components/UploadImage/index.vue'
 
 const imgBase = import.meta.env.VITE_APP_IMG_BASE
-console.log(imgBase)
+
 defineOptions({ name: 'EditDetail' })
 
 defineProps<{

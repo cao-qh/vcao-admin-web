@@ -34,13 +34,14 @@
           </span>
         </template>
         <template v-if="column.dataIndex === 'action'">
-          <a v-has="'Btn.Params.Update'" @click="update.show(row)">
-            修改参数模板
-          </a>
-          <a-divider type="vertical" />
-          <a v-has="'Btn.Params.UpdateJson'" @click="updateJson.show(row)">
-            修改json数据
-          </a>
+          <a-flex vertical>
+            <a v-has="'Btn.Params.Update'" @click="update.show(row)">
+              修改参数模板
+            </a>
+            <a v-has="'Btn.Params.UpdateJson'" @click="updateJson.show(row)">
+              修改json数据
+            </a>
+          </a-flex>
         </template>
       </template>
     </STable>

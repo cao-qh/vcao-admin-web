@@ -37,11 +37,14 @@
             <a-select
               v-model:value="formState.canshumobanBianma"
               placeholder="请选择"
+              showSearch
+              :filterOption="filterOption"
             >
               <a-select-option
                 v-for="canshumoban in canshumobanList"
                 :key="canshumoban.bm"
                 :value="canshumoban.bm"
+                :label="canshumoban.mc"
               >
                 {{ canshumoban.mc }}
               </a-select-option>
@@ -53,11 +56,14 @@
             <a-select
               v-model:value="formState.yunyingshang"
               placeholder="请选择"
+              showSearch
+              :filterOption="filterOption"
             >
               <a-select-option
                 v-for="(value, key) in operate"
                 :key="key"
                 :value="key"
+                :label="value"
               >
                 {{ value }}
               </a-select-option>
@@ -69,18 +75,14 @@
             <a-select
               v-model:value="formState.guishudi"
               placeholder="请选择"
-              :filterOption="
-                (input: string, option: any) => {
-                  return (
-                    option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                  )
-                }
-              "
+              showSearch
+              :filterOption="filterOption"
             >
               <a-select-option
                 v-for="privince in guishudi"
                 :key="privince"
                 :value="privince"
+                :label="privince"
               >
                 {{ privince }}
               </a-select-option>
@@ -103,11 +105,14 @@
             <a-select
               v-model:value="formState.qudaoshangBianma"
               placeholder="请选择"
+              showSearch
+              :filterOption="filterOption"
             >
               <a-select-option
                 v-for="qudao in qudaoList"
                 :key="qudao.quDaoBianMa"
                 :value="qudao.quDaoBianMa"
+                :label="qudao.quDaoName"
               >
                 {{ qudao.quDaoName }}
               </a-select-option>
@@ -207,6 +212,10 @@ const $emit = defineEmits(['success'])
 
 const open = ref<boolean>(false)
 
+const filterOption = (input: string, option: any) => {
+  return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+}
+
 // 表单布局
 const layout = {
   labelCol: {
@@ -231,7 +240,7 @@ const rules = {
   mingcheng: [{ required: true, message: '不能为空' }],
   canshumobanBianma: [{ required: true, message: '请选择' }],
   yunyingshang: [{ required: true, message: '请选择' }],
-  guishudi: [{ required: true, message: '不能为空' }],
+  guishudi: [{ required: true, message: '请选择' }],
   dinggoujiage: [{ required: true, message: '不能为空' }],
   qudaoshangBianma: [{ required: true, message: '请选择' }],
   chanpinXiangqing: [{ required: true, message: '不能为空' }],

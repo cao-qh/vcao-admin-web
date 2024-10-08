@@ -10,6 +10,9 @@
       <a-descriptions-item label="名称">
         {{ userInfo.mingcheng }}
       </a-descriptions-item>
+      <a-descriptions-item label="编码">
+        {{ userInfo.bianma }}
+      </a-descriptions-item>
       <a-descriptions-item label="IP">
         {{ userInfo.ipS }}
       </a-descriptions-item>

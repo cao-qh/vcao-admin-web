@@ -22,7 +22,7 @@
             cancel-text="否"
             @confirm="handleBatchPush"
           >
-            <a-button type="primary" @click="handleExport">批量推送</a-button>
+            <a-button type="primary">批量推送</a-button>
           </a-popconfirm>
           <a-button type="primary" @click="handleExport">导出</a-button>
         </a-space>
@@ -163,7 +163,7 @@ const formItems = reactive([
     type: 'select',
     label: '订单状态',
     filed: 'zhuangtai',
-    value: '',
+    value: null,
     placeholder: '请选择',
     defaultOption: {
       label: '全部',
@@ -217,8 +217,18 @@ const columns = [
     align: 'center',
   },
   {
-    title: '兴投订单编码',
+    title: '兴投订单号',
     dataIndex: 'dingdanhao',
+    align: 'center',
+  },
+  {
+    title: '产品编码',
+    dataIndex: 'chanpinbianma',
+    align: 'center',
+  },
+  {
+    title: '产品名称',
+    dataIndex: 'chanpinmingcheng',
     align: 'center',
   },
   {
@@ -227,18 +237,8 @@ const columns = [
     align: 'center',
   },
   {
-    title: '兴投产品编码',
-    dataIndex: 'chanpinbianma',
-    align: 'center',
-  },
-  {
     title: '下游渠道商',
     dataIndex: 'xiayouqudaoshang',
-    align: 'center',
-  },
-  {
-    title: '产品名称',
-    dataIndex: 'chanpinmingcheng',
     align: 'center',
   },
   {
