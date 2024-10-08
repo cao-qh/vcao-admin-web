@@ -98,6 +98,16 @@ const status = [
     label: '未处理',
     color: 'green',
   },
+  {
+    value: 7,
+    label: '客户取消',
+    color: 'red',
+  },
+  {
+    value: 8,
+    label: '订购成功',
+    color: 'green',
+  },
 ]
 
 const formItems = reactive([

@@ -73,7 +73,7 @@ const shangXiaJia = [
   },
 ]
 
-const operate = {
+const operate: any = {
   1: '移动',
   2: '联通',
   3: '电信',
@@ -127,7 +127,7 @@ const formItems = reactive([
   },
   {
     type: 'input',
-    label: '产品编码',
+    label: '产品编号',
     filed: 'bianma',
     value: '',
     placeholder: '请输入',
@@ -186,7 +186,7 @@ const formItems = reactive([
 
 const columns = [
   {
-    title: 'ID',
+    title: '编号',
     dataIndex: 'id',
     align: 'center',
   },

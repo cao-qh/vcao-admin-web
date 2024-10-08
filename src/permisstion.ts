@@ -46,7 +46,7 @@ router.beforeEach(async (to, from, next) => {
           await userStore.userLogout()
           next({
             path: role === 1 ? '/user/admin/login' : '/user/agent/login',
-            query: { redirect: to.path },
+            // query: { redirect: to.path },
           })
           notification.error({
             message: '登录失效',

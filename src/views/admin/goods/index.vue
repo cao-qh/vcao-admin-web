@@ -249,7 +249,7 @@ const formItems = reactive([
   },
   {
     type: 'input',
-    label: '产品编码',
+    label: '产品编号',
     filed: 'bianma',
     value: '',
     placeholder: '请输入',

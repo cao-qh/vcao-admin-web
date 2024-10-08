@@ -4,6 +4,7 @@
     :open="open"
     @ok="submit"
     width="800px"
+    :bodyStyle="{ height: '600px', overflow: 'auto' }"
     @cancel="open = false"
   >
     <a-list item-layout="horizontal" :data-source="selectRows">
@@ -98,10 +99,10 @@ const show = async (dlBianma: string, selectrows: any) => {
     return {
       chanpinBianma: item.chanpinBianma,
       dailiBianma: DLbianma.value,
-      dailiYongjinJine: item.dailiYongjinJine,
-      shangxiajia: item.shangxiajia,
-      jiesuanfangshi: item.jiesuanfangshi,
-      jiesuanzhouqi: item.jiesuanzhouqi,
+      dailiYongjinJine: item.dailiYongjinJine || 0,
+      shangxiajia: item.shangxiajia || 1,
+      jiesuanfangshi: item.jiesuanfangshi || 1,
+      jiesuanzhouqi: item.jiesuanzhouqi || 1,
     }
   })
 }

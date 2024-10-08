@@ -7,6 +7,7 @@
       :columns="columns"
       :data="reqData"
       :showPagination="true"
+      :scroll="{ y: 'calc(100vh - 408px)' }"
     >
       <template #toolbar>
         <a-button v-has="'Btn.Params.Add'" type="primary" @click="add.show()">
