@@ -14,11 +14,6 @@
     <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
       <a-row>
         <a-col :xs="24" :sm="24">
-          <a-form-item label="IP" name="ipS">
-            <a-input v-model:value="formState.ipS" placeholder="请输入" />
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="24">
           <a-form-item label="新密码" name="mima">
             <a-input-password
               v-model:value="formState.mima"
@@ -34,6 +29,14 @@
             />
           </a-form-item>
         </a-col>
+        <a-col :xs="24" :sm="24">
+          <a-form-item label="IP" name="ipS">
+            <a-textarea
+              v-model:value="formState.ipS"
+              placeholder="多个请用英文逗号(,)隔开"
+            />
+          </a-form-item>
+        </a-col>
       </a-row>
     </a-form>
   </a-modal>
@@ -43,6 +46,7 @@ import { reactive, ref, watch } from 'vue'
 import { message } from 'ant-design-vue'
 import { editUserInfo } from '@/api/admin/personal'
 import type { Rule } from 'ant-design-vue/es/form'
+import { password } from '@/utils/regexp'
 
 defineOptions({ name: 'Edit' })
 // 定义方法
@@ -67,14 +71,19 @@ const formState = reactive<any>({})
 watch(open, (val) => {
   console.log('open', val)
   if (val) {
-    formState.ipS = Props.userInfo.ipS
+    formState.ipS = Props.userInfo.ipS || ''
     // formState.mima = Props.userInfo.mima
   }
 })
 
 const rules = {
   // ipS: [{ required: true, message: '请输入' }],
-  mima: [{ min: 6, message: '密码不少于6位' }],
+  mima: [
+    {
+      pattern: password,
+      message: '密码不少于6位,且只能包含字母、数字、下划线',
+    },
+  ],
   confirmPassword: [
     // { required: true, message: '请输入' },
     {
@@ -94,7 +103,7 @@ const rules = {
 const submit = async () => {
   try {
     await formRef.value.validate()
-
+    formState.ipS = formState.ipS.replace('，', ',').replace(' ', '')
     const res = await editUserInfo(formState)
     if (res.code === 0) {
       $emit('reload')

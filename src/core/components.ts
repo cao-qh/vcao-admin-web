@@ -36,7 +36,6 @@ import {
   InputNumber,
   Result,
   Image,
-  List,
 } from 'ant-design-vue'
 
 const allComponent = [
@@ -77,7 +76,6 @@ const allComponent = [
   InputNumber,
   Result,
   Image,
-  List,
 ]
 
 export default {

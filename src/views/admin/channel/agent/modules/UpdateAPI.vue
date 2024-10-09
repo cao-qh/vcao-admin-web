@@ -29,7 +29,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqUpdate } from '@/api/admin/channel/agent'
+import { reqSearchApi, reqUpdateApi } from '@/api/admin/channel/agent'
 import { email } from '@/utils/regexp'
 
 defineOptions({ name: 'Update' })
@@ -55,21 +55,24 @@ const formRef = ref()
 const formState = reactive<any>({})
 
 const show = async (row: any) => {
-  open.value = true
-  formState.id = row.id
-  formState.shoujihao = row.shoujihao
-  formState.chuangjianshijian = row.chuangjianshijian
-  formState.bianma = row.bianma
-  formState.mingcheng = row.mingcheng
-  formState.youxiang = row.youxiang
-  formState.beizhu = row.beizhu
+  const res: any = await reqSearchApi({ bianma: row.bianma })
+  if (res.code === 0) {
+    open.value = true
+    formState.id = row.id
+    formState.dailiBianma = row.dailiBianma
+    formState.miyao = row.miyao
+    formState.huitiaoUrl = row.huitiaoUrl
+    formState.ipS = row.ipS
+  } else {
+    message.error(res.msg)
+  }
 }
 
 const submit = async () => {
   try {
     await formRef.value.validate()
 
-    const res = await reqUpdate(formState)
+    const res = await reqUpdateApi(formState)
     if (res.code == 0) {
       $emit('success')
       open.value = false

@@ -26,7 +26,9 @@
             </a-popconfirm>
           </template>
           <template v-if="column.dataIndex === 'action'">
-            <a v-has="'Btn.Agent.Update'" @click="update.show(row)">修改</a>
+            <a @click="updateAPI.show(row)">修改API</a>
+            <a-divider type="vertical" />
+            <a v-has="'Btn.Agent.Update'" @click="update.show(row)">资料卡</a>
             <a-divider type="vertical" />
             <a v-has="'Btn.Agent.Config'" @click="handleConfigProduct(row)">
               产品配置
@@ -45,6 +47,8 @@
       :DLbianma="isConfigProduct.DLbianma"
       @back="isConfigProduct.show = false"
     />
+
+    <UpdateAPI ref="updateAPI" @success="table.refresh()" />
   </PageWrapper>
 </template>
 
@@ -57,6 +61,7 @@ import Add from './modules/Add.vue'
 import Update from './modules/Update.vue'
 import ConfigProduct from './components/ConfigProduct/index.vue'
 import { message } from 'ant-design-vue'
+import UpdateAPI from './modules/UpdateAPI.vue'
 
 const qijinyong = [
   {
@@ -102,6 +107,26 @@ const columns = [
   {
     title: '代理账户',
     dataIndex: 'shoujihao',
+    align: 'center',
+  },
+  {
+    title: '代理名称',
+    dataIndex: 'mingcheng',
+    align: 'center',
+  },
+  {
+    title: '手机号',
+    dataIndex: 'shoujihao',
+    align: 'center',
+  },
+  {
+    title: '邮箱',
+    dataIndex: 'youxiang',
+    align: 'center',
+  },
+  {
+    title: '禁用IP',
+    dataIndex: 'youxiang',
     align: 'center',
   },
   {
@@ -167,6 +192,8 @@ const handleConfigProduct = (row: any) => {
   isConfigProduct.DLbianma = row.bianma
   isConfigProduct.show = true
 }
+
+const updateAPI = ref()
 </script>
 
 <style></style>

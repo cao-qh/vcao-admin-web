@@ -36,7 +36,8 @@ request.interceptors.response.use(
     if (
       response.data.data === -120 ||
       response.data.data === -130 ||
-      response.data.data === -140
+      response.data.data === -140 ||
+      response.data.data === -150
     ) {
       const userStore = useUserStore()
       userStore.userLogout()

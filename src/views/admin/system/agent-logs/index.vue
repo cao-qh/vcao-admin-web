@@ -6,7 +6,7 @@
       :columns="columns"
       :data="reqData"
       :showPagination="true"
-      :scroll="{ y: 'calc(100vh - 408px)' }"
+      :scroll="{ y: 'calc(100vh - 390px)' }"
     ></STable>
   </PageWrapper>
 </template>
@@ -17,34 +17,19 @@ import SearchForm from '@/components/SearchForm/index.vue'
 import { STable } from '@/components/STable'
 import { reqSearch } from '@/api/admin/system/agent-log'
 import dayjs from 'dayjs'
+import { reqSearchAgent } from '@/api/common'
 
 const leixing = [
   {
     value: 1,
-    label: '接口模板',
-  },
-  {
-    value: 2,
-    label: '参数模板',
-  },
-  {
-    value: 3,
-    label: '管理员',
-  },
-  {
-    value: 4,
-    label: '分销商',
-  },
-  {
-    value: 5,
     label: '产品',
   },
   {
-    value: 6,
+    value: 2,
     label: '订单',
   },
   {
-    value: 7,
+    value: 3,
     label: '个人信息',
   },
 ]
@@ -123,11 +108,27 @@ const formItems = reactive([
     },
   },
   {
-    type: 'input',
-    label: '代理编码',
+    type: 'select',
+    label: '代理名称',
     filed: 'dailiBianma',
     value: '',
     placeholder: '请输入',
+    options: async () => {
+      const res: any = await reqSearchAgent()
+      if (res.code == 0) {
+        return res.data.map((item: any) => {
+          return {
+            value: item.bianma,
+            label: `${item.bianma}-${item.mingcheng}`,
+          }
+        })
+      }
+      return []
+    },
+    defaultOption: {
+      label: '全部',
+      value: '',
+    },
   },
   {
     type: 'input',
@@ -147,7 +148,7 @@ const columns = [
     align: 'center',
   },
   {
-    title: '代理编码',
+    title: '代理名称',
     dataIndex: 'dailiBianma',
     align: 'center',
   },

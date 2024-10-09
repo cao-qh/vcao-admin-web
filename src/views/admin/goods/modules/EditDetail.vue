@@ -63,6 +63,7 @@ const formRef = ref()
 const formState = reactive<any>({})
 
 const show = async (row: any) => {
+  formRef.value?.clearValidate()
   const res: any = await reqDetail({ chanpinBianma: row.bianma })
   if (res.code == 0) {
     open.value = true
@@ -93,7 +94,11 @@ const submit = async () => {
     const formData = new FormData()
     Object.keys(formState).forEach((key) => {
       if (formState[key] !== undefined && formState[key] !== null) {
-        formData.append(key, formState[key])
+        if (key === 'fanyongshuoming' || key === 'chanpinXiangqing') {
+          formData.append(key, formState[key].trim())
+        } else {
+          formData.append(key, formState[key])
+        }
       }
     })
     const res = await reqEditDetail(formData)

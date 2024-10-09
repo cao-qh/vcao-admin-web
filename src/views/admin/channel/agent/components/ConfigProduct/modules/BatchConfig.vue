@@ -4,10 +4,11 @@
     :open="open"
     @ok="submit"
     width="800px"
-    :bodyStyle="{ height: '600px', overflow: 'auto' }"
+    :bodyStyle="{ maxHeight: '600px', overflow: 'auto' }"
     @cancel="open = false"
   >
-    <a-list item-layout="horizontal" :data-source="selectRows">
+    <STable :columns="columns"></STable>
+    <!-- <a-list item-layout="horizontal" :data-source="selectRows">
       <template #renderItem="{ item }">
         <a-list-item>
           <a-flex wrap="wrap" gap="middle" align="center">
@@ -69,13 +70,14 @@
           </a-flex>
         </a-list-item>
       </template>
-    </a-list>
+    </a-list> -->
   </a-modal>
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { reqConfigProduct } from '@/api/admin/channel/agent'
+import { STable } from '@/components/STable'
 
 defineOptions({ name: 'Config' })
 
@@ -92,19 +94,50 @@ const open = ref<boolean>(false)
 const DLbianma = ref('')
 const selectRows = ref<any>([])
 
-const show = async (dlBianma: string, selectrows: any) => {
+const columns = [
+  {
+    title: '编号',
+    dataIndex: 'id',
+    align: 'center',
+  },
+  {
+    title: '引流图',
+    dataIndex: 'xuanchuantuUrl',
+    align: 'center',
+  },
+  {
+    title: '产品名称',
+    dataIndex: 'mingcheng',
+    align: 'center',
+  },
+  // {
+  //   title: '结算方式',
+  //   dataIndex: 'jiesuanfangshi',
+  //   align: 'center',
+  //   customRender: ({ text }: { text: number }) => {
+  //     const item = settlement.find((item) => item.value === text)
+  //     return item ? item.label : ''
+  //   },
+  // },
+  // {
+  //   title: '结算周期',
+  //   dataIndex: 'jiesuanzhouqi',
+  //   align: 'center',
+  //   customRender: ({ text }: { text: number }) => {
+  //     const item = jiesuanzhouqi.find((item) => item.value === text)
+  //     return item ? item.label : ''
+  //   },
+  // },
+  {
+    title: '结算价格',
+    dataIndex: 'dailiYongjinJine',
+    align: 'center',
+  },
+]
+
+const show = async (dlBianma: string) => {
   open.value = true
   DLbianma.value = dlBianma
-  selectRows.value = selectrows.map((item: any) => {
-    return {
-      chanpinBianma: item.chanpinBianma,
-      dailiBianma: DLbianma.value,
-      dailiYongjinJine: item.dailiYongjinJine || 0,
-      shangxiajia: item.shangxiajia || 1,
-      jiesuanfangshi: item.jiesuanfangshi || 1,
-      jiesuanzhouqi: item.jiesuanzhouqi || 1,
-    }
-  })
 }
 
 const submit = async () => {

@@ -8,7 +8,7 @@
       :columns="columns"
       :data="getData"
       :showPagination="true"
-      :scroll="{ x: 3000 }"
+      :scroll="{ x: 3000, y: 'calc(100vh - 510px)' }"
       :row-selection="{
         selectedRowKeys: selectedRowKeys,
         onChange: onSelectChange,
@@ -383,7 +383,7 @@ const columns = [
   },
   {
     title: '操作',
-    width: '120px',
+    width: '100px',
     dataIndex: 'action',
     align: 'center',
   },

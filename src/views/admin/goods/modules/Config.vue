@@ -9,6 +9,7 @@
     :maskClosable="false"
   >
     <a-table
+      rowKey="dailiBianma"
       :columns="columns"
       :data-source="data"
       bordered
@@ -16,6 +17,9 @@
       :scroll="{ y: 600 }"
     >
       <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'peizhi'">
+          <a-checkbox v-model:checked="record.peizhi"></a-checkbox>
+        </template>
         <template v-if="column.dataIndex === 'dailiYongjinJine'">
           <a-input-number :min="0" v-model:value="record.dailiYongjinJine" />
         </template>
@@ -56,6 +60,15 @@ const $emit = defineEmits(['success'])
 
 const open = ref<boolean>(false)
 const data = ref<any>([])
+
+/* const selectedRowKeys = ref([])
+const selectedRows = ref([])
+const onSelectChange = (keys: any, rows: any) => {
+  console.log(keys, rows)
+  selectedRowKeys.value = keys
+  selectedRows.value = rows
+} */
+
 const columns = [
   // {
   //   title: 'ID',
@@ -63,6 +76,12 @@ const columns = [
   //   align: 'center',
   //   width: 60,
   // },
+  {
+    title: '配置',
+    dataIndex: 'peizhi',
+    align: 'center',
+    width: '80px',
+  },
   {
     title: '代理编码',
     dataIndex: 'dailiBianma',
@@ -84,12 +103,12 @@ const columns = [
     dataIndex: 'jiesuanzhouqi',
     align: 'center',
   },
-  {
-    title: '上下架',
-    dataIndex: 'shangxiajia',
-    align: 'center',
-    width: 70,
-  },
+  // {
+  //   title: '上下架',
+  //   dataIndex: 'shangxiajia',
+  //   align: 'center',
+  //   width: 70,
+  // },
 ]
 
 const show = async (row: any) => {
@@ -99,12 +118,14 @@ const show = async (row: any) => {
     const list: any = []
     res.data.forEach((i: any) => {
       list.push({
+        peizhi: i.peizhi === 1 ? true : false,
         chanpinBianma: i.chanpinBianma,
         dailiBianma: i.dailiBianma,
         dailiYongjinJine: i.dailiYongjinJine || 0,
         jiesuanfangshi: i.jiesuanfangshi || 1,
         jiesuanzhouqi: i.jiesuanzhouqi || 1,
-        shangxiajia: i.shangxiajia || 2,
+        // shangxiajia: i.shangxiajia || 2,
+        shangxiajia: 1,
       })
     })
     data.value = list
@@ -115,7 +136,8 @@ const show = async (row: any) => {
 
 const submit = async () => {
   try {
-    const res = await reqConfigEdit(data.value)
+    const params = data.value.filter((i: any) => i.peizhi)
+    const res = await reqConfigEdit(params)
     if (res.code == 0) {
       message.success(res.msg)
       $emit('success')

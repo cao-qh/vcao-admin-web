@@ -110,6 +110,11 @@ const columns = [
     align: 'center',
   },
   {
+    title: '账户',
+    dataIndex: 'shoujihao',
+    align: 'center',
+  },
+  {
     title: '名称',
     dataIndex: 'mingcheng',
     align: 'center',

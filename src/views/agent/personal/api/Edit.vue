@@ -16,14 +16,14 @@
         <a-col :xs="24" :sm="24">
           <a-form-item label="回调地址" name="huitiaoUrl">
             <a-input
-              v-model:value="formState.huitiaoUrl"
+              v-model:value.trim="formState.huitiaoUrl"
               placeholder="请输入"
             />
           </a-form-item>
         </a-col>
         <a-col :xs="24" :sm="24">
           <a-form-item label="IP白名单" name="ipS">
-            <a-input v-model:value="formState.ipS" placeholder="请输入" />
+            <a-input v-model:value.trim="formState.ipS" placeholder="请输入" />
           </a-form-item>
         </a-col>
       </a-row>

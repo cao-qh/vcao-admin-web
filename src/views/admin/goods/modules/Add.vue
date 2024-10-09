@@ -13,13 +13,16 @@
       <a-row>
         <a-col :xs="24" :sm="12">
           <a-form-item label="产品名称" name="mingcheng">
-            <a-input v-model:value="formState.mingcheng" placeholder="请输入" />
+            <a-input
+              v-model:value.trim="formState.mingcheng"
+              placeholder="请输入"
+            />
           </a-form-item>
         </a-col>
         <a-col :xs="24" :sm="12">
           <a-form-item label="上级产品名称" name="shangjiMingcheng">
             <a-input
-              v-model:value="formState.shangjiMingcheng"
+              v-model:value.trim="formState.shangjiMingcheng"
               placeholder="请输入"
             />
           </a-form-item>
@@ -27,7 +30,7 @@
         <a-col :xs="24" :sm="12">
           <a-form-item label="上级产品编码" name="shangjiBianma">
             <a-input
-              v-model:value="formState.shangjiBianma"
+              v-model:value.trim="formState.shangjiBianma"
               placeholder="请输入"
             />
           </a-form-item>
@@ -293,7 +296,11 @@ const submit = async () => {
     const formData = new FormData()
     Object.keys(formState).forEach((key) => {
       if (formState[key] !== undefined && formState[key] !== null) {
-        formData.append(key, formState[key])
+        if (key === 'fanyongshuoming' || key === 'chanpinXiangqing') {
+          formData.append(key, formState[key].trim())
+        } else {
+          formData.append(key, formState[key])
+        }
       }
     })
     console.log(formData)

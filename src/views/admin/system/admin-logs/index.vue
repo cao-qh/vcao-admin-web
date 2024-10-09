@@ -6,7 +6,7 @@
       :columns="columns"
       :data="reqData"
       :showPagination="true"
-      :scroll="{ y: 'calc(100vh - 408px)' }"
+      :scroll="{ y: 'calc(100vh - 410px)' }"
     ></STable>
   </PageWrapper>
 </template>
@@ -17,6 +17,7 @@ import SearchForm from '@/components/SearchForm/index.vue'
 import { STable } from '@/components/STable'
 import { reqSearch } from '@/api/admin/system/admin-log'
 import dayjs from 'dayjs'
+import { reqSearchAdmin } from '@/api/common'
 
 const leixing = [
   {
@@ -127,11 +128,27 @@ const formItems = reactive([
     },
   },
   {
-    type: 'input',
-    label: '编码',
+    type: 'select',
+    label: '名称',
     filed: 'guanliyuanBianma',
-    value: '',
+    value: null,
     placeholder: '请输入',
+    options: async () => {
+      const res: any = await reqSearchAdmin()
+      if (res.code == 0) {
+        return res.data.map((item: any) => {
+          return {
+            value: item.bianma,
+            label: `${item.bianma}-${item.mingcheng}`,
+          }
+        })
+      }
+      return []
+    },
+    defaultOption: {
+      label: '全部',
+      value: '',
+    },
   },
   {
     type: 'input',
@@ -175,7 +192,7 @@ const columns = [
     align: 'center',
   },
   {
-    title: '编码',
+    title: '名称',
     dataIndex: 'guanliyuanBianma',
     align: 'center',
   },

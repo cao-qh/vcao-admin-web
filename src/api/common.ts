@@ -16,6 +16,10 @@ enum API {
   goodsUrl = '/comm/selectQiYongChanPin',
   // 查询渠道商
   selectQudaoshang = '/comm/selectQiYongQuDao',
+  // 查询管理员
+  searchAdmin = '/comm/selectAdminBianMa',
+  // 查询代理员
+  searchAgent = '/comm/selectByAgentBianMa',
 }
 
 // 查询渠道商
@@ -39,3 +43,9 @@ export const reqDownload = (data: any) => {
     import.meta.env.VITE_SERVE + API.downloadUrl + `?filename=${data}`,
   )
 }
+
+// 查询管理员
+export const reqSearchAdmin = () => request.post(API.searchAdmin)
+
+// 查询代理员
+export const reqSearchAgent = () => request.post(API.searchAgent)

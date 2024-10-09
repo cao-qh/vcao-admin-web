@@ -13,8 +13,10 @@ enum API {
   searchProduct = '/tAdmin/agent/selectByTAgentGoods',
   // 配置产品
   configProduct = '/tAdmin/agent/peizhi',
-  // 配置产品上下架
-  configProductStatus = '/tAdmin/agent/updateTAdminTAgentGoods',
+  // 查询API
+  searchApi = '/tAdmin/agent/selectByTAgentAPI',
+  // 修改API
+  updateApi = '/tAdmin/agent/updateTAgentAPI',
 }
 
 // 查询代理列表
@@ -41,6 +43,10 @@ export const reqSearchProduct = (data: any) =>
 export const reqConfigProduct = (data: any) =>
   request.post<any, any>(API.configProduct, data)
 
-// 配置产品上下架
-export const reqConfigProductStatus = (data: any) =>
-  request.post<any, any>(API.configProductStatus, obj2Query(data))
+// 查询API
+export const reqSearchApi = (data: any) =>
+  request.post<any, any>(API.searchApi, obj2Query(data))
+
+// 修改API
+export const reqUpdateApi = (data: any) =>
+  request.post<any, any>(API.updateApi, obj2Query(data))

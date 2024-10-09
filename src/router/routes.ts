@@ -112,7 +112,7 @@ export const adminPersonalRoute = {
     // 个人日志
     {
       path: '/personal/logs',
-      component: () => import('@/views/admin/personal/logs/index.vue'),
+      component: () => import('@/views/admin/personal/plogs/index.vue'),
       name: 'PersonalLogs',
       meta: {
         title: '个人日志',

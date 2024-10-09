@@ -7,7 +7,7 @@
       :columns="columns"
       :showPagination="true"
       :data="getData"
-      :scroll="{ y: 'calc(100vh - 290px)' }"
+      :scroll="{ y: 'calc(100vh - 480px)' }"
     >
       <template #toolbar>
         <a-button

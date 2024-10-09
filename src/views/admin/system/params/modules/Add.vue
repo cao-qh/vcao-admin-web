@@ -5,7 +5,7 @@
     width="50%"
     @ok="submit"
     @cancel="open = false"
-    :bodyStyle="{ height: '500px', overflow: 'auto' }"
+    :bodyStyle="{ maxHeight: '500px', overflow: 'auto' }"
   >
     <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
       <a-form-item label="参数模板名称" name="canshuMingcheng">

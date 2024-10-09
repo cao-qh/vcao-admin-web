@@ -22,7 +22,7 @@ router.beforeEach(async (to, from, next) => {
   // 获取用户名称
   const username = userStore.username
   // 角色
-  const role = userStore.role
+  const role = Number(localStorage.getItem('ROLE'))
 
   if (token) {
     // 登录成功，访问login，不能访问，指向首页
@@ -44,6 +44,7 @@ router.beforeEach(async (to, from, next) => {
         } catch (error) {
           // token过期了，或者用户手动修改了token
           await userStore.userLogout()
+          console.log('role :>> ', role)
           next({
             path: role === 1 ? '/user/admin/login' : '/user/agent/login',
             // query: { redirect: to.path },
@@ -62,7 +63,7 @@ router.beforeEach(async (to, from, next) => {
     } else {
       next({
         path: role === 1 ? '/user/admin/login' : '/user/agent/login',
-        query: { redirect: to.path },
+        // query: { redirect: to.path },
       })
     }
   }

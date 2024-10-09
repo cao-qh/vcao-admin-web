@@ -1,8 +1,11 @@
 <template>
   <div>
-    <a-button type="primary" style="margin-bottom: 10px" @click="$emit('back')">
-      返回
-    </a-button>
+    <a-space style="margin-bottom: 10px">
+      <a-button type="primary" @click="$emit('back')">返回</a-button>
+      <a-button type="primary" @click="() => batchConfig.show(DLbianma)">
+        配置
+      </a-button>
+    </a-space>
     <SearchForm :formItems="formItems" @search="table.refresh()"></SearchForm>
 
     <STable
@@ -10,32 +13,27 @@
       :columns="columns"
       :data="reqData"
       row-key="chanpinBianma"
+      :scroll="{ y: 'calc(100vh - 410px)' }"
       :row-selection="{
         selectedRowKeys: selectedRowKeys,
         onChange: onSelectChange,
       }"
     >
       <template #toolbar>
-        <a-button type="primary" @click="handleBatchConfig">批量配置</a-button>
+        <a-popconfirm
+          title="确定要取消配置吗？"
+          ok-text="是"
+          cancel-text="否"
+          @confirm="batchCancel"
+        >
+          <a-button type="primary">批量取消</a-button>
+        </a-popconfirm>
       </template>
       <template #bodyCell="{ column, row }">
         <template v-if="column.dataIndex === 'xuanchuantuUrl'">
           <a-image :width="80" :src="baseUrl + row.xuanchuantuUrl" />
         </template>
-        <template v-if="column.dataIndex === 'shangxiajia'">
-          <a-popconfirm
-            :disabled="row.peizhi === 0"
-            title="确定要修改吗？"
-            ok-text="是"
-            cancel-text="否"
-            @confirm="handelShangxiajia(row)"
-          >
-            <a-switch
-              :disabled="row.peizhi === 0"
-              :checked="row.shangxiajia === 1"
-            />
-          </a-popconfirm>
-        </template>
+
         <!-- <template v-if="column.dataIndex === 'action'">
           <a @click="() => config.show(row, DLbianma)">配置</a>
         </template> -->
@@ -55,10 +53,7 @@
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import { STable } from '@/components/STable'
-import {
-  reqSearchProduct,
-  reqConfigProductStatus,
-} from '@/api/admin/channel/agent'
+import { reqSearchProduct } from '@/api/admin/channel/agent'
 import { message } from 'ant-design-vue'
 import BatchConfig from './modules/BatchConfig.vue'
 
@@ -254,21 +249,6 @@ const columns = [
     dataIndex: 'dailiYongjinJine',
     align: 'center',
   },
-  // {
-  //   title: '配置',
-  //   dataIndex: 'peizhi',
-  //   align: 'center',
-  // },
-  {
-    title: '上下架',
-    dataIndex: 'shangxiajia',
-    align: 'center',
-  },
-  // {
-  //   title: '操作',
-  //   dataIndex: 'action',
-  //   align: 'center',
-  // },
 ]
 
 const reqData = async () => {
@@ -290,21 +270,6 @@ const reqData = async () => {
   }
 }
 
-// 上下架
-const handelShangxiajia = async (row: any) => {
-  const result = await reqConfigProductStatus({
-    id: row.id,
-    chanpinBianma: row.chanpinBianma,
-    shangxiajia: row.shangxiajia === 1 ? 2 : 1,
-  })
-  if (result.code == 0) {
-    message.success(result.msg)
-    table.value.refresh()
-  } else {
-    message.error(result.msg)
-  }
-}
-
 const selectedRowKeys = ref<any>([])
 const selectedRows = ref<any>([])
 
@@ -313,14 +278,17 @@ const onSelectChange = (selectedRowkeys: any, selectedrows: any) => {
   selectedRows.value = selectedrows
 }
 
+// 批量取消配置
+const batchCancel = async () => {
+  if (selectedRows.value.length == 0) {
+    message.error('请选择产品')
+    return
+  }
+  alert(selectedRowKeys.value.toString())
+}
+
 // 配置
 const batchConfig = ref()
-const handleBatchConfig = () => {
-  if (selectedRows.value.length == 0) {
-    return message.error('请选择产品')
-  }
-  batchConfig.value.show(props.DLbianma, selectedRows.value)
-}
 </script>
 
 <style></style>

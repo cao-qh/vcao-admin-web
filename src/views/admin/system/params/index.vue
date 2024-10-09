@@ -68,6 +68,17 @@ import useUserStore from '@/store/modules/user'
 
 const userStore = useUserStore()
 
+const qijinyong = [
+  {
+    value: 1,
+    label: '启用',
+  },
+  {
+    value: 2,
+    label: '禁用',
+  },
+]
+
 const formItems = reactive([
   {
     type: 'input',
@@ -89,6 +100,18 @@ const formItems = reactive([
     filed: 'canshuMingcheng',
     value: '',
     placeholder: '请输入',
+  },
+  {
+    type: 'select',
+    label: '启禁用',
+    filed: 'qijinyong',
+    value: null,
+    placeholder: '请输入',
+    options: qijinyong,
+    defaultOption: {
+      value: '',
+      label: '全部',
+    },
   },
 ])
 

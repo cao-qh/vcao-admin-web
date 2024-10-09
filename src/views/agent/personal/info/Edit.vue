@@ -15,17 +15,18 @@
       <a-row>
         <a-col :xs="24" :sm="24">
           <a-form-item label="名称" name="mingcheng">
-            <a-input v-model:value="formState.mingcheng" placeholder="请输入" />
+            <a-input
+              v-model:value.trim="formState.mingcheng"
+              placeholder="请输入"
+            />
           </a-form-item>
         </a-col>
         <a-col :xs="24" :sm="24">
           <a-form-item label="邮箱" name="youxiang">
-            <a-input v-model:value="formState.youxiang" placeholder="请输入" />
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="24">
-          <a-form-item label="备注" name="beizhu">
-            <a-textarea v-model:value="formState.beizhu" placeholder="请输入" />
+            <a-input
+              v-model:value.trim="formState.youxiang"
+              placeholder="请输入"
+            />
           </a-form-item>
         </a-col>
         <a-col :xs="24" :sm="24">
@@ -34,6 +35,11 @@
               v-model:value="formState.mima"
               placeholder="请输入"
             />
+          </a-form-item>
+        </a-col>
+        <a-col :xs="24" :sm="24">
+          <a-form-item label="备注" name="beizhu">
+            <a-textarea v-model:value="formState.beizhu" placeholder="请输入" />
           </a-form-item>
         </a-col>
         <!-- <a-col :xs="24" :sm="24">
@@ -53,6 +59,7 @@ import { reactive, ref, watch } from 'vue'
 import { message } from 'ant-design-vue'
 import { editUserInfo } from '@/api/agent/personal'
 import type { Rule } from 'ant-design-vue/es/form'
+import { password } from '@/utils/regexp'
 
 defineOptions({ name: 'Edit' })
 // 定义方法
@@ -75,7 +82,6 @@ const formRef = ref()
 const formState = reactive<any>({})
 
 watch(open, (val) => {
-  console.log('open', val)
   if (val) {
     formState.mingcheng = Props.userInfo.mingcheng
     formState.youxiang = Props.userInfo.youxiang
@@ -91,8 +97,11 @@ const rules = {
   youxiang: [{ required: true, message: '请输入' }],
   // beizhu: [{ required: true, message: '请输入' }],
   mima: [
-    { min: 6, message: '密码不少于6位' },
-    { required: true, message: '请输入' },
+    {
+      required: true,
+      pattern: password,
+      message: '密码不少于6位,且只能包含字母、数字、下划线',
+    },
   ],
   confirmPassword: [
     {
@@ -112,7 +121,7 @@ const rules = {
 const submit = async () => {
   try {
     await formRef.value.validate()
-
+    formState.beizhu = formState.beizhu.trim()
     const res = await editUserInfo(formState)
     if (res.code === 0) {
       $emit('reload')

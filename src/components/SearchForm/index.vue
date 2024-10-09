@@ -11,7 +11,7 @@
           <a-form-item :label="item.label">
             <a-input
               v-if="item.type === 'input'"
-              v-model:value="item.value"
+              v-model:value.trim="item.value"
               :placeholder="item.placeholder"
               :allowClear="item.allowClear === false ? false : true"
             />

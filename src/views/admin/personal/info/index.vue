@@ -23,13 +23,7 @@
     <div
       style="margin: 10px; width: 100%; display: flex; justify-content: center"
     >
-      <a-button
-        type="primary"
-        @click="open = true"
-        v-has="'Btn.PersonalInfo.Update'"
-      >
-        修改
-      </a-button>
+      <a-button type="primary" @click="open = true">修改</a-button>
     </div>
     <Edit v-model:open="open" :userInfo="userInfo" @reload="getData" />
   </PageWrapper>
@@ -44,7 +38,7 @@ const open = ref(false)
 let userInfo = ref<any>({})
 
 const getData = async () => {
-  const res = await selectUserInfo()
+  const res: any = await selectUserInfo()
   if (res.code === 0) {
     userInfo.value = { ...res.data }
   } else {

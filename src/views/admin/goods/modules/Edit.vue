@@ -9,26 +9,10 @@
     <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
       <a-row>
         <a-col :xs="24" :sm="24">
-          <a-form-item label="ID" name="id">
+          <a-form-item label="编号" name="id">
             <a-input
               v-model:value="formState.id"
               disabled
-              placeholder="请输入"
-            />
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="24">
-          <a-form-item label="上级编码" name="shangjiBianma">
-            <a-input
-              v-model:value="formState.shangjiBianma"
-              placeholder="请输入"
-            />
-          </a-form-item>
-        </a-col>
-        <a-col :xs="24" :sm="24">
-          <a-form-item label="上级名称" name="shangjiMingcheng">
-            <a-input
-              v-model:value="formState.shangjiMingcheng"
               placeholder="请输入"
             />
           </a-form-item>
@@ -38,6 +22,23 @@
             <a-input-number
               style="width: 100%"
               v-model:value="formState.dinggoujiage"
+              placeholder="请输入"
+              disabled
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :xs="24" :sm="24">
+          <a-form-item label="上级编码" name="shangjiBianma">
+            <a-input
+              v-model:value.trim="formState.shangjiBianma"
+              placeholder="请输入"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :xs="24" :sm="24">
+          <a-form-item label="上级名称" name="shangjiMingcheng">
+            <a-input
+              v-model:value.trim="formState.shangjiMingcheng"
               placeholder="请输入"
             />
           </a-form-item>
@@ -142,6 +143,8 @@ const show = async (row: any) => {
   formState.yunyingshang = row.yunyingshang + ''
   formState.guishudi = row.guishudi
   formState.dinggoujiage = row.dinggoujiage
+
+  formRef.value?.clearValidate()
 }
 
 const submit = async () => {
