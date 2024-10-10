@@ -4,6 +4,7 @@
       <a-button type="primary" @click="$emit('back')">返回</a-button>
       <a-button type="primary" @click="handleBatchConfig">配置</a-button>
     </a-space>
+
     <SearchForm :formItems="formItems" @search="table.refresh()"></SearchForm>
 
     <STable
