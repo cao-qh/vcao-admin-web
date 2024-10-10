@@ -2,7 +2,7 @@
   <a-modal title="添加记录" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
       <a-form-item label="手机号" name="phone">
-        <a-input v-model:value="formState.phone" />
+        <a-input v-model:value.trim="formState.phone" />
       </a-form-item>
       <a-form-item label="通道" name="tongdao">
         <a-select v-model:value="formState.tongdao">
@@ -22,7 +22,7 @@
         <AddressSelector v-model:value="formState.address" />
       </a-form-item>
       <a-form-item label="备注" name="beizhu">
-        <a-textarea v-model:value="formState.beizhu"></a-textarea>
+        <a-textarea v-model:value.trim="formState.beizhu"></a-textarea>
       </a-form-item>
     </a-form>
   </a-modal>

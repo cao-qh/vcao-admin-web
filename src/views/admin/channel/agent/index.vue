@@ -26,7 +26,9 @@
             </a-popconfirm>
           </template>
           <template v-if="column.dataIndex === 'action'">
-            <a @click="updateAPI.show(row)">修改API</a>
+            <a v-has="'Btn.Agent.UpdateAPI'" @click="updateAPI.show(row)">
+              修改API
+            </a>
             <a-divider type="vertical" />
             <a v-has="'Btn.Agent.Update'" @click="update.show(row)">资料卡</a>
             <a-divider type="vertical" />

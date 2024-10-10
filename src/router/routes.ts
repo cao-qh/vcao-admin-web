@@ -234,13 +234,13 @@ export const adminRoute = [
       },
     ],
   },
-  // 套餐管理
+  // 产品管理
   {
     path: '/goods',
     component: BaseLayout,
     name: 'Goods',
     meta: {
-      title: '套餐管理',
+      title: '产品管理',
       icon: 'StarOutlined',
     },
     redirect: '/goods/list',
@@ -251,7 +251,7 @@ export const adminRoute = [
         component: () => import('@/views/admin/goods/index.vue'),
         name: 'GoodsList',
         meta: {
-          title: '套餐列表',
+          title: '产品列表',
         },
       },
     ],
@@ -336,13 +336,13 @@ export const agentRoute = [
       },
     ],
   },
-  // 套餐管理
+  // 产品管理
   {
     path: '/goods',
     component: BaseLayout,
     name: 'Goods',
     meta: {
-      title: '套餐管理',
+      title: '产品管理',
       icon: 'StarOutlined',
     },
     redirect: '/goods/list',
@@ -353,7 +353,7 @@ export const agentRoute = [
         component: () => import('@/views/agent/goods/index.vue'),
         name: 'GoodsList',
         meta: {
-          title: '套餐列表',
+          title: '产品列表',
         },
       },
     ],

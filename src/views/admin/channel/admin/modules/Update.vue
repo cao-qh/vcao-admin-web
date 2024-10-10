@@ -2,17 +2,20 @@
   <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" v-bind="layout">
       <a-form-item label="名称" name="mingcheng">
-        <a-input v-model:value="formState.mingcheng" />
+        <a-input v-model:value.trim="formState.mingcheng" />
       </a-form-item>
       <a-form-item
         label="密码"
         name="mima"
         :rules="[{ min: 6, message: '请输入6位以上密码' }]"
       >
-        <a-input-password v-model:value="formState.mima" />
+        <a-input-password v-model:value="formState.mima" placeholder="请输入" />
       </a-form-item>
       <a-form-item label="限制IP" name="ipS">
-        <a-textarea v-model:value="formState.ipS"></a-textarea>
+        <a-textarea
+          v-model:value.trim="formState.ipS"
+          placeholder="请输入"
+        ></a-textarea>
       </a-form-item>
     </a-form>
   </a-modal>

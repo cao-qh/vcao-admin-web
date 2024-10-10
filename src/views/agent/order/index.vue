@@ -8,7 +8,7 @@
       :columns="columns"
       :data="getData"
       :showPagination="true"
-      :scroll="{ x: 2500 }"
+      :scroll="{ x: 2500, y: 'calc(100vh - 490px)' }"
       :row-selection="{
         selectedRowKeys: selectedRowKeys,
         onChange: onSelectChange,
@@ -211,7 +211,7 @@ const formItems = reactive([
   },
   {
     type: 'input',
-    label: '手机号',
+    label: '办理手机号',
     filed: 'shoujihao',
     value: '',
     placeholder: '请输入',

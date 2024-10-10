@@ -7,7 +7,7 @@
       <a-form-item name="shoujihao">
         <a-input
           size="large"
-          v-model:value="loginForm.shoujihao"
+          v-model:value.trim="loginForm.shoujihao"
           placeholder="手机号"
         >
           <template #prefix>
@@ -18,7 +18,7 @@
       <a-form-item name="mima">
         <a-input-password
           size="large"
-          v-model:value="loginForm.mima"
+          v-model:value.trim="loginForm.mima"
           type="mima"
           placeholder="密码"
         >

@@ -2,13 +2,22 @@
   <a-modal title="添加" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
       <a-form-item label="账户/手机号" name="shoujihao">
-        <a-input v-model:value="formState.shoujihao" placeholder="请输入" />
+        <a-input
+          v-model:value.trim="formState.shoujihao"
+          placeholder="请输入"
+        />
       </a-form-item>
       <a-form-item label="密码" name="mima">
-        <a-input-password v-model:value="formState.mima" placeholder="请输入" />
+        <a-input-password
+          v-model:value.trim="formState.mima"
+          placeholder="请输入"
+        />
       </a-form-item>
       <a-form-item label="名称" name="mingcheng">
-        <a-input v-model:value="formState.mingcheng" placeholder="请输入" />
+        <a-input
+          v-model:value.trim="formState.mingcheng"
+          placeholder="请输入"
+        />
       </a-form-item>
     </a-form>
   </a-modal>

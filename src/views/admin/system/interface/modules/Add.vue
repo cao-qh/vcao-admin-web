@@ -3,25 +3,25 @@
     <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
       <a-form-item label="名称" name="jiekouMingcheng">
         <a-input
-          v-model:value="formState.jiekouMingcheng"
+          v-model:value.trim="formState.jiekouMingcheng"
           placeholder="请输入"
         />
       </a-form-item>
       <a-form-item label="中文参数" name="zhongwen">
         <a-textarea
-          v-model:value="formState.zhongwen"
+          v-model:value.trim="formState.zhongwen"
           placeholder="以-分隔，例如xx-xx-xx"
         ></a-textarea>
       </a-form-item>
       <a-form-item label="英文参数" name="yingwen">
         <a-textarea
-          v-model:value="formState.yingwen"
+          v-model:value.trim="formState.yingwen"
           placeholder="以-分隔，例如aa-bb-cc"
         ></a-textarea>
       </a-form-item>
       <a-form-item label="备注" name="beizhu">
         <a-textarea
-          v-model:value="formState.beizhu"
+          v-model:value.trim="formState.beizhu"
           placeholder="请输入"
         ></a-textarea>
       </a-form-item>

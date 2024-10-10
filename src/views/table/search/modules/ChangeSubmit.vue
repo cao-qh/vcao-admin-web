@@ -27,7 +27,7 @@
         <AddressSelector v-model:value="formState.address" />
       </a-form-item>
       <a-form-item label="备注" name="beizhu">
-        <a-textarea v-model:value="formState.beizhu"></a-textarea>
+        <a-textarea v-model:value.trim="formState.beizhu"></a-textarea>
       </a-form-item>
     </a-form>
   </a-modal>

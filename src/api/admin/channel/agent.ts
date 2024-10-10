@@ -16,7 +16,7 @@ enum API {
   // 查询API
   searchApi = '/tAdmin/agent/selectByTAgentAPI',
   // 修改API
-  updateApi = '/tAdmin/agent/updateTAgentAPI',
+  updateApi = '/tAdmin/agent/updateByTAgentAPI',
 }
 
 // 查询代理列表

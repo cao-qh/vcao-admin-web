@@ -109,7 +109,7 @@ const formItems = reactive([
   },
   {
     type: 'select',
-    label: '代理名称',
+    label: '名称',
     filed: 'dailiBianma',
     value: '',
     placeholder: '请输入',
@@ -148,7 +148,7 @@ const columns = [
     align: 'center',
   },
   {
-    title: '代理名称',
+    title: '名称',
     dataIndex: 'dailiBianma',
     align: 'center',
   },

@@ -2,7 +2,7 @@
   <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" v-bind="layout">
       <a-form-item label="名称" name="mingcheng">
-        <a-input v-model:value="formState.mingcheng" />
+        <a-input v-model:value.trim="formState.mingcheng" />
       </a-form-item>
     </a-form>
   </a-modal>

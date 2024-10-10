@@ -17,7 +17,7 @@
             v-for="item in zhongyingwenParams"
             :key="item.yw"
             :addon-before="item.zw"
-            v-model:value="formState.canshuZhongyingwen[item.yw]"
+            v-model:value.trim="formState.canshuZhongyingwen[item.yw]"
           />
         </a-flex>
       </a-form-item>

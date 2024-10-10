@@ -2,10 +2,10 @@
   <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" v-bind="layout">
       <a-form-item label="参数模板名称" name="canshuMingcheng">
-        <a-input v-model:value="formState.canshuMingcheng" />
+        <a-input v-model:value.trim="formState.canshuMingcheng" />
       </a-form-item>
       <a-form-item label="备注" name="canshuBeizhu">
-        <a-textarea v-model:value="formState.canshuBeizhu"></a-textarea>
+        <a-textarea v-model:value.trim="formState.canshuBeizhu"></a-textarea>
       </a-form-item>
     </a-form>
   </a-modal>

@@ -10,14 +10,14 @@
     <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
       <a-form-item label="参数模板名称" name="canshuMingcheng">
         <a-input
-          v-model:value="formState.canshuMingcheng"
+          v-model:value.trim="formState.canshuMingcheng"
           placeholder="请输入"
         />
       </a-form-item>
       <a-form-item label="接口模板" name="jiekouBianma">
         <a-select
           showSearch
-          v-model:value="formState.jiekouBianma"
+          v-model:value.trim="formState.jiekouBianma"
           :options="interfaceList"
           :fieldNames="{ label: 'mc', value: 'bm' }"
           :filterOption="filterOption"
@@ -36,14 +36,14 @@
               v-for="item in zhongyingwenParams"
               :key="item.yw"
               :addon-before="item.zw"
-              v-model:value="formState.canshuZhongyingwen[item.yw]"
+              v-model:value.trim="formState.canshuZhongyingwen[item.yw]"
             />
           </a-flex>
         </a-form-item>
       </template>
       <a-form-item label="备注" name="canshuBeizhu">
         <a-textarea
-          v-model:value="formState.canshuBeizhu"
+          v-model:value.trim="formState.canshuBeizhu"
           placeholder="请输入"
         ></a-textarea>
       </a-form-item>

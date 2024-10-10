@@ -8,18 +8,21 @@
         <a-input v-model:value="formState.chuangjianshijian" disabled />
       </a-form-item>
       <a-form-item label="名称" name="mingcheng">
-        <a-input v-model:value="formState.mingcheng" placeholder="请输入" />
+        <a-input
+          v-model:value.trim="formState.mingcheng"
+          placeholder="请输入"
+        />
       </a-form-item>
       <a-form-item
         label="邮箱"
         name="youxiang"
         :rules="[{ pattern: email, message: '请输入正确的邮箱' }]"
       >
-        <a-input v-model:value="formState.youxiang" placeholder="请输入" />
+        <a-input v-model:value.trim="formState.youxiang" placeholder="请输入" />
       </a-form-item>
       <a-form-item label="备注" name="beizhu" placeholder="请输入">
         <a-textarea
-          v-model:value="formState.beizhu"
+          v-model:value.trim="formState.beizhu"
           placeholder="请输入"
         ></a-textarea>
       </a-form-item>

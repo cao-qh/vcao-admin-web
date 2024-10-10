@@ -2,9 +2,7 @@
   <div>
     <a-space style="margin-bottom: 10px">
       <a-button type="primary" @click="$emit('back')">返回</a-button>
-      <a-button type="primary" @click="() => batchConfig.show(DLbianma)">
-        配置
-      </a-button>
+      <a-button type="primary" @click="handleBatchConfig">配置</a-button>
     </a-space>
     <SearchForm :formItems="formItems" @search="table.refresh()"></SearchForm>
 
@@ -14,29 +12,11 @@
       :data="reqData"
       row-key="chanpinBianma"
       :scroll="{ y: 'calc(100vh - 410px)' }"
-      :row-selection="{
-        selectedRowKeys: selectedRowKeys,
-        onChange: onSelectChange,
-      }"
     >
-      <template #toolbar>
-        <a-popconfirm
-          title="确定要取消配置吗？"
-          ok-text="是"
-          cancel-text="否"
-          @confirm="batchCancel"
-        >
-          <a-button type="primary">批量取消</a-button>
-        </a-popconfirm>
-      </template>
       <template #bodyCell="{ column, row }">
         <template v-if="column.dataIndex === 'xuanchuantuUrl'">
           <a-image :width="80" :src="baseUrl + row.xuanchuantuUrl" />
         </template>
-
-        <!-- <template v-if="column.dataIndex === 'action'">
-          <a @click="() => config.show(row, DLbianma)">配置</a>
-        </template> -->
       </template>
     </STable>
 
@@ -54,7 +34,6 @@ import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import { STable } from '@/components/STable'
 import { reqSearchProduct } from '@/api/admin/channel/agent'
-import { message } from 'ant-design-vue'
 import BatchConfig from './modules/BatchConfig.vue'
 
 defineOptions({ name: 'ConfigProduct' })
@@ -263,32 +242,30 @@ const reqData = async () => {
 
   const res: any = await reqSearchProduct(data)
   if (res.code == 0) {
+    const list = res.data.filter((item: any) => item.peizhi)
+
     return {
-      data: res.data,
-      total: res.data.length,
+      data: list,
+      total: list.length,
     }
   }
 }
 
-const selectedRowKeys = ref<any>([])
-const selectedRows = ref<any>([])
-
-const onSelectChange = (selectedRowkeys: any, selectedrows: any) => {
-  selectedRowKeys.value = selectedRowkeys
-  selectedRows.value = selectedrows
-}
-
-// 批量取消配置
-const batchCancel = async () => {
-  if (selectedRows.value.length == 0) {
-    message.error('请选择产品')
-    return
-  }
-  alert(selectedRowKeys.value.toString())
-}
-
 // 配置
 const batchConfig = ref()
+// 处理批量配置
+const handleBatchConfig = () => {
+  const data: any = {
+    DLbianma: props.DLbianma,
+  }
+  formItems.forEach((item) => {
+    if (item.value) {
+      data[item.filed] = item.value
+    }
+  })
+
+  batchConfig.value.show(data)
+}
 </script>
 
 <style></style>

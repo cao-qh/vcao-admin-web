@@ -2,7 +2,10 @@
   <a-modal title="添加" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
       <a-form-item label="名称" name="mingcheng">
-        <a-input v-model:value="formState.mingcheng" placeholder="请输入" />
+        <a-input
+          v-model:value.trim="formState.mingcheng"
+          placeholder="请输入"
+        />
       </a-form-item>
       <a-form-item label="启禁用" name="qijinyong" placeholder="请选择">
         <a-radio-group v-model:value="formState.qijinyong">

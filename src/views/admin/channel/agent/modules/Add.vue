@@ -2,16 +2,25 @@
   <a-modal title="添加" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
       <a-form-item label="账户/手机号" name="shoujihao">
-        <a-input v-model:value="formState.shoujihao" placeholder="请输入" />
+        <a-input
+          v-model:value.trim="formState.shoujihao"
+          placeholder="请输入"
+        />
       </a-form-item>
       <a-form-item label="密码" name="mima">
-        <a-input-password v-model:value="formState.mima" placeholder="请输入" />
+        <a-input-password
+          v-model:value.trim="formState.mima"
+          placeholder="请输入"
+        />
       </a-form-item>
       <a-form-item label="名称" name="mingcheng">
-        <a-input v-model:value="formState.mingcheng" placeholder="请输入" />
+        <a-input
+          v-model:value.trim="formState.mingcheng"
+          placeholder="请输入"
+        />
       </a-form-item>
       <a-form-item label="邮箱" name="youxiang">
-        <a-input v-model:value="formState.youxiang" placeholder="请输入" />
+        <a-input v-model:value.trim="formState.youxiang" placeholder="请输入" />
       </a-form-item>
       <a-form-item label="启禁用" name="qijinyong" placeholder="请选择">
         <a-radio-group v-model:value="formState.qijinyong">
@@ -21,7 +30,7 @@
       </a-form-item>
       <a-form-item label="备注" name="beizhu" placeholder="请输入">
         <a-textarea
-          v-model:value="formState.beizhu"
+          v-model:value.trim="formState.beizhu"
           placeholder="请输入"
         ></a-textarea>
       </a-form-item>

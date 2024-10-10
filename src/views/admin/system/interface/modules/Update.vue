@@ -2,7 +2,7 @@
   <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" v-bind="layout">
       <a-form-item label="接口编码" name="jiekouBianma">
-        <a-input v-model:value="formState.jiekouBianma" disabled />
+        <a-input v-model:value.trim="formState.jiekouBianma" disabled />
       </a-form-item>
       <a-form-item
         label="接口名称"
@@ -10,23 +10,23 @@
         placeholder="请输入"
         :rules="[{ required: true, message: '请输入接口名称' }]"
       >
-        <a-input v-model:value="formState.jiekouMingcheng" />
+        <a-input v-model:value.trim="formState.jiekouMingcheng" />
       </a-form-item>
       <a-form-item label="中文参数" name="zhongwen">
         <a-textarea
-          v-model:value="formState.zhongwen"
+          v-model:value.trim="formState.zhongwen"
           placeholder="以-分隔，例如xx-xx-xx"
         ></a-textarea>
       </a-form-item>
       <a-form-item label="英文参数" name="yingwen">
         <a-textarea
-          v-model:value="formState.yingwen"
+          v-model:value.trim="formState.yingwen"
           placeholder="以-分隔，例如aa-bb-cc"
         ></a-textarea>
       </a-form-item>
       <a-form-item label="备注" name="beizhu">
         <a-textarea
-          v-model:value="formState.beizhu"
+          v-model:value.trim="formState.beizhu"
           placeholder="请输入"
         ></a-textarea>
       </a-form-item>

@@ -1,25 +1,15 @@
 <template>
   <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" v-bind="layout">
-      <a-form-item label="账户" name="shoujihao">
-        <a-input v-model:value="formState.shoujihao" disabled />
+      <a-form-item label="回调地址" name="huitiaoUrl">
+        <a-input
+          v-model:value.trim="formState.huitiaoUrl"
+          placeholder="请输入"
+        />
       </a-form-item>
-      <a-form-item label="注册时间" name="chuangjianshijian">
-        <a-input v-model:value="formState.chuangjianshijian" disabled />
-      </a-form-item>
-      <a-form-item label="名称" name="mingcheng">
-        <a-input v-model:value="formState.mingcheng" placeholder="请输入" />
-      </a-form-item>
-      <a-form-item
-        label="邮箱"
-        name="youxiang"
-        :rules="[{ pattern: email, message: '请输入正确的邮箱' }]"
-      >
-        <a-input v-model:value="formState.youxiang" placeholder="请输入" />
-      </a-form-item>
-      <a-form-item label="备注" name="beizhu" placeholder="请输入">
+      <a-form-item label="IP白名单" name="ipS" placeholder="请输入">
         <a-textarea
-          v-model:value="formState.beizhu"
+          v-model:value.trim="formState.ipS"
           placeholder="请输入"
         ></a-textarea>
       </a-form-item>
@@ -30,9 +20,8 @@
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { reqSearchApi, reqUpdateApi } from '@/api/admin/channel/agent'
-import { email } from '@/utils/regexp'
 
-defineOptions({ name: 'Update' })
+defineOptions({ name: 'UpdateAPI' })
 
 // 定义方法
 const $emit = defineEmits(['success'])
@@ -59,10 +48,8 @@ const show = async (row: any) => {
   if (res.code === 0) {
     open.value = true
     formState.id = row.id
-    formState.dailiBianma = row.dailiBianma
-    formState.miyao = row.miyao
-    formState.huitiaoUrl = row.huitiaoUrl
-    formState.ipS = row.ipS
+    formState.huitiaoUrl = res.data.huitiaoUrl
+    formState.ipS = res.data.ipS
   } else {
     message.error(res.msg)
   }

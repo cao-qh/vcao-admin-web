@@ -119,10 +119,19 @@ const columns = [
     dataIndex: 'mingcheng',
     align: 'center',
   },
-
   {
     title: '电话',
     dataIndex: 'shoujihao',
+    align: 'center',
+  },
+  {
+    title: 'IP白名单',
+    dataIndex: 'ipS',
+    align: 'center',
+  },
+  {
+    title: '创建时间',
+    dataIndex: 'chuangjianshijian',
     align: 'center',
   },
   {

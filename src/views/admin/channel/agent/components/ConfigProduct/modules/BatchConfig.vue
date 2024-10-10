@@ -7,79 +7,57 @@
     :bodyStyle="{ maxHeight: '600px', overflow: 'auto' }"
     @cancel="open = false"
   >
-    <STable :columns="columns"></STable>
-    <!-- <a-list item-layout="horizontal" :data-source="selectRows">
-      <template #renderItem="{ item }">
-        <a-list-item>
-          <a-flex wrap="wrap" gap="middle" align="center">
-            <div>产品编码：{{ item.chanpinBianma }}</div>
-            <div>代理编码：{{ item.dailiBianma }}</div>
-            <div>
-              <span>结算方式：</span>
-              <a-select
-                placeholder="请选择"
-                style="width: 100px"
-                v-model:value="item.jiesuanfangshi"
-              >
-                <a-select-option
-                  v-for="sitem in settlement"
-                  :key="sitem.value"
-                  :value="sitem.value"
-                >
-                  {{ sitem.label }}
-                </a-select-option>
-              </a-select>
-            </div>
-            <div>
-              <span>结算周期：</span>
-              <a-select
-                placeholder="请选择"
-                style="width: 100px"
-                v-model:value="item.jiesuanzhouqi"
-              >
-                <a-select-option
-                  v-for="jitem in jiesuanzhouqi"
-                  :key="jitem.value"
-                  :value="jitem.value"
-                >
-                  {{ jitem.label }}
-                </a-select-option>
-              </a-select>
-            </div>
-            <a-flex align="center">
-              <span>代理佣金金额：</span>
-              <a-input-number
-                :min="0"
-                :precision="2"
-                placeholder="请输入"
-                style="width: 150px"
-                v-model:value="item.dailiYongjinJine"
-              >
-                <template #addonAfter>
-                  <span>元</span>
-                </template>
-              </a-input-number>
-            </a-flex>
-            <div>
-              <span>上下架：</span>
-              <a-radio-group v-model:value="item.shangxiajia">
-                <a-radio-button :value="1">上架</a-radio-button>
-                <a-radio-button :value="2">下架</a-radio-button>
-              </a-radio-group>
-            </div>
-          </a-flex>
-        </a-list-item>
+    <a-table
+      :columns="columns"
+      :dataSource="dataSource"
+      row-key="chanpinBianma"
+      bordered
+      :pagination="false"
+      :row-selection="{
+        selectedRowKeys: selectedRowKeys,
+        onChange: onSelectChange,
+      }"
+    >
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'dailiYongjinJine'">
+          <a-input-number
+            :min="0"
+            :precision="2"
+            v-model:value.trim="record.dailiYongjinJine"
+          />
+        </template>
+        <template v-if="column.dataIndex === 'jiesuanfangshi'">
+          <a-select v-model:value="record.jiesuanfangshi" style="width: 120px">
+            <a-select-option
+              v-for="item in settlement"
+              :value="item.value"
+              :key="item.value"
+            >
+              {{ item.label }}
+            </a-select-option>
+          </a-select>
+        </template>
+        <template v-if="column.dataIndex === 'jiesuanzhouqi'">
+          <a-select v-model:value="record.jiesuanzhouqi" style="width: 120px">
+            <a-select-option
+              v-for="item in jiesuanzhouqi"
+              :value="item.value"
+              :key="item.value"
+            >
+              {{ item.label }}
+            </a-select-option>
+          </a-select>
+        </template>
       </template>
-    </a-list> -->
+    </a-table>
   </a-modal>
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqConfigProduct } from '@/api/admin/channel/agent'
-import { STable } from '@/components/STable'
+import { reqConfigProduct, reqSearchProduct } from '@/api/admin/channel/agent'
 
-defineOptions({ name: 'Config' })
+defineOptions({ name: 'BatchConfig' })
 
 defineProps<{
   settlement: any
@@ -91,53 +69,64 @@ const $emit = defineEmits(['success'])
 
 const open = ref<boolean>(false)
 
-const DLbianma = ref('')
+const selectedRowKeys = ref<any>([])
+
 const selectRows = ref<any>([])
+
+const dataSource = ref<any>(null)
 
 const columns = [
   {
-    title: '编号',
-    dataIndex: 'id',
+    title: '产品编码',
+    dataIndex: 'chanpinBianma',
     align: 'center',
   },
   {
-    title: '引流图',
-    dataIndex: 'xuanchuantuUrl',
+    title: '代理编码',
+    dataIndex: 'dailiBianma',
     align: 'center',
   },
   {
-    title: '产品名称',
-    dataIndex: 'mingcheng',
-    align: 'center',
-  },
-  // {
-  //   title: '结算方式',
-  //   dataIndex: 'jiesuanfangshi',
-  //   align: 'center',
-  //   customRender: ({ text }: { text: number }) => {
-  //     const item = settlement.find((item) => item.value === text)
-  //     return item ? item.label : ''
-  //   },
-  // },
-  // {
-  //   title: '结算周期',
-  //   dataIndex: 'jiesuanzhouqi',
-  //   align: 'center',
-  //   customRender: ({ text }: { text: number }) => {
-  //     const item = jiesuanzhouqi.find((item) => item.value === text)
-  //     return item ? item.label : ''
-  //   },
-  // },
-  {
-    title: '结算价格',
+    title: '代理佣金金额',
     dataIndex: 'dailiYongjinJine',
+    align: 'center',
+  },
+  {
+    title: '结算方式',
+    dataIndex: 'jiesuanfangshi',
+    align: 'center',
+  },
+  {
+    title: '结算周期',
+    dataIndex: 'jiesuanzhouqi',
     align: 'center',
   },
 ]
 
-const show = async (dlBianma: string) => {
-  open.value = true
-  DLbianma.value = dlBianma
+const show = async (params: any) => {
+  selectedRowKeys.value = []
+  selectRows.value = []
+  const res: any = await reqSearchProduct(params)
+  if (res.code == 0) {
+    dataSource.value = res.data.map((item: any) => ({
+      chanpinBianma: item.chanpinBianma,
+      dailiBianma: item.dailiBianma,
+      dailiYongjinJine: item.dailiYongjinJine || 0,
+      jiesuanfangshi: item.jiesuanfangshi || 1,
+      jiesuanzhouqi: item.jiesuanzhouqi || 1,
+      shangxiajia: 1,
+    }))
+    open.value = true
+
+    res.data.forEach((item: any) => {
+      if (item.peizhi) {
+        selectedRowKeys.value.push(item.chanpinBianma)
+        selectRows.value.push(item)
+      }
+    })
+  } else {
+    message.error(res.msg)
+  }
 }
 
 const submit = async () => {
@@ -153,6 +142,11 @@ const submit = async () => {
   } catch (error) {
     console.log('error :>> ', error)
   }
+}
+
+const onSelectChange = (selectedRowkeys: any, selectedrows: any) => {
+  selectedRowKeys.value = selectedRowkeys
+  selectRows.value = selectedrows
 }
 
 defineExpose({

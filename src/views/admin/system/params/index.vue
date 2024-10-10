@@ -7,7 +7,7 @@
       :columns="columns"
       :data="reqData"
       :showPagination="true"
-      :scroll="{ y: 'calc(100vh - 408px)' }"
+      :scroll="{ y: 'calc(100vh - 430px)' }"
     >
       <template #toolbar>
         <a-button v-has="'Btn.Params.Add'" type="primary" @click="add.show()">
@@ -40,7 +40,7 @@
               修改参数模板
             </a>
             <a v-has="'Btn.Params.UpdateJson'" @click="updateJson.show(row)">
-              修改json数据
+              修改中英文参数
             </a>
           </a-flex>
         </template>
