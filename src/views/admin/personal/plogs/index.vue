@@ -6,7 +6,7 @@
       ref="table"
       :columns="columns"
       :data="getData"
-      :scroll="{ y: 'calc(100vh - 320px)' }"
+      :scroll="{ y: 'calc(100vh - 420px)' }"
       :showPagination="true"
     ></STable>
   </PageWrapper>

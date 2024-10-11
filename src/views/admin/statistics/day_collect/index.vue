@@ -30,7 +30,7 @@ import { reactive, ref, onMounted } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import STable from '@/components/STable/index.vue'
 import { collectDaySelect, collectDayDownload } from '@/api/admin/collect'
-import { reqGoodsBianma, selectQudaoshang } from '@/api/common'
+import { reqGoodsBianma, reqSearchAgent } from '@/api/common'
 import { message } from 'ant-design-vue'
 import dayjs, { Dayjs } from 'dayjs'
 
@@ -149,8 +149,8 @@ const formItems = reactive([
   },
   {
     type: 'select',
-    label: '渠道商',
-    filed: 'shangyouqudaoshang',
+    label: '代理',
+    filed: 'xiayouqudaoshang',
     value: '',
     placeholder: '请选择',
     defaultOption: {
@@ -158,12 +158,12 @@ const formItems = reactive([
       label: '全部',
     },
     options: async () => {
-      const res = await selectQudaoshang()
+      const res: any = await reqSearchAgent()
       if (res.code === 0) {
-        return Object.keys(res.data).map((key) => {
+        return res.data.map((item: any) => {
           return {
-            value: res.data[key]?.quDaoBianMa,
-            label: res.data[key]?.quDaoName,
+            value: item.bianma,
+            label: `${item.bianma}-${item.mingcheng}`,
           }
         })
       } else {
@@ -226,13 +226,13 @@ const columns = [
     },
   },
   {
-    title: '上级渠道名称',
-    dataIndex: 'shangjiqudaomingcheng',
+    title: '代理名称',
+    dataIndex: 'dlmingcheng',
     align: 'center',
   },
   {
-    title: '上级渠道编码',
-    dataIndex: 'qudaobianma',
+    title: '代理编码',
+    dataIndex: 'dlbianma',
     align: 'center',
   },
   {
@@ -244,6 +244,19 @@ const columns = [
     title: '产品名称',
     dataIndex: 'mingcheng',
     align: 'center',
+  },
+  {
+    title: '归属地',
+    dataIndex: 'guishudi',
+    align: 'center',
+  },
+  {
+    title: '运营商',
+    dataIndex: 'yunyingshang',
+    align: 'center',
+    customRender({ text }) {
+      return operate[text]
+    },
   },
   {
     title: '资费',

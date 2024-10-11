@@ -228,6 +228,9 @@ const columns = [
     title: '结算价格',
     dataIndex: 'dailiYongjinJine',
     align: 'center',
+    customRender: ({ text }: { text: number }) => {
+      return text.toFixed(2)
+    },
   },
 ]
 

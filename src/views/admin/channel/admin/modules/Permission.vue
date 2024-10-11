@@ -61,6 +61,8 @@ const show = async (row: any) => {
   if (res.code == 0) {
     open.value = true
     menuArr.value = res.data
+    setConfigPermissionNodeDisabled(menuArr.value)
+
     const { checked, halfChecked } = filterCheckedArr(menuArr.value, [], [])
     checkedKeys.value.checked = checked
     checkedKeys.value.halfChecked = halfChecked
@@ -173,6 +175,8 @@ const checkParent = (self: any) => {
 // 取消勾选所有子节点
 const unCheckAll = (list: any) => {
   list.forEach((item: any) => {
+    if (item.disabled) return
+
     item.state = CheckState.unchecked
     toggleChecked(item.code, CheckState.unchecked)
 
@@ -210,6 +214,31 @@ const toggleChecked = (code: string, state: CheckState) => {
       checkedKeys.value.halfChecked.push(code)
     }
   }
+}
+
+// 设置权限管理节点，一旦勾选就禁用，不可取消
+const setConfigPermissionNodeDisabled = (menuArr: any) => {
+  // 找到管理员权限配置节点
+  const configPermissionNode: any = findNode(menuArr, 'Btn.Admin.Permission')
+  if (configPermissionNode && configPermissionNode.select) {
+    configPermissionNode.disabled = true
+  }
+}
+
+// 递归查找节点
+const findNode = (list: any, code: string) => {
+  for (let i = 0; i < list.length; i++) {
+    if (list[i].code == code) {
+      return list[i]
+    }
+    if (list[i].children && list[i].children.length > 0) {
+      const res: any = findNode(list[i].children, code)
+      if (res) {
+        return res
+      }
+    }
+  }
+  return null
 }
 
 const submit = async () => {

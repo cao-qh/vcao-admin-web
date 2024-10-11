@@ -14,6 +14,14 @@
     <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
       <a-row>
         <a-col :xs="24" :sm="24">
+          <a-form-item label="原密码" name="oldMima">
+            <a-input-password
+              v-model:value="formState.oldMima"
+              placeholder="请输入"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :xs="24" :sm="24">
           <a-form-item label="新密码" name="mima">
             <a-input-password
               v-model:value="formState.mima"
@@ -69,7 +77,6 @@ const formRef = ref()
 const formState = reactive<any>({})
 
 watch(open, (val) => {
-  console.log('open', val)
   if (val) {
     formState.ipS = Props.userInfo.ipS || ''
     // formState.mima = Props.userInfo.mima
@@ -78,6 +85,21 @@ watch(open, (val) => {
 
 const rules = {
   // ipS: [{ required: true, message: '请输入' }],
+  oldMima: [
+    {
+      validator: async (_rule: Rule, value: string) => {
+        if (formState.mima) {
+          if (value !== Props.userInfo.mima) {
+            return Promise.reject('原密码输入错误')
+          } else {
+            return Promise.resolve()
+          }
+        }
+        return Promise.resolve()
+      },
+      trigger: 'change',
+    },
+  ],
   mima: [
     {
       pattern: password,

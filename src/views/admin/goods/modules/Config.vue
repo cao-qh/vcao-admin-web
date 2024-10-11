@@ -8,6 +8,11 @@
     @cancel="open = false"
     :maskClosable="false"
   >
+    <div style="width: 100%; margin: 10px 0">
+      <a-button type="primary" size="small" @click="handleQuanxuan">
+        全选
+      </a-button>
+    </div>
     <a-table
       rowKey="dailiBianma"
       :columns="columns"
@@ -16,7 +21,85 @@
       :pagination="false"
       :scroll="{ y: 600 }"
     >
-      <template #bodyCell="{ column, record }">
+      <template
+        #customFilterDropdown="{
+          setSelectedKeys,
+          selectedKeys,
+          confirm,
+          clearFilters,
+          column,
+        }"
+      >
+        <div style="padding: 8px">
+          <a-input
+            ref="searchInput"
+            :placeholder="`搜索 ${column.title}`"
+            :value="selectedKeys[0]"
+            style="width: 188px; margin-bottom: 8px; display: block"
+            @change="
+              (e) => setSelectedKeys(e.target.value ? [e.target.value] : [])
+            "
+            @pressEnter="
+              handleSearch(
+                selectedKeys,
+                confirm,
+                column.dataIndex,
+                clearFilters,
+              )
+            "
+          />
+          <a-button
+            type="primary"
+            size="small"
+            style="width: 90px; margin-right: 8px"
+            @click="
+              handleSearch(
+                selectedKeys,
+                confirm,
+                column.dataIndex,
+                clearFilters,
+              )
+            "
+          >
+            <template #icon><SearchOutlined /></template>
+            搜索
+          </a-button>
+          <a-button
+            size="small"
+            style="width: 90px"
+            @click="handleReset(clearFilters)"
+          >
+            重置
+          </a-button>
+        </div>
+      </template>
+      <template #customFilterIcon="{ filtered }">
+        <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }" />
+      </template>
+      <template #bodyCell="{ column, record, text }">
+        <span
+          v-if="state.searchText && state.searchedColumn === column.dataIndex"
+        >
+          <template
+            v-for="(fragment, i) in text
+              .toString()
+              .split(
+                new RegExp(
+                  `(?<=${state.searchText})|(?=${state.searchText})`,
+                  'i',
+                ),
+              )"
+          >
+            <mark
+              v-if="fragment.toLowerCase() === state.searchText.toLowerCase()"
+              :key="i"
+              class="highlight"
+            >
+              {{ fragment }}
+            </mark>
+            <template v-else>{{ fragment }}</template>
+          </template>
+        </span>
         <template v-if="column.dataIndex === 'peizhi'">
           <a-checkbox v-model:checked="record.peizhi"></a-checkbox>
         </template>
@@ -49,7 +132,7 @@
   </a-modal>
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { message } from 'ant-design-vue'
 import { reqConfig, reqConfigEdit } from '@/api/admin/goods'
 
@@ -70,12 +153,6 @@ const onSelectChange = (keys: any, rows: any) => {
 } */
 
 const columns = [
-  // {
-  //   title: 'ID',
-  //   dataIndex: 'id',
-  //   align: 'center',
-  //   width: 60,
-  // },
   {
     title: '配置',
     dataIndex: 'peizhi',
@@ -83,10 +160,23 @@ const columns = [
     width: '80px',
   },
   {
-    title: '代理编码',
-    dataIndex: 'dailiBianma',
+    title: '代理名称',
+    dataIndex: 'dailiBianmaMC',
     align: 'center',
-    width: '100px',
+    width: '120px',
+    customFilterDropdown: true,
+    onFilter: (value, record) =>
+      record.dailiBianmaMC
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => {
+          searchInput.value.focus()
+        }, 100)
+      }
+    },
   },
   {
     title: '佣金',
@@ -111,7 +201,32 @@ const columns = [
   // },
 ]
 
+let oldClearFilters: any
+const state = reactive({
+  searchText: '',
+  searchedColumn: '',
+})
+const searchInput = ref()
+
+const handleSearch = (selectedKeys, confirm, dataIndex, clearFilters) => {
+  confirm()
+  state.searchText = selectedKeys[0]
+  state.searchedColumn = dataIndex
+  oldClearFilters = clearFilters
+}
+
+const handleReset = (clearFilters) => {
+  clearFilters({ confirm: true })
+  state.searchText = ''
+}
+
+let bianma: any
+
 const show = async (row: any) => {
+  // 重置 表头筛选条件
+  oldClearFilters && handleReset(oldClearFilters)
+
+  bianma = row.bianma
   const res: any = await reqConfig({ chanpinBianma: row.bianma })
   if (res.code == 0) {
     open.value = true
@@ -121,6 +236,7 @@ const show = async (row: any) => {
         peizhi: i.peizhi === 1 ? true : false,
         chanpinBianma: i.chanpinBianma,
         dailiBianma: i.dailiBianma,
+        dailiBianmaMC: i.dailiBianmaMC,
         dailiYongjinJine: i.dailiYongjinJine || 0,
         jiesuanfangshi: i.jiesuanfangshi || 1,
         jiesuanzhouqi: i.jiesuanzhouqi || 1,
@@ -134,10 +250,16 @@ const show = async (row: any) => {
   }
 }
 
+const handleQuanxuan = () => {
+  data.value.forEach((i: any) => {
+    i.peizhi = true
+  })
+}
+
 const submit = async () => {
   try {
     const params = data.value.filter((i: any) => i.peizhi)
-    const res = await reqConfigEdit(params)
+    const res = await reqConfigEdit({ data: params, params: { bianma } })
     if (res.code == 0) {
       message.success(res.msg)
       $emit('success')

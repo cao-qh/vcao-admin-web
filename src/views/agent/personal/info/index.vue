@@ -5,7 +5,7 @@
         {{ userInfo.shoujihao }}
       </a-descriptions-item>
       <a-descriptions-item label="密码">
-        {{ userInfo.mima }}
+        {{ userInfo.password }}
       </a-descriptions-item>
       <a-descriptions-item label="名称">
         {{ userInfo.mingcheng }}
@@ -49,7 +49,10 @@ let userInfo = ref<any>({})
 const getData = async () => {
   const res = await selectUserInfo()
   if (res.code === 0) {
-    userInfo.value = { ...res.data }
+    userInfo.value = {
+      ...res.data,
+      password: new Array(res.data.mima.length).fill('*').join(''),
+    }
   } else {
     message.error(res.msg)
   }

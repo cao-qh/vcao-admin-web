@@ -170,6 +170,15 @@ export const adminRoute = [
           title: '代理员日志',
         },
       },
+      // 代理产品配置日志
+      {
+        path: '/system/config-logs',
+        component: () => import('@/views/admin/system/config-logs/index.vue'),
+        name: 'ConfigLogs',
+        meta: {
+          title: '代理产品配置日志',
+        },
+      },
     ],
   },
   // 渠道管理

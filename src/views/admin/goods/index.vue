@@ -116,6 +116,7 @@ import Edit from './modules/Edit.vue'
 import Config from './modules/Config.vue'
 import { message } from 'ant-design-vue'
 import useUserStore from '@/store/modules/user'
+import dayjs from 'dayjs'
 
 const userStore = useUserStore()
 
@@ -372,6 +373,9 @@ const columns = [
     title: '创建时间',
     dataIndex: 'chuangjianshijian',
     align: 'center',
+    sorter: (a: any, b: any) =>
+      dayjs(a.chuangjianshijian).valueOf() -
+      dayjs(b.chuangjianshijian).valueOf(),
   },
   {
     title: '修改时间',

@@ -132,6 +132,11 @@ const columns = [
     align: 'center',
   },
   {
+    title: '备注',
+    dataIndex: 'beizhu',
+    align: 'center',
+  },
+  {
     title: '创建时间',
     dataIndex: 'chuangjianshijian',
     align: 'center',

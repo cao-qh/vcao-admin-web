@@ -242,12 +242,12 @@ const columns = [
     align: 'center',
   },
   {
-    title: '下级订单号',
+    title: '代理商订单号',
     dataIndex: 'dingdanhaoXiaji',
     align: 'center',
   },
   {
-    title: '下游渠道商',
+    title: '代理商',
     dataIndex: 'xiayouqudaoshang',
     align: 'center',
   },

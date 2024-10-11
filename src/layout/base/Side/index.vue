@@ -27,6 +27,7 @@
 import { ref } from 'vue'
 import useLayoutSettingStore from '@/store/modules/setting'
 import SunMoon from '@/components/SunMoon/index.vue'
+import setting from '@/setting'
 
 defineOptions({
   name: 'Side',
@@ -40,8 +41,8 @@ const changeThemeColor = () => {
 }
 
 const resetThemeColor = () => {
-  layoutSettingStore.themeColor = '#1890FF'
-  color.value = '#1890FF'
+  layoutSettingStore.themeColor = setting.themeColor
+  color.value = setting.themeColor
 }
 </script>
 

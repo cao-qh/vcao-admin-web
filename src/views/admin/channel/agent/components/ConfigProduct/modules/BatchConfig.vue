@@ -75,6 +75,8 @@ const selectRows = ref<any>([])
 
 const dataSource = ref<any>(null)
 
+const DLbianma = ref<string>('')
+
 const columns = [
   {
     title: '产品编码',
@@ -104,6 +106,7 @@ const columns = [
 ]
 
 const show = async (params: any) => {
+  DLbianma.value = params.DLbianma
   selectedRowKeys.value = []
   selectRows.value = []
   const res: any = await reqSearchProduct(params)
@@ -131,7 +134,7 @@ const show = async (params: any) => {
 
 const submit = async () => {
   try {
-    const res = await reqConfigProduct(selectRows.value)
+    const res = await reqConfigProduct(DLbianma.value, selectRows.value)
     if (res.code == 0) {
       $emit('success')
       open.value = false

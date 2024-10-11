@@ -40,8 +40,9 @@ export const reqSearchProduct = (data: any) =>
   request.post<any, any>(API.searchProduct, obj2Query(data))
 
 // 配置产品
-export const reqConfigProduct = (data: any) =>
-  request.post<any, any>(API.configProduct, data)
+export const reqConfigProduct = (DLbianma: string, data: any) => {
+  return request.post<any, any>(API.configProduct + `?bianma=${DLbianma}`, data)
+}
 
 // 查询API
 export const reqSearchApi = (data: any) =>

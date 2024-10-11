@@ -40,7 +40,13 @@ export const reqConfig = (data: any) =>
 
 // 配置
 export const reqConfigEdit = (data: any) =>
-  request.post<any, any>(API.configEditUrl, data)
+  request({
+    url: API.configEditUrl,
+    method: 'post',
+    params: data.params,
+    data: data.data
+  })
+  // request.post<any, any>(API.configEditUrl+'?bianma='+data.params.bianma, data.data)
 
 // 详情
 export const reqDetail = (data: any) =>

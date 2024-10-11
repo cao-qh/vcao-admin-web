@@ -34,6 +34,23 @@
             <a-input-password
               v-model:value="formState.mima"
               placeholder="请输入"
+              disabled
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :xs="24" :sm="24">
+          <a-form-item label="新密码" name="password">
+            <a-input-password
+              v-model:value="formState.password"
+              placeholder="请输入"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :xs="24" :sm="24">
+          <a-form-item label="确认密码" name="confirmPassword">
+            <a-input-password
+              v-model:value="formState.confirmPassword"
+              placeholder="请输入"
             />
           </a-form-item>
         </a-col>
@@ -42,14 +59,6 @@
             <a-textarea v-model:value="formState.beizhu" placeholder="请输入" />
           </a-form-item>
         </a-col>
-        <!-- <a-col :xs="24" :sm="24">
-          <a-form-item label="确认密码" name="confirmPassword">
-            <a-input-password
-              v-model:value="formState.confirmPassword"
-              placeholder="请输入"
-            />
-          </a-form-item>
-        </a-col> -->
       </a-row>
     </a-form>
   </a-modal>
@@ -83,6 +92,7 @@ const formState = reactive<any>({})
 
 watch(open, (val) => {
   if (val) {
+    formRef.value?.resetFields()
     formState.mingcheng = Props.userInfo.mingcheng
     formState.youxiang = Props.userInfo.youxiang
     formState.beizhu = Props.userInfo.beizhu
@@ -103,11 +113,17 @@ const rules = {
       message: '密码不少于6位,且只能包含字母、数字、下划线',
     },
   ],
+  password: [
+    {
+      pattern: password,
+      message: '密码不少于6位,且只能包含字母、数字、下划线',
+    },
+  ],
   confirmPassword: [
     {
       // required: true,
       validator: async (_rule: Rule, value: string) => {
-        if (value !== formState.mima) {
+        if (value !== formState.password) {
           return Promise.reject('两次输入不一致')
         } else {
           return Promise.resolve()
@@ -122,6 +138,11 @@ const submit = async () => {
   try {
     await formRef.value.validate()
     formState.beizhu = formState.beizhu.trim()
+    if (formState.password) {
+      formState.mima = formState.password
+    }
+    delete formState.password
+    delete formState.confirmPassword
     const res = await editUserInfo(formState)
     if (res.code === 0) {
       $emit('reload')

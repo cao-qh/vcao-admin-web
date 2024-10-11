@@ -8,48 +8,156 @@
       :columns="columns"
       :data="getData"
       :showPagination="true"
-      :scroll="{ x: 3000, y: 'calc(100vh - 510px)' }"
+      :scroll="{ x: 2050, y: 'calc(100vh - 510px)' }"
       :row-selection="{
         selectedRowKeys: selectedRowKeys,
         onChange: onSelectChange,
       }"
     >
       <template #toolbar>
-        <a-space>
-          <a-popconfirm
-            :title="`确定要批量推送吗？`"
-            ok-text="是"
-            cancel-text="否"
-            @confirm="handleBatchPush"
-          >
-            <a-button v-has="'Btn.Order.BatchPush'" type="primary">
-              批量推送
-            </a-button>
-          </a-popconfirm>
-          <a-button
-            v-has="'Btn.Order.Download'"
-            type="primary"
-            @click="handleExport"
-          >
-            导出
+        <a-popconfirm
+          :title="`确定要批量推送吗？`"
+          ok-text="是"
+          cancel-text="否"
+          @confirm="handleBatchPush"
+        >
+          <a-button v-has="'Btn.Order.BatchPush'" type="primary">
+            批量推送
           </a-button>
-        </a-space>
+        </a-popconfirm>
+        <a-button
+          v-has="'Btn.Order.Download'"
+          type="primary"
+          @click="handleExport"
+        >
+          导出
+        </a-button>
       </template>
       <template #bodyCell="{ column, row }">
-        <!-- <template v-if="column.dataIndex === 'ruwangInfo'">
+        <template v-if="column.dataIndex === 'dingdanbianma'">
           <MultipartTableCell>
             <template #label>
-              <div>入网名：</div>
-              <div>入网号：</div>
-              <div>证件号：</div>
+              <div>兴投订单编码：</div>
+              <div>下级订单编码：</div>
+              <div>上级订单编码：</div>
             </template>
             <template #value>
-              <div>{{ row.netName }}</div>
-              <div>{{ row.netPhone }}</div>
-              <div>{{ row.netCardId }}</div>
+              <div>{{ row.dingdanhao }}</div>
+              <div>{{ row.dingdanhaoXiaji }}</div>
+              <div>{{ row.dingdanhaoShangji }}</div>
             </template>
           </MultipartTableCell>
-        </template> -->
+        </template>
+        <template v-if="column.dataIndex === 'chanpinxinxi'">
+          <MultipartTableCell>
+            <template #label>
+              <div>产品名称：</div>
+              <div>兴投产品编码：</div>
+              <div>上级产品编码：</div>
+            </template>
+            <template #value>
+              <div>{{ row.chanpinmingcheng }}</div>
+              <div>{{ row.chanpinbianma }}</div>
+              <div>{{ row.shangJiChanpinBianMa }}</div>
+            </template>
+          </MultipartTableCell>
+        </template>
+        <template v-if="column.dataIndex === 'qudaoshangxinixi'">
+          <MultipartTableCell>
+            <template #label>
+              <div>上游渠道商：</div>
+              <div>下游渠道商：</div>
+            </template>
+            <template #value>
+              <div>{{ row.shangyouqudaoshang }}</div>
+              <div>{{ row.xiayouqudaoshang }}</div>
+            </template>
+          </MultipartTableCell>
+        </template>
+        <template v-if="column.dataIndex === 'haomaxinxi'">
+          <MultipartTableCell>
+            <template #label>
+              <div>办理手机号：</div>
+              <div>验证码：</div>
+            </template>
+            <template #value>
+              <div>{{ row.shoujihao }}</div>
+              <div>{{ row.yanzhengma }}</div>
+            </template>
+          </MultipartTableCell>
+        </template>
+        <template v-if="column.dataIndex === 'tuiguangxinxi'">
+          <MultipartTableCell>
+            <template #label>
+              <div>触点：</div>
+              <div>产品页面链接：</div>
+              <div>下级备注：</div>
+            </template>
+            <template #value>
+              <div>{{ row.xiajiChudian }}</div>
+              <div>{{ row.xiajiLuodiyeUrl }}</div>
+              <div>{{ row.xiajiBeizhu }}</div>
+            </template>
+          </MultipartTableCell>
+        </template>
+        <template v-if="column.dataIndex === 'zhuangtaixinxi'">
+          <MultipartTableCell>
+            <template #label>
+              <div>订单状态：</div>
+              <div>校验结果：</div>
+              <div>结果返回：</div>
+            </template>
+            <template #value>
+              <div
+                :style="{
+                  color: getStatus(row.zhuangtai).color,
+                }"
+              >
+                {{ getStatus(row.zhuangtai).label }}
+              </div>
+              <div>{{ row.jiaoyanJieguo }}</div>
+              <div>{{ row.shouliJieguo }}</div>
+            </template>
+          </MultipartTableCell>
+        </template>
+        <template v-if="column.dataIndex === 'dinggoujiage'">
+          <MultipartTableCell>
+            <template #label>
+              <div>订购价格：</div>
+              <div>下级佣金：</div>
+            </template>
+            <template #value>
+              <div>{{ row.dinggoujiage }}</div>
+              <div>{{ row.xiajiYongjin }}</div>
+            </template>
+          </MultipartTableCell>
+        </template>
+        <template v-if="column.dataIndex === 'dizhixinxi'">
+          <MultipartTableCell>
+            <template #label>
+              <div>省份：</div>
+              <div>地址：</div>
+            </template>
+            <template #value>
+              <div>{{ row.shengfen }}</div>
+              <div>{{ row.dishi }}</div>
+            </template>
+          </MultipartTableCell>
+        </template>
+        <template v-if="column.dataIndex === 'shijianxinxi'">
+          <MultipartTableCell>
+            <template #label>
+              <div>创建时间：</div>
+              <div>校验时间：</div>
+              <div>返回时间：</div>
+            </template>
+            <template #value>
+              <div>{{ row.chuangjianshijian }}</div>
+              <div>{{ row.jiaoyanshijian }}</div>
+              <div>{{ row.shoulishijian }}</div>
+            </template>
+          </MultipartTableCell>
+        </template>
         <template v-if="column.dataIndex === 'action'">
           <div>
             <a-popconfirm
@@ -68,9 +176,9 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, h } from 'vue'
+import { reactive, ref } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
-import { STable } from '@/components/STable'
+import { STable, MultipartTableCell } from '@/components/STable'
 import dayjs from 'dayjs'
 import { reqOrder, reqPush, reqBatchPush, reqExport } from '@/api/admin/order'
 import { message } from 'ant-design-vue'
@@ -261,133 +369,194 @@ const columns = [
     title: '编号',
     dataIndex: 'id',
     align: 'center',
+    width: '80px',
   },
   {
-    title: '兴投订单编码',
-    dataIndex: 'dingdanhao',
+    title: '订单编码',
+    dataIndex: 'dingdanbianma',
     align: 'center',
+    width: '300px',
+    fixed: 'left',
   },
+  // {
+  //   title: '兴投订单编码',
+  //   dataIndex: 'dingdanhao',
+  //   align: 'center',
+  // },
+  // {
+  //   title: '下级订单号',
+  //   dataIndex: 'dingdanhaoXiaji',
+  //   align: 'center',
+  // },
+  // {
+  //   title: '上级订单号',
+  //   dataIndex: 'dingdanhaoShangji',
+  //   align: 'center',
+  // },
   {
-    title: '下级订单号',
-    dataIndex: 'dingdanhaoXiaji',
+    title: '产品信息',
+    dataIndex: 'chanpinxinxi',
     align: 'center',
+    width: '250px',
   },
+  // {
+  //   title: '兴投产品编码',
+  //   dataIndex: 'chanpinbianma',
+  //   align: 'center',
+  // },
+  // {
+  //   title: '产品名称',
+  //   dataIndex: 'chanpinmingcheng',
+  //   align: 'center',
+  // },
+  // {
+  //   title: '上级产品编码',
+  //   dataIndex: 'shangJiChanpinBianMa',
+  //   align: 'center',
+  // },
   {
-    title: '上级订单号',
-    dataIndex: 'dingdanhaoShangji',
+    title: '渠道商信息',
+    dataIndex: 'qudaoshangxinixi',
     align: 'center',
+    width: '190px',
   },
+  // {
+  //   title: '下游渠道商',
+  //   dataIndex: 'xiayouqudaoshang',
+  //   align: 'center',
+  // },
+  // {
+  //   title: '上游渠道商',
+  //   dataIndex: 'shangyouqudaoshang',
+  //   align: 'center',
+  // },
   {
-    title: '兴投产品编码',
-    dataIndex: 'chanpinbianma',
+    title: '号码信息',
+    dataIndex: 'haomaxinxi',
     align: 'center',
+    width: '210px',
   },
+  // {
+  //   title: '办理手机号',
+  //   dataIndex: 'shoujihao',
+  //   align: 'center',
+  // },
+  // {
+  //   title: '验证码',
+  //   dataIndex: 'yanzhengma',
+  //   align: 'center',
+  // },
   {
-    title: '产品名称',
-    dataIndex: 'chanpinmingcheng',
+    title: '推广信息',
+    dataIndex: 'tuiguangxinxi',
     align: 'center',
+    width: '200px',
   },
+  // {
+  //   title: '触点',
+  //   dataIndex: 'xiajiChudian',
+  //   align: 'center',
+  // },
+  // {
+  //   title: '产品页面链接',
+  //   dataIndex: 'xiajiLuodiyeUrl',
+  //   align: 'center',
+  // },
+  // {
+  //   title: '下级备注',
+  //   dataIndex: 'xiajiBeizhu',
+  //   align: 'center',
+  // },
   {
-    title: '上级产品编码',
-    dataIndex: 'shangJiChanpinBianMa',
+    title: '状态信息',
+    dataIndex: 'zhuangtaixinxi',
     align: 'center',
+    width: '160px',
   },
+  // {
+  //   title: '订单状态',
+  //   dataIndex: 'zhuangtai',
+  //   align: 'center',
+  //   customRender: ({ text }: { text: any }) => {
+  //     const item: any = status.find((item) => item.value === text)
+  //     return h('span', { style: { color: item.color } }, item.label)
+  //   },
+  // },
+  // {
+  //   title: '校验结果',
+  //   dataIndex: 'jiaoyanJieguo',
+  //   align: 'center',
+  // },
+  // {
+  //   title: '结果返回',
+  //   dataIndex: 'shouliJieguo',
+  //   align: 'center',
+  // },
   {
-    title: '下游渠道商',
-    dataIndex: 'xiayouqudaoshang',
-    align: 'center',
-  },
-  {
-    title: '上游渠道商',
-    dataIndex: 'shangyouqudaoshang',
-    align: 'center',
-  },
-  {
-    title: '办理手机号',
-    dataIndex: 'shoujihao',
-    align: 'center',
-  },
-  {
-    title: '验证码',
-    dataIndex: 'yanzhengma',
-    align: 'center',
-  },
-  {
-    title: '触点',
-    dataIndex: 'xiajiChudian',
-    align: 'center',
-  },
-  {
-    title: '产品页面链接',
-    dataIndex: 'xiajiLuodiyeUrl',
-    align: 'center',
-  },
-  {
-    title: '下级备注',
-    dataIndex: 'xiajiBeizhu',
-    align: 'center',
-  },
-  {
-    title: '订单状态',
-    dataIndex: 'zhuangtai',
-    align: 'center',
-    customRender: ({ text }: { text: any }) => {
-      const item: any = status.find((item) => item.value === text)
-      return h('span', { style: { color: item.color } }, item.label)
-    },
-  },
-  {
-    title: '校验结果',
-    dataIndex: 'jiaoyanJieguo',
-    align: 'center',
-  },
-  {
-    title: '结果返回',
-    dataIndex: 'shouliJieguo',
-    align: 'center',
-  },
-  {
-    title: '订购价格',
+    title: '价格信息',
     dataIndex: 'dinggoujiage',
     align: 'center',
+    width: '130px',
   },
+  // {
+  //   title: '订购价格',
+  //   dataIndex: 'dinggoujiage',
+  //   align: 'center',
+  // },
+  // {
+  //   title: '下级佣金',
+  //   dataIndex: 'xiajiYongjin',
+  //   align: 'center',
+  // },
   {
-    title: '下级佣金',
-    dataIndex: 'xiajiYongjin',
+    title: '地址信息',
+    dataIndex: 'dizhixinxi',
+    align: 'center',
+    width: '120px',
+  },
+  // {
+  //   title: '省份',
+  //   dataIndex: 'shengfen',
+  //   align: 'center',
+  // },
+  // {
+  //   title: '地址',
+  //   dataIndex: 'dishi',
+  //   align: 'center',
+  // },
+  {
+    title: '时间信息',
+    dataIndex: 'shijianxinxi',
     align: 'center',
   },
-  {
-    title: '省份',
-    dataIndex: 'shengfen',
-    align: 'center',
-  },
-  {
-    title: '地址',
-    dataIndex: 'dishi',
-    align: 'center',
-  },
-  {
-    title: '创建时间',
-    dataIndex: 'chuangjianshijian',
-    align: 'center',
-  },
-  {
-    title: '校验时间',
-    dataIndex: 'jiaoyanshijian',
-    align: 'center',
-  },
-  {
-    title: '返回时间',
-    dataIndex: 'shoulishijian',
-    align: 'center',
-  },
+  // {
+  //   title: '创建时间',
+  //   dataIndex: 'chuangjianshijian',
+  //   align: 'center',
+  // },
+  // {
+  //   title: '校验时间',
+  //   dataIndex: 'jiaoyanshijian',
+  //   align: 'center',
+  // },
+  // {
+  //   title: '返回时间',
+  //   dataIndex: 'shoulishijian',
+  //   align: 'center',
+  // },
   {
     title: '操作',
     width: '100px',
     dataIndex: 'action',
     align: 'center',
+    fixed: 'right',
   },
 ]
+
+const getStatus = (value: number) => {
+  const item: any = status.find((item) => item.value === value)
+  return item
+}
 
 const getData = async (currentPage: number, pageSize: number) => {
   const data: any = {

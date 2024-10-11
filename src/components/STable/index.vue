@@ -1,5 +1,5 @@
 <template>
-  <a-space style="margin-bottom: 8px">
+  <a-space style="margin-bottom: 8px; float: right">
     <slot name="toolbar" :dataSource="dataSource"></slot>
   </a-space>
   <a-table
