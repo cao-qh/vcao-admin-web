@@ -5,7 +5,11 @@
       <a-button type="primary" @click="handleBatchConfig">配置</a-button>
     </a-space>
 
-    <SearchForm :formItems="formItems" @search="table.refresh()"></SearchForm>
+    <SearchForm
+      :formItems="formItems"
+      @search="table.refresh()"
+      @reset="handleReset"
+    ></SearchForm>
 
     <STable
       ref="table"
@@ -269,6 +273,15 @@ const handleBatchConfig = () => {
   })
 
   batchConfig.value.show(data)
+}
+
+const handleReset = () => {
+  for (let i = 0; i < formItems.length; i++) {
+    const item = formItems[i]
+    item.value = ''
+  }
+
+  table.value.refresh()
 }
 </script>
 

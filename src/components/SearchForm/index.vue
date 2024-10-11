@@ -67,7 +67,7 @@
       <a-col>
         <a-space>
           <a-button type="primary" @click="$emit('search')">查询</a-button>
-          <a-button @click="layoutSettingStore.refresh = true">重置</a-button>
+          <a-button @click="handleReset">重置</a-button>
           <a
             v-if="formItems.length > 3"
             @click="toggleAdvanced"
@@ -84,17 +84,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, useAttrs } from 'vue'
 import useLayoutSettingStore from '@/store/modules/setting'
 import type { SearchFormProps } from './type'
 
 const advanced = ref(true)
+const attrs = useAttrs()
 
 defineEmits(['search'])
 
 defineOptions({
   name: 'SearchForm',
+  inheritAttrs: false,
 })
+
+const handleReset = () => {
+  if (attrs.onReset) {
+    const onReset = attrs.onReset as () => void
+    onReset()
+  } else {
+    layoutSettingStore.refresh = true
+  }
+}
 
 const props = withDefaults(defineProps<SearchFormProps>(), {
   formItems: () => [
