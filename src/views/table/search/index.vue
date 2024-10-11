@@ -8,7 +8,7 @@
       :columns="columns"
       :data="reqData"
       :showPagination="true"
-      :scroll="{ y: 'calc(100vh - 408px)' }"
+      :scroll="{ y: 'calc(100vh - 450px)' }"
     >
       <template #toolbar>
         <a-button type="primary" @click="handleAdd">添加记录</a-button>
@@ -54,7 +54,7 @@
     <Add
       ref="add"
       :channel="channel"
-      :faceValue="FACE_VALUE"
+      :faceValue="faceValue"
       @success="table.refresh()"
     />
 
@@ -63,7 +63,7 @@
     <ChangeSubmit
       ref="changeSubmit"
       :channel="channel"
-      :faceValue="FACE_VALUE"
+      :faceValue="faceValue"
       @success="table.refresh()"
     />
   </PageWrapper>
@@ -74,12 +74,8 @@ import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import { STable } from '@/components/STable'
 import dayjs from 'dayjs'
-import type { StringKey } from './type'
-import type {
-  RecordSearchResponseData,
-  RecordSearchParams,
-  Record,
-} from '@/api/table/search/type'
+import type { RecordSearchResponseData, Record } from '@/api/table/search/type'
+import type { RequestParams } from '@/api/type'
 import { reqSearch, reqSubmit, reqQijinyong } from '@/api/table/search/index'
 import Add from './modules/Add.vue'
 import BatchImport from './modules/BatchImport.vue'
@@ -137,11 +133,20 @@ const channel: any = [
 ]
 
 // 面值
-const FACE_VALUE: StringKey = {
-  10: '10元',
-  20: '20元',
-  30: '30元',
-}
+const faceValue: any = [
+  {
+    value: 10,
+    label: '10元',
+  },
+  {
+    value: 20,
+    label: '20元',
+  },
+  {
+    value: 30,
+    label: '30元',
+  },
+]
 
 const formItems = reactive([
   {
@@ -168,11 +173,16 @@ const formItems = reactive([
     placeholder: '请输入',
   },
   {
-    type: 'input',
+    type: 'select',
     label: '面值',
-    filed: 'mianzhi',
+    filed: 'faceValue',
     value: '',
     placeholder: '请输入',
+    options: faceValue,
+    defaultOption: {
+      label: '全部',
+      value: '',
+    },
   },
   {
     type: 'select',
@@ -190,7 +200,7 @@ const formItems = reactive([
     type: 'select',
     label: '状态',
     filed: 'zhuangtai',
-    value: null,
+    value: '',
     placeholder: '请选择',
     options: orderStatus,
     defaultOption: {
@@ -216,7 +226,8 @@ const columns = [
     dataIndex: 'mianzhi',
     align: 'center',
     customRender: ({ text }: { text: string }) => {
-      return FACE_VALUE[text]
+      const item = faceValue.find((item: any) => item.value == text)
+      return item && item.label
     },
   },
   {
@@ -283,12 +294,10 @@ const columns = [
 
 const table = ref()
 
-const reqData = async (page: number, limit: number) => {
-  const data: RecordSearchParams = {
-    page: page,
-    size: limit,
-    staticTime: '',
-    endTime: '',
+const reqData = async (currentPage: number, pageSize: number) => {
+  const data: RequestParams = {
+    currentPage,
+    pageSize,
   }
   formItems.forEach((item) => {
     if (item.value) {
@@ -297,7 +306,7 @@ const reqData = async (page: number, limit: number) => {
   })
 
   const res: RecordSearchResponseData = await reqSearch(data)
-  if (res.code == 200) {
+  if (res.code == 0) {
     return {
       data: res.data.list,
       total: res.data.total,
@@ -339,7 +348,7 @@ const handelQijinyong = async (row: any) => {
     id: row.id,
     qijinyong: row.qijinyong === 1 ? 2 : 1,
   })
-  if (result.code == 200) {
+  if (result.code == 0) {
     message.success(result.message)
   } else {
     message.error(result.message)

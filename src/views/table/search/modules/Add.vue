@@ -2,27 +2,41 @@
   <a-modal title="添加记录" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
       <a-form-item label="手机号" name="phone">
-        <a-input v-model:value.trim="formState.phone" />
+        <a-input v-model:value.trim="formState.phone" placeholder="请输入" />
       </a-form-item>
       <a-form-item label="通道" name="tongdao">
-        <a-select v-model:value="formState.tongdao">
-          <a-select-option v-for="(v, k) in channel" :key="k" :value="k">
-            {{ v }}
+        <a-select v-model:value="formState.tongdao" placeholder="请选择">
+          <a-select-option
+            v-for="item in channel"
+            :key="item.value"
+            :value="item.value"
+          >
+            {{ item.label }}
           </a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item label="面值" name="mianzhi">
-        <a-select v-model:value="formState.mianzhi">
-          <a-select-option v-for="(v, k) in faceValue" :key="k" :value="k">
-            {{ v }}
+        <a-select v-model:value="formState.mianzhi" placeholder="请选择">
+          <a-select-option
+            v-for="item in faceValue"
+            :key="item.value"
+            :value="item.value"
+          >
+            {{ item.label }}
           </a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item label="收货地址" name="address">
-        <AddressSelector v-model:value="formState.address" />
+        <AddressSelector
+          v-model:value="formState.address"
+          placeholder="请输入"
+        />
       </a-form-item>
       <a-form-item label="备注" name="beizhu">
-        <a-textarea v-model:value.trim="formState.beizhu"></a-textarea>
+        <a-textarea
+          v-model:value.trim="formState.beizhu"
+          placeholder="请输入"
+        ></a-textarea>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -88,8 +102,8 @@ const show = () => {
   open.value = true
   Object.assign(formState, {
     phone: '',
-    mianzhi: '',
-    tongdao: '',
+    mianzhi: null,
+    tongdao: null,
     beizhu: '',
     address: '',
   })
@@ -101,10 +115,10 @@ const submit = async () => {
     await formRef.value.validate()
     console.log('formState :>> ', formState)
     const res = await reqAdd(formState)
-    if (res.code == 200) {
+    if (res.code == 0) {
       $emit('success')
       open.value = false
-      message.success(res.message)
+      message.success(res.msg)
     } else {
       message.error(res.msg)
     }

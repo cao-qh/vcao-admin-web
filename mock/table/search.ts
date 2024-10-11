@@ -33,18 +33,27 @@ export default [
       // if (!token) {
       //   return { code: 201, message: '请先登录' }
       // }
-      const { page, size } = request.query
+      const { currentPage, pageSize } = request.query
 
       const fulllist = createRecordList()
-      const list = fulllist.slice((page - 1) * size, page * size)
-      const total = fulllist.length
-      const pages = Math.ceil(total / size)
+      const list = fulllist.slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize,
+      )
+      const totalSize = fulllist.length
+      const totalPage = Math.ceil(totalSize / pageSize)
 
       //如果有返回成功信息
       return {
-        code: 200,
+        code: 0,
         message: '查询成功',
-        data: { list, total, pages, page: +page, size: +size },
+        data: {
+          list,
+          totalSize,
+          totalPage,
+          currentPage: +currentPage,
+          pageSize: +pageSize,
+        },
       }
     },
   },
@@ -54,8 +63,8 @@ export default [
     method: 'post',
     response: () => {
       return {
-        code: 200,
-        message: '添加成功',
+        code: 0,
+        msg: '添加成功',
       }
     },
   },
