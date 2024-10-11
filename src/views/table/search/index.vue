@@ -11,19 +11,8 @@
       :scroll="{ y: 'calc(100vh - 408px)' }"
     >
       <template #toolbar>
-        <a-button type="primary" @click="handleAdd">
-          <template #icon>
-            <PlusOutlined />
-          </template>
-          添加记录
-        </a-button>
-
-        <a-button type="primary" @click="handleBatchImport">
-          <template #icon>
-            <UploadOutlined />
-          </template>
-          批量导入
-        </a-button>
+        <a-button type="primary" @click="handleAdd">添加记录</a-button>
+        <a-button type="primary" @click="handleBatchImport">批量导入</a-button>
       </template>
       <template #bodyCell="{ column, row }">
         <template v-if="column.dataIndex === 'qijinyong'">
@@ -35,6 +24,15 @@
           >
             <a-switch :checked="row.qijinyong === 1" />
           </a-popconfirm>
+        </template>
+        <template v-if="column.dataIndex === 'zhuangtai'">
+          <span
+            :style="{
+              color: getOrderStatus(row.zhuangtai).color,
+            }"
+          >
+            {{ getOrderStatus(row.zhuangtai).label }}
+          </span>
         </template>
         <template v-if="column.dataIndex === 'action'">
           <template v-if="row.zhuangtai !== 2">
@@ -55,14 +53,16 @@
 
     <Add
       ref="add"
-      :channel="CHANNEL"
+      :channel="channel"
       :faceValue="FACE_VALUE"
       @success="table.refresh()"
     />
+
     <BatchImport ref="batchImport" @success="table.refresh()" />
+
     <ChangeSubmit
       ref="changeSubmit"
-      :channel="CHANNEL"
+      :channel="channel"
       :faceValue="FACE_VALUE"
       @success="table.refresh()"
     />
@@ -86,21 +86,55 @@ import BatchImport from './modules/BatchImport.vue'
 import ChangeSubmit from './modules/ChangeSubmit.vue'
 import { message } from 'ant-design-vue'
 
-const ORDER_STATUS: StringKey = {
-  1: '未提交',
-  2: '已提交',
-  3: '处理中',
-  4: '充值成功',
-  5: '充值失败',
-  6: '提交失败',
-}
+// 订单状态
+const orderStatus: any = [
+  {
+    value: 1,
+    label: '未提交',
+    color: 'blue',
+  },
+  {
+    value: 2,
+    label: '已提交',
+    color: 'green',
+  },
+  {
+    value: 3,
+    label: '处理中',
+    color: 'orange',
+  },
+  {
+    value: 4,
+    label: '充值成功',
+    color: 'green',
+  },
+  {
+    value: 5,
+    label: '充值失败',
+    color: 'red',
+  },
+  {
+    value: 6,
+    label: '提交失败',
+    color: 'red',
+  },
+]
 
 // 通道
-const CHANNEL: StringKey = {
-  1: '通道A',
-  2: '通道B',
-  3: '通道C',
-}
+const channel: any = [
+  {
+    value: 1,
+    label: '通道A',
+  },
+  {
+    value: 2,
+    label: '通道B',
+  },
+  {
+    value: 3,
+    label: '通道C',
+  },
+]
 
 // 面值
 const FACE_VALUE: StringKey = {
@@ -113,7 +147,7 @@ const formItems = reactive([
   {
     type: 'datePicker',
     label: '开始时间',
-    filed: 'staticTime',
+    filed: 'startTime',
     value: dayjs().subtract(15, 'day').format('YYYY-MM-DD HH:mm:ss'),
     showTime: true,
     valueFormat: 'YYYY-MM-DD HH:mm:ss',
@@ -141,11 +175,16 @@ const formItems = reactive([
     placeholder: '请输入',
   },
   {
-    type: 'input',
+    type: 'select',
     label: '通道',
     filed: 'tongdao',
     value: '',
-    placeholder: '请输入',
+    placeholder: '请选择',
+    options: channel,
+    defaultOption: {
+      label: '全部',
+      value: '',
+    },
   },
   {
     type: 'select',
@@ -153,10 +192,7 @@ const formItems = reactive([
     filed: 'zhuangtai',
     value: null,
     placeholder: '请选择',
-    options: Object.keys(ORDER_STATUS).map((key) => ({
-      value: key,
-      label: ORDER_STATUS[key],
-    })),
+    options: orderStatus,
     defaultOption: {
       label: '全部',
       value: '',
@@ -193,16 +229,14 @@ const columns = [
     dataIndex: 'tongdao',
     align: 'center',
     customRender: ({ text }: { text: string }) => {
-      return CHANNEL[text]
+      const item = channel.find((item: any) => item.value == text)
+      return item && item.label
     },
   },
   {
     title: '订单状态',
     dataIndex: 'zhuangtai',
     align: 'center',
-    customRender: ({ text }: { text: string }) => {
-      return ORDER_STATUS[text]
-    },
   },
   {
     title: '订单号',
@@ -310,6 +344,12 @@ const handelQijinyong = async (row: any) => {
   } else {
     message.error(result.message)
   }
+}
+
+// 获取订单状态
+const getOrderStatus = (value: number) => {
+  const item: any = orderStatus.find((item: any) => item.value === value)
+  return item
 }
 </script>
 
