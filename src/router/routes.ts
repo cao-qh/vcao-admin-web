@@ -91,7 +91,7 @@ export const constantRoute = [
 // 管理员个人管理路由（单独添加，不参与权限筛选）
 // 个人管理
 export const adminPersonalRoute = {
-  path: '/',
+  path: '/personal',
   component: BaseLayout,
   name: 'Personal',
   meta: {
