@@ -2,27 +2,22 @@ import { fileURLToPath, URL } from 'node:url'
 import path from 'path'
 
 import { defineConfig, loadEnv } from 'vite'
+// import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import Components from 'unplugin-vue-components/vite'
-import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 // mock插件提供方法
 import { viteMockServe } from 'vite-plugin-mock'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
+  // export default defineConfig(() => {
   // 获取各种环境下的对应的变量
   const env = loadEnv(mode, process.cwd())
   return {
+    base: `/${env.VITE_APP_BASE_URL}/`,
+    // 插件
     plugins: [
       vue(),
-      Components({
-        resolvers: [
-          AntDesignVueResolver({
-            importStyle: false, // css in js
-          }),
-        ],
-      }),
       createSvgIconsPlugin({
         // Specify the icon folder to be cached
         iconDirs: [path.resolve(process.cwd(), 'src/assets/icons')],
@@ -34,6 +29,7 @@ export default defineConfig(({ mode }) => {
         enable: true,
       }),
     ],
+    // 解析
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -48,9 +44,38 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
+    // 构建
+    build: {
+      outDir: env.VITE_APP_BASE_URL,
+      rollupOptions: {
+        output: {
+          // 手动分割包
+          manualChunks(id: string) {
+            if (id.includes('@ant-design/icons-vue')) {
+              return '@ant-design/icons-vue'
+            }
+            if (id.includes('ant-design-vue')) {
+              return 'ant-design-vue'
+            }
+            if (id.includes('echarts')) {
+              return 'echarts'
+            }
+            if (id.includes('@tsparticles')) {
+              return '@tsparticles'
+            }
+            if (id.includes('nprogress')) {
+              return 'nprogress'
+            }
+            if (id.includes('vue-router')) {
+              return 'vue-router'
+            }
+          },
+        },
+      },
+    },
     // 代理跨域
     server: {
-      port: 5174,
+      port: 5176,
       proxy: {
         [env.VITE_APP_BASE_API]: {
           // 获取数据的服务器地址设置

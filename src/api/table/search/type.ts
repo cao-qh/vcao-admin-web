@@ -1,14 +1,6 @@
-import type { RequestParams, Response, ResponsePagination } from '@/api/type'
+import type { Response, ResponsePagination } from '@/api/type'
 
 // 请求参数
-export interface RecordSearchParams extends RequestParams {
-  phone?: string
-  mianzhi?: string
-  tongdao?: string
-  zhuangtai?: string
-  staticTime: string
-  endTime: string
-}
 
 export interface Record {
   id?: number
@@ -20,6 +12,7 @@ export interface Record {
   fankuitime?: null
   zhuangtai?: number
   dingdanhao?: string
+  address?: string
   beizhu?: string
 }
 

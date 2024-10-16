@@ -1,0 +1,78 @@
+<template>
+  <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
+    <a-form ref="formRef" :model="formState" v-bind="layout">
+      <a-form-item label="名称" name="mingcheng">
+        <a-input v-model:value.trim="formState.mingcheng" />
+      </a-form-item>
+      <a-form-item
+        label="密码"
+        name="mima"
+        :rules="[{ min: 6, message: '请输入6位以上密码' }]"
+      >
+        <a-input-password v-model:value="formState.mima" placeholder="请输入" />
+      </a-form-item>
+      <a-form-item label="限制IP" name="ipS">
+        <a-textarea
+          v-model:value.trim="formState.ipS"
+          placeholder="请输入"
+        ></a-textarea>
+      </a-form-item>
+    </a-form>
+  </a-modal>
+</template>
+<script lang="ts" setup>
+import { reactive, ref } from 'vue'
+import { message } from 'ant-design-vue'
+import { reqUpdate } from '@/api/admin/channel/admin'
+
+defineOptions({ name: 'Update' })
+
+// 定义方法
+const $emit = defineEmits(['success'])
+
+const open = ref<boolean>(false)
+
+// 表单布局
+const layout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 7 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 13 },
+  },
+}
+
+const formRef = ref()
+const formState = reactive<any>({})
+
+const show = async (row: any) => {
+  open.value = true
+  formState.id = row.id
+  formState.mingcheng = row.mingcheng
+  formState.mima = row.mima
+  formState.ipS = row.ipS
+}
+
+const submit = async () => {
+  try {
+    await formRef.value.validate()
+
+    const res = await reqUpdate(formState)
+    if (res.code == 0) {
+      $emit('success')
+      open.value = false
+      message.success(res.msg)
+    } else {
+      message.error(res.msg)
+    }
+  } catch (error) {
+    console.log('error :>> ', error)
+  }
+}
+
+defineExpose({
+  show,
+})
+</script>

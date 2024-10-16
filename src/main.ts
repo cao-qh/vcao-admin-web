@@ -6,6 +6,10 @@ import './styles/index.scss'
 import 'virtual:svg-icons-register'
 // 引入自定义擦火箭对象：注册整个项目全局组件
 import gloalComponent from '@/components'
+// ant-design组件按需引入
+import antComponents from '@/core/components'
+// 全局注册ant-design图标
+import antIcon from '@/core/icons'
 // 引入路由
 import router from '@/router'
 // 引入仓库
@@ -18,6 +22,10 @@ const app = createApp(App)
 
 // 安装自定义插件
 app.use(gloalComponent)
+// 安装ant-design-vue插件
+app.use(antComponents)
+// 安装ant-design图标
+app.use(antIcon)
 // 注册模板路由
 app.use(router)
 // 安装仓库
@@ -30,5 +38,8 @@ app.use(Particles, {
 })
 // 引入路由鉴权文件
 import './permisstion'
+// 引入自定义指令文件
+import { isHasButton } from './directive/has'
+isHasButton(app)
 // 将应用挂在到挂在点上
 app.mount('#app')

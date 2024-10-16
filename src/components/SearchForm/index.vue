@@ -2,19 +2,24 @@
   <a-form style="margin-bottom: 10px">
     <a-row :gutter="32">
       <template v-for="(item, index) in formItems" :key="item.filed">
-        <a-col v-if="index < 3 || advanced" :xs="24" :md="8" :xl="6">
+        <a-col
+          v-if="(index < 3 || advanced) && !item.hidden"
+          :xs="24"
+          :md="8"
+          :xl="6"
+        >
           <a-form-item :label="item.label">
             <a-input
               v-if="item.type === 'input'"
-              v-model:value="item.value"
+              v-model:value.trim="item.value"
               :placeholder="item.placeholder"
-              allowClear
+              :allowClear="item.allowClear === false ? false : true"
             />
             <a-select
               v-if="item.type === 'select'"
               v-model:value="item.value"
               :placeholder="item.placeholder"
-              allowClear
+              :allowClear="item.allowClear === false ? false : true"
               showSearch
               :filterOption="filterOption"
               @change="item.onChange"
@@ -53,6 +58,8 @@
               :showTime="item.showTime"
               :valueFormat="item.valueFormat"
               :disabledDate="item.disabledDate"
+              :allowClear="item.allowClear === false ? false : true"
+              @change="item.onChange"
             />
           </a-form-item>
         </a-col>
@@ -60,7 +67,7 @@
       <a-col>
         <a-space>
           <a-button type="primary" @click="$emit('search')">查询</a-button>
-          <a-button @click="layoutSettingStore.refresh = true">重置</a-button>
+          <a-button @click="handleReset">重置</a-button>
           <a
             v-if="formItems.length > 3"
             @click="toggleAdvanced"
@@ -77,17 +84,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, useAttrs } from 'vue'
 import useLayoutSettingStore from '@/store/modules/setting'
 import type { SearchFormProps } from './type'
 
-const advanced = ref(false)
+const advanced = ref(true)
+const attrs = useAttrs()
 
 defineEmits(['search'])
 
 defineOptions({
   name: 'SearchForm',
+  inheritAttrs: false,
 })
+
+const handleReset = () => {
+  if (attrs.onReset) {
+    const onReset = attrs.onReset as () => void
+    onReset()
+  } else {
+    layoutSettingStore.refresh = true
+  }
+}
 
 const props = withDefaults(defineProps<SearchFormProps>(), {
   formItems: () => [

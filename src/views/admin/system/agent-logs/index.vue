@@ -1,0 +1,213 @@
+<template>
+  <PageWrapper>
+    <SearchForm :formItems="formItems" @search="table.refresh()" />
+    <STable
+      ref="table"
+      :columns="columns"
+      :data="reqData"
+      :showPagination="true"
+      :scroll="{ y: 'calc(100vh - 390px)' }"
+    ></STable>
+  </PageWrapper>
+</template>
+
+<script setup lang="ts">
+import { ref, reactive } from 'vue'
+import SearchForm from '@/components/SearchForm/index.vue'
+import { STable } from '@/components/STable'
+import { reqSearch } from '@/api/admin/system/agent-log'
+import dayjs from 'dayjs'
+import { reqSearchAgent } from '@/api/common'
+
+const leixing = [
+  {
+    value: 1,
+    label: '产品',
+  },
+  {
+    value: 2,
+    label: '订单',
+  },
+  {
+    value: 3,
+    label: '个人信息',
+  },
+]
+
+const zhuangtai = [
+  {
+    value: 1,
+    label: '登录',
+  },
+  {
+    value: 2,
+    label: '添加',
+  },
+  {
+    value: 3,
+    label: '修改',
+  },
+  {
+    value: 4,
+    label: '删除',
+  },
+  {
+    value: 5,
+    label: '配置',
+  },
+  {
+    value: 6,
+    label: '下载',
+  },
+  {
+    value: 7,
+    label: '跳转',
+  },
+]
+
+const formItems = reactive([
+  {
+    type: 'datePicker',
+    label: '开始时间',
+    filed: 'startTime',
+    value: dayjs().subtract(15, 'day').format('YYYY-MM-DD'),
+    valueFormat: 'YYYY-MM-DD',
+    disabledDate: (val: any) => {
+      const endTime: any = formItems.find((item) => item.filed === 'endTime')
+
+      // 大于结束之间不可选
+      if (val.valueOf() > dayjs(endTime.value).valueOf()) {
+        return true
+      }
+      // 小于接收时间31天内的都可以选择
+      if (val.valueOf() < dayjs(endTime.value).subtract(31, 'day').valueOf()) {
+        return true
+      }
+
+      return false
+    },
+  },
+  {
+    type: 'datePicker',
+    label: '结束时间',
+    filed: 'endTime',
+    value: dayjs().format('YYYY-MM-DD'),
+    valueFormat: 'YYYY-MM-DD',
+    disabledDate: (val: any) => {
+      // 不可大于今天
+      if (val.valueOf() > dayjs().valueOf()) {
+        return true
+      }
+      return false
+    },
+    onChange: (date: string) => {
+      const startTime: any = formItems.find(
+        (item) => item.filed === 'startTime',
+      )
+      startTime.value = dayjs(date).subtract(31, 'day').format('YYYY-MM-DD')
+    },
+  },
+  {
+    type: 'select',
+    label: '名称',
+    filed: 'dailiBianma',
+    value: '',
+    placeholder: '请输入',
+    options: async () => {
+      const res: any = await reqSearchAgent()
+      if (res.code == 0) {
+        return res.data.map((item: any) => {
+          return {
+            value: item.bianma,
+            label: `${item.bianma}-${item.mingcheng}`,
+          }
+        })
+      }
+      return []
+    },
+    defaultOption: {
+      label: '全部',
+      value: '',
+    },
+  },
+  {
+    type: 'input',
+    label: '详情',
+    filed: 'xiangqing',
+    value: '',
+    placeholder: '请输入',
+  },
+])
+
+const table = ref()
+
+const columns = [
+  {
+    title: '编号',
+    dataIndex: 'id',
+    align: 'center',
+  },
+  {
+    title: '名称',
+    dataIndex: 'dailiBianma',
+    align: 'center',
+  },
+  {
+    title: '类型',
+    dataIndex: 'leixing',
+    align: 'center',
+    customRender: ({ text }: { text: any }) => {
+      const item: any = leixing.find((item) => item.value == text)
+      return item ? item.label : ''
+    },
+  },
+  {
+    title: '操作状态',
+    dataIndex: 'zhuangtai',
+    align: 'center',
+    customRender: ({ text }: { text: any }) => {
+      const item: any = zhuangtai.find((item) => item.value == text)
+      return item ? item.label : ''
+    },
+  },
+  {
+    title: '详情',
+    dataIndex: 'xiangqing',
+    align: 'center',
+    width: '30%',
+  },
+  {
+    title: 'IP',
+    dataIndex: 'ipS',
+    align: 'center',
+  },
+  {
+    title: '创建时间',
+    dataIndex: 'chuangjianshijian',
+    align: 'center',
+  },
+]
+
+const reqData = async (currentPage: number, pageSize: number) => {
+  const data: any = {
+    currentPage,
+    pageSize,
+  }
+
+  formItems.forEach((item) => {
+    if (item.value) {
+      data[item.filed] = item.value
+    }
+  })
+
+  const res: any = await reqSearch(data)
+  if (res.code == 0) {
+    return {
+      data: res.data.list,
+      total: res.data.totalSize,
+    }
+  }
+}
+</script>
+
+<style></style>

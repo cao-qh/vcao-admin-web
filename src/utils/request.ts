@@ -32,6 +32,16 @@ request.interceptors.response.use(
     // 关闭PageLoading
     const appStore = useAppStore()
     appStore.pageLoading = false
+
+    if (
+      response.data.data === -120 ||
+      response.data.data === -130 ||
+      response.data.data === -140 ||
+      response.data.data === -150
+    ) {
+      const userStore = useUserStore()
+      userStore.userLogout()
+    }
     // 简化数据
     return response.data
   },
@@ -66,7 +76,7 @@ request.interceptors.response.use(
 )
 
 // 对象转query字符串
-export const objToQuery = function (obj: { [x: string]: any } = {}) {
+export const obj2Query = function (obj: { [x: string]: any } = {}) {
   let query = ''
   const keys = Object.keys(obj)
   for (let i = 0; i < keys.length; i++) {

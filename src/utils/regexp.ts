@@ -34,3 +34,10 @@ export const noStar = /^[^*]*$/
 // 合法url地址
 export const url =
   /(https?|ftp|file):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/
+
+// 邮箱
+export const email =
+  /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+
+// 密码
+export const password = /^[a-zA-Z0-9_]{6,}$/

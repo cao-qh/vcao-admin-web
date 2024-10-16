@@ -1,7 +1,7 @@
 export interface RequestParams {
-  page?: number
-  size?: number
-  limit?: number
+  currentPage?: number
+  pageSize?: number
+  totalSize?: number
   [key: string]: any
 }
 

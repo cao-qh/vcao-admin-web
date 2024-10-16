@@ -1,6 +1,8 @@
 // 小仓库：layout组件相关配置仓库
 import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
+import type { TabList } from '@/layout/base/MultiTab/type'
+import setting from '@/setting'
 
 const useLayoutSettingStore = defineStore('settingStore', () => {
   const settings = JSON.parse(localStorage.getItem('SETTINGS') as string)
@@ -12,8 +14,10 @@ const useLayoutSettingStore = defineStore('settingStore', () => {
   const refresh = ref(false) // 刷新页面状态
   const side = ref(false) // 右侧主题设置抽屉状态
   const dark = ref(settings?.dark || false) // 是否为暗黑
-  const themeColor = ref(settings?.themeColor || '#1890FF') // 主题色
+  const themeColor = ref(settings?.themeColor || setting.themeColor) // 主题色
   const isMobile = ref(false) // 是否为移动端
+
+  const tabList = ref<TabList>([])
 
   // 当暗黑模式和主题色变化时，更新本地存储
   watch(
@@ -50,6 +54,7 @@ const useLayoutSettingStore = defineStore('settingStore', () => {
     dark,
     themeColor,
     isMobile,
+    tabList,
   }
 })
 

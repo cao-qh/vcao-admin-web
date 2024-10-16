@@ -5,6 +5,7 @@ export interface SearchFormProps {
 }
 
 interface FormItem {
+  hidden?: boolean
   filed: string
   label: string
   type: string
@@ -14,6 +15,7 @@ interface FormItem {
   defaultOption?: SelectOption
   showTime?: boolean
   valueFormat?: string
+  allowClear?: boolean
   onChange?: (value: any) => void
   disabledDate?: (current: dayjs.Dayjs) => boolean
 }

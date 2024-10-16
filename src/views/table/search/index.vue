@@ -2,40 +2,37 @@
   <PageWrapper>
     <SearchForm :formItems="formItems" @search="table.refresh()"></SearchForm>
 
-    <a-space style="margin-bottom: 8px">
-      <a-button type="primary" @click="handleAdd">
-        <template #icon>
-          <PlusOutlined />
-        </template>
-        添加记录
-      </a-button>
-
-      <a-button type="primary" @click="handleBatchImport">
-        <template #icon>
-          <UploadOutlined />
-        </template>
-        批量导入
-      </a-button>
-    </a-space>
-
     <STable
       ref="table"
       rowKey="id"
       :columns="columns"
       :data="reqData"
       :showPagination="true"
-      :scroll="{ y: 'calc(100vh - 408px)' }"
+      :scroll="{ y: 'calc(100vh - 450px)' }"
     >
+      <template #toolbar>
+        <a-button type="primary" @click="handleAdd">添加记录</a-button>
+        <a-button type="primary" @click="handleBatchImport">批量导入</a-button>
+      </template>
       <template #bodyCell="{ column, row }">
         <template v-if="column.dataIndex === 'qijinyong'">
           <a-popconfirm
-            title="确定要启用吗？"
+            title="确定要修改吗？"
             ok-text="是"
             cancel-text="否"
-            @confirm="handelQqijinyong(row)"
+            @confirm="handelQijinyong(row)"
           >
             <a-switch :checked="row.qijinyong === 1" />
           </a-popconfirm>
+        </template>
+        <template v-if="column.dataIndex === 'zhuangtai'">
+          <span
+            :style="{
+              color: getOrderStatus(row.zhuangtai).color,
+            }"
+          >
+            {{ getOrderStatus(row.zhuangtai).label }}
+          </span>
         </template>
         <template v-if="column.dataIndex === 'action'">
           <template v-if="row.zhuangtai !== 2">
@@ -56,15 +53,17 @@
 
     <Add
       ref="add"
-      :channel="CHANNEL"
-      :faceValue="FACE_VALUE"
+      :channel="channel"
+      :faceValue="faceValue"
       @success="table.refresh()"
     />
+
     <BatchImport ref="batchImport" @success="table.refresh()" />
+
     <ChangeSubmit
       ref="changeSubmit"
-      :channel="CHANNEL"
-      :faceValue="FACE_VALUE"
+      :channel="channel"
+      :faceValue="faceValue"
       @success="table.refresh()"
     />
   </PageWrapper>
@@ -73,48 +72,87 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
-import STable from '@/components/STable/index.vue'
+import { STable } from '@/components/STable'
 import dayjs from 'dayjs'
-import type { StringKey } from './type'
-import type {
-  RecordSearchResponseData,
-  RecordSearchParams,
-  Record,
-} from '@/api/table/search/type'
+import type { RecordSearchResponseData, Record } from '@/api/table/search/type'
+import type { RequestParams } from '@/api/type'
 import { reqSearch, reqSubmit, reqQijinyong } from '@/api/table/search/index'
 import Add from './modules/Add.vue'
 import BatchImport from './modules/BatchImport.vue'
 import ChangeSubmit from './modules/ChangeSubmit.vue'
 import { message } from 'ant-design-vue'
 
-const ORDER_STATUS: StringKey = {
-  1: '未提交',
-  2: '已提交',
-  3: '处理中',
-  4: '充值成功',
-  5: '充值失败',
-  6: '提交失败',
-}
+// 订单状态
+const orderStatus: any = [
+  {
+    value: 1,
+    label: '未提交',
+    color: 'blue',
+  },
+  {
+    value: 2,
+    label: '已提交',
+    color: 'green',
+  },
+  {
+    value: 3,
+    label: '处理中',
+    color: 'orange',
+  },
+  {
+    value: 4,
+    label: '充值成功',
+    color: 'green',
+  },
+  {
+    value: 5,
+    label: '充值失败',
+    color: 'red',
+  },
+  {
+    value: 6,
+    label: '提交失败',
+    color: 'red',
+  },
+]
 
 // 通道
-const CHANNEL: StringKey = {
-  1: '通道A',
-  2: '通道B',
-  3: '通道C',
-}
+const channel: any = [
+  {
+    value: 1,
+    label: '通道A',
+  },
+  {
+    value: 2,
+    label: '通道B',
+  },
+  {
+    value: 3,
+    label: '通道C',
+  },
+]
 
 // 面值
-const FACE_VALUE: StringKey = {
-  10: '10元',
-  20: '20元',
-  30: '30元',
-}
+const faceValue: any = [
+  {
+    value: 10,
+    label: '10元',
+  },
+  {
+    value: 20,
+    label: '20元',
+  },
+  {
+    value: 30,
+    label: '30元',
+  },
+]
 
 const formItems = reactive([
   {
     type: 'datePicker',
     label: '开始时间',
-    filed: 'staticTime',
+    filed: 'startTime',
     value: dayjs().subtract(15, 'day').format('YYYY-MM-DD HH:mm:ss'),
     showTime: true,
     valueFormat: 'YYYY-MM-DD HH:mm:ss',
@@ -132,32 +170,39 @@ const formItems = reactive([
     label: '手机号',
     filed: 'phone',
     value: '',
-    placeholder: '请输入手机号',
+    placeholder: '请输入',
   },
   {
-    type: 'input',
+    type: 'select',
     label: '面值',
-    filed: 'mianzhi',
+    filed: 'faceValue',
     value: '',
-    placeholder: '请输入面值',
+    placeholder: '请输入',
+    options: faceValue,
+    defaultOption: {
+      label: '全部',
+      value: '',
+    },
   },
   {
-    type: 'input',
+    type: 'select',
     label: '通道',
     filed: 'tongdao',
     value: '',
-    placeholder: '请输入通道',
+    placeholder: '请选择',
+    options: channel,
+    defaultOption: {
+      label: '全部',
+      value: '',
+    },
   },
   {
     type: 'select',
     label: '状态',
     filed: 'zhuangtai',
-    value: null,
+    value: '',
     placeholder: '请选择',
-    options: Object.keys(ORDER_STATUS).map((key) => ({
-      value: key,
-      label: ORDER_STATUS[key],
-    })),
+    options: orderStatus,
     defaultOption: {
       label: '全部',
       value: '',
@@ -181,7 +226,8 @@ const columns = [
     dataIndex: 'mianzhi',
     align: 'center',
     customRender: ({ text }: { text: string }) => {
-      return FACE_VALUE[text]
+      const item = faceValue.find((item: any) => item.value == text)
+      return item && item.label
     },
   },
   {
@@ -194,20 +240,23 @@ const columns = [
     dataIndex: 'tongdao',
     align: 'center',
     customRender: ({ text }: { text: string }) => {
-      return CHANNEL[text]
+      const item = channel.find((item: any) => item.value == text)
+      return item && item.label
     },
   },
   {
     title: '订单状态',
     dataIndex: 'zhuangtai',
     align: 'center',
-    customRender: ({ text }: { text: string }) => {
-      return ORDER_STATUS[text]
-    },
   },
   {
     title: '订单号',
     dataIndex: 'dingdanhao',
+    align: 'center',
+  },
+  {
+    title: '收货地址',
+    dataIndex: 'address',
     align: 'center',
   },
   {
@@ -245,12 +294,10 @@ const columns = [
 
 const table = ref()
 
-const reqData = async (page: number, limit: number) => {
-  const data: RecordSearchParams = {
-    page: page,
-    size: limit,
-    staticTime: '',
-    endTime: '',
+const reqData = async (currentPage: number, pageSize: number) => {
+  const data: RequestParams = {
+    currentPage,
+    pageSize,
   }
   formItems.forEach((item) => {
     if (item.value) {
@@ -259,7 +306,7 @@ const reqData = async (page: number, limit: number) => {
   })
 
   const res: RecordSearchResponseData = await reqSearch(data)
-  if (res.code == 200) {
+  if (res.code == 0) {
     return {
       data: res.data.list,
       total: res.data.total,
@@ -296,16 +343,22 @@ const handleSubmit = async (dingdanhao: string) => {
 }
 
 // 启禁用
-const handelQqijinyong = async (row: any) => {
+const handelQijinyong = async (row: any) => {
   const result = await reqQijinyong({
     id: row.id,
     qijinyong: row.qijinyong === 1 ? 2 : 1,
   })
-  if (result.code == 200) {
+  if (result.code == 0) {
     message.success(result.message)
   } else {
     message.error(result.message)
   }
+}
+
+// 获取订单状态
+const getOrderStatus = (value: number) => {
+  const item: any = orderStatus.find((item: any) => item.value === value)
+  return item
 }
 </script>
 
