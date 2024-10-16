@@ -453,7 +453,7 @@ export const agentRoute = [
       // 个人日志
       {
         path: '/personal/log',
-        component: () => import('@/views/agent/personal/logs/index.vue'),
+        component: () => import('@/views/agent/personal/plogs/index.vue'),
         name: 'PersonalLog',
         meta: {
           title: '个人日志',
