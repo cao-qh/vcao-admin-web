@@ -19,3 +19,8 @@ const onClick = () => {
   console.log(value.value)
 }
 </script>
+<style>
+.text {
+  font-size: 20px;
+}
+</style>

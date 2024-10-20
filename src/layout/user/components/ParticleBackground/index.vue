@@ -10,10 +10,10 @@ const particleOptions = {
   fpsLimit: 120,
   interactivity: {
     events: {
-      onClick: {
-        enable: true,
-        mode: 'push',
-      },
+      // onClick: {
+      //   enable: true,
+      //   mode: 'push',
+      // },
       onHover: {
         enable: true,
         mode: 'repulse',
@@ -26,9 +26,9 @@ const particleOptions = {
         opacity: 0.8,
         size: 40,
       },
-      push: {
-        quantity: 4,
-      },
+      // push: {
+      //   quantity: 1,
+      // },
       repulse: {
         distance: 200,
         duration: 0.4,
@@ -58,7 +58,7 @@ const particleOptions = {
       density: {
         enable: true,
       },
-      value: 80,
+      value: 150,
     },
     opacity: {
       value: 0.5,

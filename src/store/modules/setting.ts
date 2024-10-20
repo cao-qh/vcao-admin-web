@@ -5,7 +5,7 @@ import type { TabList } from '@/layout/base/MultiTab/type'
 import setting from '@/setting'
 
 const useLayoutSettingStore = defineStore('settingStore', () => {
-  const settings = JSON.parse(localStorage.getItem('SETTINGS') as string)
+  const localData = JSON.parse(localStorage.getItem('SETTINGS') as string)
   const sessionData = JSON.parse(sessionStorage.getItem('SETTINGS') as string)
 
   const fold = ref(sessionData?.fold || false) // 左侧layout.side是否折叠
@@ -13,8 +13,8 @@ const useLayoutSettingStore = defineStore('settingStore', () => {
 
   const refresh = ref(false) // 刷新页面状态
   const side = ref(false) // 右侧主题设置抽屉状态
-  const dark = ref(settings?.dark || false) // 是否为暗黑
-  const themeColor = ref(settings?.themeColor || setting.themeColor) // 主题色
+  const dark = ref(localData?.dark || false) // 是否为暗黑
+  const themeColor = ref(localData?.themeColor || setting.themeColor) // 主题色
   const isMobile = ref(false) // 是否为移动端
 
   const tabList = ref<TabList>([])

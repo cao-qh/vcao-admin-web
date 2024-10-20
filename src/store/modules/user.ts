@@ -2,10 +2,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 // 引入接口
-import {
-  reqLogin as reqAdminLogin,
-  reqInfo as reqAdminInfo,
-} from '@/api/admin/user'
+import { reqLogin, reqInfo } from '@/api/user'
 
 // 引入路由（常量路由）
 import { constantRoute, adminRoute } from '@/router/routes'
@@ -39,7 +36,7 @@ const useUserStore: any = defineStore('user', () => {
 
   // 用户登录的方法
   const userLogin = async (data: any) => {
-    const result: any = await reqAdminLogin(data)
+    const result: any = await reqLogin(data)
     // 登录请求：成功200->token
     // 登录请求：失败201->错误信息
     if (result.code == 0) {
@@ -60,7 +57,7 @@ const useUserStore: any = defineStore('user', () => {
   const userInfo = async () => {
     // 管理员权限
     // 获取用户信息进行存储仓库当中
-    const result: any = await reqAdminInfo()
+    const result: any = await reqInfo()
     // 如果获取用户信息成功，存储一下用户信息
     if (result.code == 0) {
       username.value = result.data.username

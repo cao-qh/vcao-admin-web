@@ -31,6 +31,8 @@ import {
   BarChartOutlined,
   DownloadOutlined,
   SearchOutlined,
+  TabletOutlined,
+  MailOutlined,
 } from '@ant-design/icons-vue'
 
 const antDesignIconsVue = {
@@ -66,6 +68,8 @@ const antDesignIconsVue = {
   BarChartOutlined,
   DownloadOutlined,
   SearchOutlined,
+  TabletOutlined,
+  MailOutlined,
 }
 
 // 对外暴漏插件对象
