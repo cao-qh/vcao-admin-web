@@ -14,23 +14,15 @@ export const constantRoute = [
       title: '登录',
       hidden: true, //代表路由标题在菜单中是否隐藏  true:隐藏 false:不隐藏
     },
+    redirect: '/user/login',
     children: [
-      // 管理员登录
+      // 登录
       {
-        path: '/user/admin/login',
-        component: () => import('@/views/admin/user/login/index.vue'),
+        path: '/user/login',
+        component: () => import('@/views/user/login/index.vue'),
         name: 'AdminLogin',
         meta: {
           title: '管理员登录',
-        },
-      },
-      // 代理员登录
-      {
-        path: '/user/agent/login',
-        component: () => import('@/views/agent/user/login/index.vue'),
-        name: 'AgentLogin',
-        meta: {
-          title: '代理员登录',
         },
       },
     ],
@@ -79,6 +71,37 @@ export const constantRoute = [
     ],
   },
   {
+    path: '/personal',
+    component: BaseLayout,
+    name: 'Personal',
+    meta: {
+      title: '个人管理',
+      icon: 'UserOutlined',
+    },
+    redirect: '/personal/info',
+    children: [
+      // 个人信息
+      {
+        path: '/personal/info',
+        component: () => import('@/views/admin/personal/info/index.vue'),
+        name: 'PersonalInfo',
+        meta: {
+          title: '个人信息',
+        },
+      },
+      // 个人日志
+      {
+        path: '/personal/logs',
+        component: () => import('@/views/admin/personal/plogs/index.vue'),
+        name: 'PersonalLogs',
+        meta: {
+          title: '个人日志',
+        },
+      },
+    ],
+  },
+  // 404页面
+  {
     path: '/:pathMatch(.*)*',
     component: () => import('@/views/404/index.vue'),
     meta: {
@@ -87,39 +110,6 @@ export const constantRoute = [
     },
   },
 ]
-
-// 管理员个人管理路由（单独添加，不参与权限筛选）
-// 个人管理
-export const adminPersonalRoute = {
-  path: '/personal',
-  component: BaseLayout,
-  name: 'Personal',
-  meta: {
-    title: '个人管理',
-    icon: 'UserOutlined',
-  },
-  redirect: '/personal/info',
-  children: [
-    // 个人信息
-    {
-      path: '/personal/info',
-      component: () => import('@/views/admin/personal/info/index.vue'),
-      name: 'PersonalInfo',
-      meta: {
-        title: '个人信息',
-      },
-    },
-    // 个人日志
-    {
-      path: '/personal/logs',
-      component: () => import('@/views/admin/personal/plogs/index.vue'),
-      name: 'PersonalLogs',
-      meta: {
-        title: '个人日志',
-      },
-    },
-  ],
-}
 
 // 管理员路由
 export const adminRoute = [
@@ -315,148 +305,6 @@ export const adminRoute = [
         name: 'DownloadList',
         meta: {
           title: '下载列表',
-        },
-      },
-    ],
-  },
-]
-
-// 代理路由
-export const agentRoute = [
-  // 订单管理
-  {
-    path: '/',
-    component: BaseLayout,
-    name: 'Order',
-    meta: {
-      title: '订单管理',
-      icon: 'UnorderedListOutlined',
-    },
-    redirect: '/order/list',
-    children: [
-      // 订单列表
-      {
-        path: '/order/list',
-        component: () => import('@/views/agent/order/index.vue'),
-        name: 'OrderList',
-        meta: {
-          title: '订单列表',
-        },
-      },
-    ],
-  },
-  // 产品管理
-  {
-    path: '/goods',
-    component: BaseLayout,
-    name: 'Goods',
-    meta: {
-      title: '产品管理',
-      icon: 'StarOutlined',
-    },
-    redirect: '/goods/list',
-    children: [
-      // 商品列表
-      {
-        path: '/goods/list',
-        component: () => import('@/views/agent/goods/index.vue'),
-        name: 'GoodsList',
-        meta: {
-          title: '产品列表',
-        },
-      },
-    ],
-  },
-  // 统计分析
-  {
-    path: '/statistics',
-    component: BaseLayout,
-    name: 'Statistics',
-    meta: {
-      title: '统计分析',
-      icon: 'BarChartOutlined',
-    },
-    redirect: '/statistics/collect',
-    children: [
-      // 汇总统计
-      {
-        path: '/statistics/collect',
-        component: () => import('@/views/agent/statistics/collect/index.vue'),
-        name: 'Collect',
-        meta: {
-          title: '汇总统计',
-        },
-      },
-      // 日统计
-      {
-        path: '/statistics/day_collect',
-        component: () =>
-          import('@/views/agent/statistics/day_collect/index.vue'),
-        name: 'DayCollect',
-        meta: {
-          title: '日统计',
-        },
-      },
-    ],
-  },
-  // 下载管理
-  {
-    path: '/download',
-    component: BaseLayout,
-    name: 'Download',
-    meta: {
-      title: '下载管理',
-      icon: 'DownloadOutlined',
-    },
-    redirect: '/download/list',
-    children: [
-      // 下载列表
-      {
-        path: '/download/list',
-        component: () => import('@/views/admin/download/index.vue'),
-        name: 'DownloadList',
-        meta: {
-          title: '下载列表',
-        },
-      },
-    ],
-  },
-  // 个人管理
-  {
-    path: '/personal',
-    component: BaseLayout,
-    name: 'Personal',
-    meta: {
-      title: '个人管理',
-      icon: 'UserOutlined',
-    },
-    redirect: '/personal/info',
-    children: [
-      // 个人信息
-      {
-        path: '/personal/info',
-        component: () => import('@/views/agent/personal/info/index.vue'),
-        name: 'PersonalInfo',
-        meta: {
-          title: '个人信息',
-        },
-      },
-      // API信息
-      {
-        path: '/personal/api',
-        component: () => import('@/views/agent/personal/api/index.vue'),
-        name: 'PersonalApi',
-        meta: {
-          title: 'API信息',
-        },
-      },
-      // 个人日志
-      {
-        path: '/personal/log',
-        component: () => import('@/views/agent/personal/plogs/index.vue'),
-        name: 'PersonalLog',
-        meta: {
-          title: '个人日志',
         },
       },
     ],
