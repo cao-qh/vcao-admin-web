@@ -67,7 +67,6 @@ watch(model, (val) => {
 
 // 上传前回调
 const handleBeforeUpload: UploadProps['beforeUpload'] = async (file) => {
-  console.log(file)
   if (file.size > 1 * 1024 * 1024) {
     message.warning('图片大小不能超过1MB')
     // 重置 上传组件 防止超过大小限制的图片显示上去

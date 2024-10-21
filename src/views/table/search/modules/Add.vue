@@ -1,5 +1,11 @@
 <template>
-  <a-modal title="添加记录" :open="open" @ok="submit" @cancel="open = false">
+  <a-modal
+    title="添加记录"
+    :open="open"
+    @ok="submit"
+    @cancel="open = false"
+    :body-style="{ maxHeight: '580px', overflow: 'auto' }"
+  >
     <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
       <a-form-item label="手机号" name="phone">
         <a-input v-model:value.trim="formState.phone" placeholder="请输入" />
@@ -53,12 +59,12 @@ defineOptions({ name: 'Add' })
 // 属性
 defineProps({
   channel: {
-    type: Object,
-    default: () => {},
+    type: Array<any>,
+    default: () => [],
   },
   faceValue: {
-    type: Object,
-    default: () => {},
+    type: Array<any>,
+    default: () => [],
   },
 })
 // 定义方法

@@ -1,5 +1,11 @@
 <template>
-  <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
+  <a-modal
+    title="修改"
+    :open="open"
+    @ok="submit"
+    @cancel="open = false"
+    :body-style="{ maxHeight: '580px', overflow: 'auto' }"
+  >
     <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
       <a-form-item label="订单号" name="dingdanhao">
         <a-input v-model:value="formState.dingdanhao" disabled />

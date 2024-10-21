@@ -7,8 +7,14 @@ function createUserList() {
       password: 'admin',
       desc: '平台管理员',
       // roles: ['平台管理员'],
-      buttons: ['Btn.Protocol.Add', 'Btn.Protocol.Update'],
-      routes: ['AppConfig', 'Protocol','HomeSetting'],
+      buttons: [
+        'Btn.Protocol.Add',
+        'Btn.Protocol.Update',
+        'Btn.HomeSetting.Add',
+        'Btn.HomeSetting.Update',
+        'Btn.HomeSetting.Delete',
+      ],
+      routes: ['AppConfig', 'Protocol', 'HomeSetting'],
       token: 'Admin Token',
     },
   ]
