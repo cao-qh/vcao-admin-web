@@ -2,7 +2,7 @@
 import axios from 'axios'
 import { message } from 'ant-design-vue'
 import useUserStore from '@/store/modules/user'
-import useAppStore from '@/store/modules/app'
+import useSettingStore from '@/store/modules/setting'
 
 // 第一步：利用axios对象的create方法，创建一个axios实例
 const request = axios.create({
@@ -18,8 +18,8 @@ request.interceptors.request.use((config) => {
   }
 
   // 在发送请求之前开启PageLoading
-  const appStore = useAppStore()
-  appStore.pageLoading = true
+  const settingStore = useSettingStore()
+  settingStore.pageLoading = true
 
   // 返回配置对象
   return config
@@ -30,8 +30,8 @@ request.interceptors.response.use(
   (response) => {
     // 成功回调
     // 关闭PageLoading
-    const appStore = useAppStore()
-    appStore.pageLoading = false
+    const settingStore = useSettingStore()
+    settingStore.pageLoading = false
 
     if (
       response.data.data === -120 ||
@@ -47,8 +47,8 @@ request.interceptors.response.use(
   },
   (error) => {
     // 关闭PageLoading
-    const appStore = useAppStore()
-    appStore.pageLoading = false
+    const settingStore = useSettingStore()
+    settingStore.pageLoading = false
     // 失败回调：处理http网络错误
     // 定义一个变量：存储网络错误信息
     let messageContent = ''

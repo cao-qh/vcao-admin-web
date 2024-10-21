@@ -9,10 +9,10 @@
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
-import useAppStore from '@/store/modules/app'
+import useSettingStore from '@/store/modules/setting'
 import useLayoutSettingStore from '@/store/modules/setting'
 
-const appStore = useAppStore()
+const settingStore = useSettingStore()
 const layoutSettingStore = useLayoutSettingStore()
 const open = ref(false)
 const timer = ref<any>(null)
@@ -34,7 +34,7 @@ const color = computed(() => {
 })
 
 watch(
-  () => appStore.pageLoading,
+  () => settingStore.pageLoading,
   (val) => {
     // 防闪设计，页面加载中最小展示300毫秒
     if (val) {

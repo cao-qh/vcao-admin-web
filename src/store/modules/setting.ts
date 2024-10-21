@@ -17,7 +17,9 @@ const useLayoutSettingStore = defineStore('settingStore', () => {
   const themeColor = ref(localData?.themeColor || setting.themeColor) // 主题色
   const isMobile = ref(false) // 是否为移动端
 
-  const tabList = ref<TabList>([])
+  const tabList = ref<TabList>([]) // 多标签页列表
+
+  const pageLoading = ref(false) // 页面加载状态
 
   // 当暗黑模式和主题色变化时，更新本地存储
   watch(
@@ -55,6 +57,7 @@ const useLayoutSettingStore = defineStore('settingStore', () => {
     themeColor,
     isMobile,
     tabList,
+    pageLoading,
   }
 })
 
