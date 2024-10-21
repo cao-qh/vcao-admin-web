@@ -70,36 +70,6 @@ export const constantRoute = [
       },
     ],
   },
-  {
-    path: '/personal',
-    component: BaseLayout,
-    name: 'Personal',
-    meta: {
-      title: '个人管理',
-      icon: 'UserOutlined',
-    },
-    redirect: '/personal/info',
-    children: [
-      // 个人信息
-      {
-        path: '/personal/info',
-        component: () => import('@/views/admin/personal/info/index.vue'),
-        name: 'PersonalInfo',
-        meta: {
-          title: '个人信息',
-        },
-      },
-      // 个人日志
-      {
-        path: '/personal/logs',
-        component: () => import('@/views/admin/personal/plogs/index.vue'),
-        name: 'PersonalLogs',
-        meta: {
-          title: '个人日志',
-        },
-      },
-    ],
-  },
   // 404页面
   {
     path: '/:pathMatch(.*)*',
@@ -112,199 +82,34 @@ export const constantRoute = [
 ]
 
 // 管理员路由
-export const adminRoute = [
+export const asyncRoute = [
   // 系统管理
   {
-    path: '/system',
+    path: '/AppConfig',
     component: BaseLayout,
-    name: 'System',
+    name: 'AppConfig',
     meta: {
-      title: '系统管理',
+      title: '应用配置',
       icon: 'SettingOutlined',
     },
-    redirect: '/system/interface',
+    redirect: '/AppConfig/Protocol',
     children: [
-      // 接口模板
+      // 用户协议
       {
-        path: '/system/interface',
-        component: () => import('@/views/admin/system/interface/index.vue'),
-        name: 'Interface',
+        path: '/AppConfig/Protocol',
+        component: () => import('@/views/AppConfig/Protocol/index.vue'),
+        name: 'Protocol',
         meta: {
-          title: '接口模板',
+          title: '用户协议',
         },
       },
-      // 参数模板
+      // 首页设置
       {
-        path: '/system/params',
-        component: () => import('@/views/admin/system/params/index.vue'),
-        name: 'Params',
+        path: '/AppConfig/HomeSetting',
+        component: () => import('@/views/AppConfig/HomeSetting/index.vue'),
+        name: 'HomeSetting',
         meta: {
-          title: '参数模板',
-        },
-      },
-      // 管理员日志
-      {
-        path: '/system/admin-logs',
-        component: () => import('@/views/admin/system/admin-logs/index.vue'),
-        name: 'AdminLogs',
-        meta: {
-          title: '管理员日志',
-        },
-      },
-      // 代理员日志
-      {
-        path: '/system/agent-logs',
-        component: () => import('@/views/admin/system/agent-logs/index.vue'),
-        name: 'AgentLogs',
-        meta: {
-          title: '代理员日志',
-        },
-      },
-      // 代理产品配置日志
-      {
-        path: '/system/config-logs',
-        component: () => import('@/views/admin/system/config-logs/index.vue'),
-        name: 'ConfigLogs',
-        meta: {
-          title: '代理产品配置日志',
-        },
-      },
-    ],
-  },
-  // 渠道管理
-  {
-    path: '/channel',
-    component: BaseLayout,
-    name: 'Channel',
-    meta: {
-      title: '渠道管理',
-      icon: 'TeamOutlined',
-    },
-    redirect: '/channel/admin',
-    children: [
-      // 管理员管理
-      {
-        path: '/channel/admin',
-        component: () => import('@/views/admin/channel/admin/index.vue'),
-        name: 'Admin',
-        meta: {
-          title: '管理员管理',
-        },
-      },
-      // 代理员管理
-      {
-        path: '/channel/agent',
-        component: () => import('@/views/admin/channel/agent/index.vue'),
-        name: 'Agent',
-        meta: {
-          title: '代理员管理',
-        },
-      },
-      // 上游渠道商
-      {
-        path: '/channel/up-channel',
-        component: () => import('@/views/admin/channel/up-channel/index.vue'),
-        name: 'UpChannel',
-        meta: {
-          title: '上游渠道商',
-        },
-      },
-    ],
-  },
-  // 订单管理
-  {
-    path: '/order',
-    component: BaseLayout,
-    name: 'Order',
-    meta: {
-      title: '订单管理',
-      icon: 'UnorderedListOutlined',
-    },
-    redirect: '/order/list',
-    children: [
-      // 订单列表
-      {
-        path: '/order/list',
-        component: () => import('@/views/admin/order/index.vue'),
-        name: 'OrderList',
-        meta: {
-          title: '订单列表',
-        },
-      },
-    ],
-  },
-  // 产品管理
-  {
-    path: '/goods',
-    component: BaseLayout,
-    name: 'Goods',
-    meta: {
-      title: '产品管理',
-      icon: 'StarOutlined',
-    },
-    redirect: '/goods/list',
-    children: [
-      // 商品列表
-      {
-        path: '/goods/list',
-        component: () => import('@/views/admin/goods/index.vue'),
-        name: 'GoodsList',
-        meta: {
-          title: '产品列表',
-        },
-      },
-    ],
-  },
-  // 统计分析
-  {
-    path: '/statistics',
-    component: BaseLayout,
-    name: 'Statistics',
-    meta: {
-      title: '统计分析',
-      icon: 'BarChartOutlined',
-    },
-    redirect: '/statistics/collect',
-    children: [
-      // 汇总统计
-      {
-        path: '/statistics/collect',
-        component: () => import('@/views/admin/statistics/collect/index.vue'),
-        name: 'Collect',
-        meta: {
-          title: '汇总统计',
-        },
-      },
-      // 日统计
-      {
-        path: '/statistics/day_collect',
-        component: () =>
-          import('@/views/admin/statistics/day_collect/index.vue'),
-        name: 'DayCollect',
-        meta: {
-          title: '日统计',
-        },
-      },
-    ],
-  },
-  // 下载管理
-  {
-    path: '/download',
-    component: BaseLayout,
-    name: 'Download',
-    meta: {
-      title: '下载管理',
-      icon: 'DownloadOutlined',
-    },
-    redirect: '/download/list',
-    children: [
-      // 下载列表
-      {
-        path: '/download/list',
-        component: () => import('@/views/admin/download/index.vue'),
-        name: 'DownloadList',
-        meta: {
-          title: '下载列表',
+          title: '首页设置',
         },
       },
     ],

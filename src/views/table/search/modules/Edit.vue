@@ -41,7 +41,6 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import type { Record } from '@/api/table/search/type'
 import { reqEdit } from '@/api/table/search/index'
 import AddressSelector from '@/components/AddressSelector/index.vue'
 
@@ -77,14 +76,14 @@ const layout = {
 }
 
 const formRef = ref()
-const formState = reactive<Record>({})
+const formState = reactive<any>({})
 
 const rules = {
   dingdanhao: [{ required: true, message: '请输入' }],
   tongdao: [{ required: true, message: '请选择' }],
 }
 
-const show = async (row: Record) => {
+const show = async (row: any) => {
   open.value = true
   formState.dingdanhao = row.dingdanhao
   formState.tongdao = row.tongdao

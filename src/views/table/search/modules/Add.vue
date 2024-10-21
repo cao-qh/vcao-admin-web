@@ -44,7 +44,6 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import type { Record } from '@/api/table/search/type'
 import { reqAdd } from '@/api/table/search/index'
 import { phone } from '@/utils/regexp'
 import AddressSelector from '@/components/AddressSelector/index.vue'
@@ -80,7 +79,7 @@ const layout = {
 }
 
 const formRef = ref()
-const formState = reactive<Record>({})
+const formState = reactive<any>({})
 
 const rules = {
   phone: [

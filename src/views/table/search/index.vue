@@ -92,8 +92,6 @@ import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import { STable, MultipartTableCell } from '@/components/STable'
 import dayjs from 'dayjs'
-import type { RecordSearchResponseData } from '@/api/table/search/type'
-import type { RequestParams } from '@/api/type'
 import { reqSearch, reqSubmit, reqQijinyong } from '@/api/table/search/index'
 import Add from './modules/Add.vue'
 import BatchImport from './modules/BatchImport.vue'
@@ -310,7 +308,7 @@ const columns = [
 const table = ref()
 
 const reqData = async (currentPage: number, pageSize: number) => {
-  const data: RequestParams = {
+  const data: any = {
     currentPage,
     pageSize,
   }
@@ -320,7 +318,7 @@ const reqData = async (currentPage: number, pageSize: number) => {
     }
   })
 
-  const res: RecordSearchResponseData = await reqSearch(data)
+  const res: any = await reqSearch(data)
   if (res.code == 0) {
     return {
       data: res.data.list,

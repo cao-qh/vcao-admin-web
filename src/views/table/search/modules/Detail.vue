@@ -25,7 +25,6 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
-import type { Record } from '@/api/table/search/type'
 import { reqDetail } from '@/api/table/search/index'
 import { message } from 'ant-design-vue'
 
@@ -45,7 +44,7 @@ defineProps({
 const open = ref<boolean>(false)
 const data = ref<any>(null)
 
-const show = async (row: Record) => {
+const show = async (row: any) => {
   const res = await reqDetail({ id: row.id })
   if (res.code == 0) {
     open.value = true

@@ -5,7 +5,7 @@ import { ref } from 'vue'
 import { reqLogin, reqInfo } from '@/api/user'
 
 // 引入路由（常量路由）
-import { constantRoute, adminRoute } from '@/router/routes'
+import { constantRoute, asyncRoute } from '@/router/routes'
 import router, { resetRouter } from '@/router'
 import { deepCopy } from '@/utils/deepCopy'
 import type { RouteRecordRaw } from 'vue-router'
@@ -63,7 +63,7 @@ const useUserStore: any = defineStore('user', () => {
       username.value = result.data.username
       buttons.value = result.data.buttons
       // 深拷贝asyncRoute
-      const cloneAsyncRoute = deepCopy(adminRoute)
+      const cloneAsyncRoute = deepCopy(asyncRoute)
 
       // 过滤异步路由
       const userAsyncRoute = filterAsyncRoute(
