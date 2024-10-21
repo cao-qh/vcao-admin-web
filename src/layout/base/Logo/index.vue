@@ -4,7 +4,7 @@
     class="logo"
     :class="{ fold: layoutSettingStore.fold }"
   >
-    <img :src="setting.logo" alt="logo" />
+    <img :src="`/${appBaseUrl}/${setting.logo}`" alt="logo" />
     <span>{{ setting.title }}</span>
   </div>
 </template>
@@ -18,6 +18,8 @@ const layoutSettingStore = useLayoutSettingStore()
 defineOptions({
   name: 'Logo',
 })
+
+const appBaseUrl = import.meta.env.VITE_APP_BASE_URL
 
 const color = computed(() => {
   return layoutSettingStore.dark ? '#d9d9d9' : layoutSettingStore.themeColor
