@@ -1,10 +1,5 @@
 <template>
-  <a-modal
-    title="更换通道并提单"
-    :open="open"
-    @ok="submit"
-    @cancel="open = false"
-  >
+  <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
       <a-form-item label="订单号" name="dingdanhao">
         <a-input v-model:value="formState.dingdanhao" disabled />
@@ -35,7 +30,10 @@
         <AddressSelector v-model:value="formState.address" />
       </a-form-item>
       <a-form-item label="备注" name="beizhu">
-        <a-textarea v-model:value.trim="formState.beizhu"></a-textarea>
+        <a-textarea
+          v-model:value.trim="formState.beizhu"
+          placeholder="请输入"
+        ></a-textarea>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -47,7 +45,7 @@ import type { Record } from '@/api/table/search/type'
 import { reqEdit } from '@/api/table/search/index'
 import AddressSelector from '@/components/AddressSelector/index.vue'
 
-defineOptions({ name: 'ChangeSubmit' })
+defineOptions({ name: 'Edit' })
 
 // 属性
 defineProps({
