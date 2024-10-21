@@ -1,11 +1,6 @@
 import request from '@/utils/request'
 
-import type {
-  RecordSearchParams,
-  RecordSearchResponseData,
-  Record,
-  QijinyongParams,
-} from './type'
+import type { Record, QijinyongParams } from './type'
 
 enum API {
   // 查询记录
@@ -14,8 +9,8 @@ enum API {
   add = '/table/add',
   // 批量导入
   batchImport = '/table/import',
-  // 更换通道并提单
-  updateSubmit = '/table/changeAndSubmit',
+  // 修改
+  edit = '/table/update',
   // 提单
   submit = '/table/submit',
   // 启禁用
@@ -24,9 +19,9 @@ enum API {
   detail = '/table/detail',
 }
 
-// 查询代理列表
-export const reqSearch = (data: RecordSearchParams) =>
-  request.get<any, RecordSearchResponseData>(API.search, { params: data })
+// 查询列表
+export const reqSearch = (data: any) =>
+  request.get<any, any>(API.search, { params: data })
 
 // 添加记录
 export const reqAdd = (data: Record) => request.post<any, any>(API.add, data)
@@ -36,8 +31,7 @@ export const reqAddBatch = (data: FormData) =>
   request.post<any, any>(API.batchImport, data)
 
 // 更换通道并提单
-export const reqUpdateSubmit = (data: Record) =>
-  request.post<any, any>(API.updateSubmit, data)
+export const reqEdit = (data: Record) => request.post<any, any>(API.edit, data)
 
 // 提单
 export const reqSubmit = (dingdanhao: string) =>

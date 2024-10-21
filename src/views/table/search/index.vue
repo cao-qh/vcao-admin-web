@@ -11,10 +11,24 @@
       :scroll="{ y: 'calc(100vh - 450px)' }"
     >
       <template #toolbar>
-        <a-button type="primary" @click="handleAdd">添加记录</a-button>
-        <a-button type="primary" @click="handleBatchImport">批量导入</a-button>
+        <a-button type="primary" @click="() => add.show()">添加记录</a-button>
+        <a-button type="primary" @click="() => batchImport.show()">
+          批量导入
+        </a-button>
       </template>
       <template #bodyCell="{ column, row }">
+        <template v-if="column.dataIndex === 'zhanghuxinxi'">
+          <MultipartTableCell>
+            <template #label>
+              <div>手机号：</div>
+              <div>代理账户：</div>
+            </template>
+            <template #value>
+              <div>{{ row.phone }}</div>
+              <div>{{ row.agentname }}</div>
+            </template>
+          </MultipartTableCell>
+        </template>
         <template v-if="column.dataIndex === 'qijinyong'">
           <a-popconfirm
             title="确定要修改吗？"
@@ -45,7 +59,9 @@
               <a>提单</a>
             </a-popconfirm>
             <a-divider type="vertical" />
-            <a @click="handleChangeSubmit(row)">更换通道并提单</a>
+            <a @click="() => edit.show(row)">修改</a>
+            <a-divider type="vertical" />
+            <a @click="() => detail.show(row)">详情</a>
           </template>
         </template>
       </template>
@@ -60,27 +76,30 @@
 
     <BatchImport ref="batchImport" @success="table.refresh()" />
 
-    <ChangeSubmit
-      ref="changeSubmit"
+    <Edit
+      ref="edit"
       :channel="channel"
       :faceValue="faceValue"
       @success="table.refresh()"
     />
+
+    <Detail ref="detail" />
   </PageWrapper>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
-import { STable } from '@/components/STable'
+import { STable, MultipartTableCell } from '@/components/STable'
 import dayjs from 'dayjs'
-import type { RecordSearchResponseData, Record } from '@/api/table/search/type'
+import type { RecordSearchResponseData } from '@/api/table/search/type'
 import type { RequestParams } from '@/api/type'
 import { reqSearch, reqSubmit, reqQijinyong } from '@/api/table/search/index'
 import Add from './modules/Add.vue'
 import BatchImport from './modules/BatchImport.vue'
-import ChangeSubmit from './modules/ChangeSubmit.vue'
+import Edit from './modules/Edit.vue'
 import { message } from 'ant-design-vue'
+import Detail from './modules/Detail.vue'
 
 // 订单状态
 const orderStatus: any = [
@@ -217,9 +236,10 @@ const columns = [
     align: 'center',
   },
   {
-    title: '手机号',
-    dataIndex: 'phone',
+    title: '账户信息',
+    dataIndex: 'zhanghuxinxi',
     align: 'center',
+    width: '200px',
   },
   {
     title: '面值',
@@ -229,11 +249,6 @@ const columns = [
       const item = faceValue.find((item: any) => item.value == text)
       return item && item.label
     },
-  },
-  {
-    title: '代理账户',
-    dataIndex: 'agentname',
-    align: 'center',
   },
   {
     title: '通道',
@@ -316,29 +331,20 @@ const reqData = async (currentPage: number, pageSize: number) => {
 
 // 添加记录
 const add = ref()
-
-const handleAdd = () => {
-  add.value.show()
-}
-
 // 批量导入
 const batchImport = ref()
-const handleBatchImport = () => {
-  batchImport.value.show()
-}
+// 修改
+const edit = ref()
+// 详情
+const detail = ref()
 
-// 更换通道并提单
-const changeSubmit = ref()
-const handleChangeSubmit = (row: Record) => {
-  changeSubmit.value.show(row)
-}
 // 提单
 const handleSubmit = async (dingdanhao: string) => {
   const res = await reqSubmit(dingdanhao)
-  if (res.code == 200) {
-    message.success(res.message)
+  if (res.code == 0) {
+    message.success(res.msg)
   } else {
-    message.error(res.message)
+    message.error(res.msg)
   }
 }
 
@@ -349,9 +355,9 @@ const handelQijinyong = async (row: any) => {
     qijinyong: row.qijinyong === 1 ? 2 : 1,
   })
   if (result.code == 0) {
-    message.success(result.message)
+    message.success(result.msg)
   } else {
-    message.error(result.message)
+    message.error(result.msg)
   }
 }
 

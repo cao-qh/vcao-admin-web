@@ -47,11 +47,11 @@ const data = ref<any>(null)
 
 const show = async (row: Record) => {
   const res = await reqDetail({ id: row.id })
-  if (res.code == 200) {
+  if (res.code == 0) {
     open.value = true
     data.value = res.data
   } else {
-    message.error(res.message)
+    message.error(res.msg)
   }
 }
 

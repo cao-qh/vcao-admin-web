@@ -74,8 +74,8 @@ export default [
     method: 'post',
     response: () => {
       return {
-        code: 200,
-        message: '导入成功',
+        code: 0,
+        msg: '导入成功',
         data: {
           success: 10,
           error: 2,
@@ -89,19 +89,19 @@ export default [
     method: 'post',
     response: () => {
       return {
-        code: 200,
-        message: '提单成功',
+        code: 0,
+        msg: '提单成功',
       }
     },
   },
-  // 更换通道并提单
+  // 修改
   {
-    url: '/api/table/changeAndSubmit',
+    url: '/api/table/update',
     method: 'post',
     response: () => {
       return {
-        code: 200,
-        message: '更换通道并提单成功',
+        code: 0,
+        msg: '修改成功',
       }
     },
   },
@@ -112,7 +112,7 @@ export default [
     response: () => {
       return {
         code: 0,
-        message: '操作成功',
+        msg: '操作成功',
       }
     },
   },
@@ -122,8 +122,8 @@ export default [
     method: 'get',
     response: () => {
       return {
-        code: 200,
-        message: '查询成功',
+        code: 0,
+        msg: '查询成功',
         data: {
           id: 1,
           phone: '151@string("number", 8)',

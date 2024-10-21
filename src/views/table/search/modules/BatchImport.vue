@@ -64,9 +64,9 @@ const submit = async () => {
     const formData = new FormData()
     formData.append('file', fileList.value[0].originFileObj)
     const res = await reqAddBatch(formData)
-    if (res.code == 200) {
+    if (res.code == 0) {
       $emit('success')
-      message.success(res.message)
+      message.success(res.msg)
       resultInfo.value = res.data
     } else {
       message.error(res.msg)

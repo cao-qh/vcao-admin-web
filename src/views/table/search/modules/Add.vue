@@ -84,17 +84,17 @@ const formState = reactive<Record>({})
 
 const rules = {
   phone: [
-    { required: true, message: '请输入电话' },
+    { required: true, message: '请输入' },
     {
       pattern: phone,
       message: '请输入正确的手机号',
     },
   ],
-  mianzhi: [{ required: true, message: '请选择面值' }],
-  tongdao: [{ required: true, message: '请选择通道' }],
+  mianzhi: [{ required: true, message: '请选择' }],
+  tongdao: [{ required: true, message: '请选择' }],
   address: [
-    { required: true, message: '请选择地址' },
-    { pattern: address, message: '请输入正确的地址' },
+    { required: true, message: '请选择' },
+    { pattern: address, message: '请输入' },
   ],
 }
 

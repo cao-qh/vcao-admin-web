@@ -5,7 +5,7 @@
     @ok="submit"
     @cancel="open = false"
   >
-    <a-form ref="formRef" :model="formState" v-bind="layout">
+    <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
       <a-form-item label="订单号" name="dingdanhao">
         <a-input v-model:value="formState.dingdanhao" disabled />
       </a-form-item>
@@ -44,7 +44,7 @@
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import type { Record } from '@/api/table/search/type'
-import { reqUpdateSubmit } from '@/api/table/search/index'
+import { reqEdit } from '@/api/table/search/index'
 import AddressSelector from '@/components/AddressSelector/index.vue'
 
 defineOptions({ name: 'ChangeSubmit' })
@@ -81,6 +81,11 @@ const layout = {
 const formRef = ref()
 const formState = reactive<Record>({})
 
+const rules = {
+  dingdanhao: [{ required: true, message: '请输入' }],
+  tongdao: [{ required: true, message: '请选择' }],
+}
+
 const show = async (row: Record) => {
   open.value = true
   formState.dingdanhao = row.dingdanhao
@@ -94,13 +99,13 @@ const submit = async () => {
   try {
     await formRef.value.validate()
 
-    const res = await reqUpdateSubmit(formState)
-    if (res.code == 200) {
+    const res = await reqEdit(formState)
+    if (res.code == 0) {
       $emit('success')
       open.value = false
-      message.success(res.message)
+      message.success(res.msg)
     } else {
-      message.error(res.message)
+      message.error(res.msg)
     }
   } catch (error) {
     console.log('error :>> ', error)

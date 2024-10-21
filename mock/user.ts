@@ -66,7 +66,7 @@ export default [
   },
   // 获取管理员信息
   {
-    url: '/api/admin/info',
+    url: '/api/info',
     method: 'post',
     response: (request) => {
       //获取请求头携带token
@@ -75,7 +75,7 @@ export default [
       const checkUser = createUserList().find((item) => item.token === token)
       //没有返回失败的信息
       if (!checkUser) {
-        return { code: 201, data: { msg: '获取用户信息失败' } }
+        return { code: -1, data: { msg: '获取用户信息失败' } }
       }
       //如果有返回成功信息
       return {

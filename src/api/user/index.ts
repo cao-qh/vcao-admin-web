@@ -6,7 +6,7 @@ enum API {
   // 登录
   loginUrl = '/login',
   // 用户信息
-  infoUrl = '/tAdmin/tQuanxian/LoginAdminQuanXian',
+  infoUrl = '/info',
   // 退出登录
   logoutUrl = '/tAdmin/cunliang/tuiChu',
 }
