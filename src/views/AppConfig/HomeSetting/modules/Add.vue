@@ -21,8 +21,8 @@
           </a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item label="跳转类型" name="tjlx">
-        <a-select v-model:value="formState.tjlx" placeholder="请选择">
+      <a-form-item label="跳转类型" name="tzlx">
+        <a-select v-model:value="formState.tzlx" placeholder="请选择">
           <a-select-option
             v-for="item in jumpType"
             :key="item.value"
