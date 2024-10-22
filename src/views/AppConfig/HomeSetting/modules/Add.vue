@@ -32,7 +32,7 @@
           </a-select-option>
         </a-select>
       </a-form-item>
-      <template v-if="formState.tjlx == 1">
+      <template v-if="formState.tzlx == 1">
         <a-form-item label="视频合集编码" name="sphjbm">
           <a-input v-model:value.trim="formState.sphjbm" placeholder="请输入" />
         </a-form-item>
@@ -40,7 +40,7 @@
           <a-input v-model:value.trim="formState.sphjbm" placeholder="请输入" />
         </a-form-item>
       </template>
-      <template v-if="formState.tjlx == 2">
+      <template v-if="formState.tzlx == 2">
         <a-form-item label="广告" name="gg">
           <a-input v-model:value.trim="formState.gg" placeholder="请输入" />
         </a-form-item>

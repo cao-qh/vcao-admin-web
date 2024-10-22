@@ -90,7 +90,7 @@ export const asyncRoute = [
     name: 'AppConfig',
     meta: {
       title: '应用配置',
-      icon: 'SettingOutlined',
+      icon: 'AppstoreOutlined',
     },
     redirect: '/AppConfig/Protocol',
     children: [
@@ -110,6 +110,24 @@ export const asyncRoute = [
         name: 'HomeSetting',
         meta: {
           title: '首页设置',
+        },
+      },
+      // 广告设置
+      {
+        path: '/AppConfig/AdSetting',
+        component: () => import('@/views/AppConfig/AdSetting/index.vue'),
+        name: 'AdSetting',
+        meta: {
+          title: '广告设置',
+        },
+      },
+      // 会员订购
+      {
+        path: '/AppConfig/MemberOrder',
+        component: () => import('@/views/AppConfig/MemberOrder/index.vue'),
+        name: 'MemberOrder',
+        meta: {
+          title: '会员订购',
         },
       },
     ],

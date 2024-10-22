@@ -32,7 +32,7 @@
           </a-select-option>
         </a-select>
       </a-form-item>
-      <template v-if="formState.tjlx == 1">
+      <template v-if="formState.tzlx == 1">
         <a-form-item label="视频合集编码" name="sphjbm">
           <a-input v-model:value.trim="formState.sphjbm" placeholder="请输入" />
         </a-form-item>
@@ -40,7 +40,7 @@
           <a-input v-model:value.trim="formState.sphjbm" placeholder="请输入" />
         </a-form-item>
       </template>
-      <template v-if="formState.tjlx == 2">
+      <template v-if="formState.tzlx == 2">
         <a-form-item label="广告" name="gg">
           <a-input v-model:value.trim="formState.gg" placeholder="请输入" />
         </a-form-item>
@@ -52,6 +52,7 @@
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { reqEdit } from '@/api/table/search/index'
+import UploadImage from '@/components/UploadImage/index.vue'
 
 defineOptions({ name: 'Edit' })
 
@@ -88,14 +89,25 @@ const formRef = ref()
 const formState = reactive<any>({})
 
 const rules = {
-  yhxy: [{ required: true, message: '请输入' }],
-  yszc: [{ required: true, message: '请输入' }],
+  tp: [{ required: true, message: '请选择' }],
+  qz: [{ required: true, message: '请输入' }],
+  wz: [{ required: true, message: '请选择' }],
+  tzlx: [{ required: true, message: '请选择' }],
+  sphjbm: [{ required: true, message: '请输入' }],
+  spzjbm: [{ required: true, message: '请输入' }],
+  gg: [{ required: true, message: '请输入' }],
 }
 
 const show = async (row: any) => {
   open.value = true
-  formState.yhxy = row.yhxy
-  formState.yszc = row.yszc
+  formState.tp = row.tp
+  formState.qz = row.qz
+  formState.wz = row.wz
+  formState.tjlx = row.tjlx
+  formState.tzlx = row.tzlx
+  formState.sphjbm = row.sphjbm
+  formState.spzjbm = row.spzjbm
+  formState.gg = row.gg
 }
 
 const submit = async () => {
