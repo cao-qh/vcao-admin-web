@@ -1,40 +1,17 @@
 <template>
-  <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
-    <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
-      <a-form-item label="图片" name="tp">
-        <UploadImage v-model:value="formState.tp" />
-      </a-form-item>
-      <a-form-item label="时长" name="sc">
-        <a-input-number
-          :min="0"
-          v-model:value.trim="formState.sc"
-          placeholder="请输入"
-        />
-      </a-form-item>
-      <a-form-item label="原价" name="yj">
-        <a-input-number
-          :min="0"
-          :precision="2"
-          v-model:value.trim="formState.yj"
-          placeholder="请输入"
-        />
-      </a-form-item>
-      <a-form-item label="优惠价" name="yhj">
-        <a-input-number
-          :min="0"
-          :precision="2"
-          v-model:value.trim="formState.yhj"
-          placeholder="请输入"
-        />
-      </a-form-item>
-    </a-form>
+  <a-modal title="修改参数" :open="open" @ok="submit" @cancel="open = false">
+    <a-form
+      ref="formRef"
+      :model="formState"
+      v-bind="layout"
+      :rules="rules"
+    ></a-form>
   </a-modal>
 </template>
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { reqEdit } from '@/api/table/search/index'
-import UploadImage from '@/components/UploadImage/index.vue'
 
 defineOptions({ name: 'Edit' })
 

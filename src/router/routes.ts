@@ -130,6 +130,33 @@ export const asyncRoute = [
           title: '会员订购',
         },
       },
+      // 视频解锁方式
+      {
+        path: '/AppConfig/VideoUnlock',
+        component: () => import('@/views/AppConfig/VideoUnlock/index.vue'),
+        name: 'VideoUnlock',
+        meta: {
+          title: '视频解锁方式',
+        },
+      },
+      // 云点播
+      {
+        path: '/AppConfig/CloudPlay',
+        component: () => import('@/views/AppConfig/CloudPlay/index.vue'),
+        name: 'CloudPlay',
+        meta: {
+          title: '云点播',
+        },
+      },
+      // 支付
+      {
+        path: '/AppConfig/Pay',
+        component: () => import('@/views/AppConfig/Pay/index.vue'),
+        name: 'Pay',
+        meta: {
+          title: '支付',
+        },
+      },
     ],
   },
 ]

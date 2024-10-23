@@ -6,18 +6,23 @@
       </a-form-item>
       <a-form-item label="时长" name="sc">
         <a-input-number
+          :min="0"
           v-model:value.trim="formState.sc"
           placeholder="请输入"
         />
       </a-form-item>
       <a-form-item label="原价" name="yj">
         <a-input-number
+          :min="0"
+          :precision="2"
           v-model:value.trim="formState.yj"
           placeholder="请输入"
         />
       </a-form-item>
       <a-form-item label="优惠价" name="yhj">
         <a-input-number
+          :min="0"
+          :precision="2"
           v-model:value.trim="formState.yhj"
           placeholder="请输入"
         />
@@ -38,14 +43,6 @@ import { reqAdd } from '@/api/table/search/index'
 import UploadImage from '@/components/UploadImage/index.vue'
 
 defineOptions({ name: 'Add' })
-
-// 属性
-defineProps({
-  adType: {
-    type: Array<any>,
-    default: () => [],
-  },
-})
 
 // 定义方法
 const $emit = defineEmits(['success'])
