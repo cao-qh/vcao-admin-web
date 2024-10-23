@@ -36,6 +36,12 @@
           </a-radio-button>
         </a-radio-group>
       </a-form-item>
+      <a-form-item label="登录IP" name="ips">
+        <a-textarea
+          v-model:value.trim="formState.ips"
+          placeholder="请输入"
+        ></a-textarea>
+      </a-form-item>
     </a-form>
   </a-modal>
 </template>
@@ -93,6 +99,7 @@ const show = () => {
     mc: '',
     hydj: '',
     qjy: '',
+    ips: '',
   })
   formRef.value?.clearValidate()
 }

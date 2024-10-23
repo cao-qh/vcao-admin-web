@@ -1,50 +1,33 @@
 <template>
   <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
-      <a-form-item label="图片" name="tp">
+      <a-form-item label="头像" name="tx">
         <UploadImage
-          v-model:value.trim="formState.tp"
+          v-model:value.trim="formState.tx"
           placeholder="请输入"
         ></UploadImage>
       </a-form-item>
-      <a-form-item label="权重" name="qz">
-        <a-input v-model:value.trim="formState.qz" placeholder="请输入" />
+      <a-form-item label="密码" name="mm">
+        <a-input-password
+          v-model:value.trim="formState.mm"
+          placeholder="请输入"
+        />
       </a-form-item>
-      <a-form-item label="位置" name="wz">
-        <a-select v-model:value="formState.wz" placeholder="请选择">
-          <a-select-option
-            v-for="item in position"
-            :key="item.value"
-            :value="item.value"
-          >
-            {{ item.label }}
-          </a-select-option>
+      <a-form-item label="名称" name="mc">
+        <a-input v-model:value.trim="formState.mc" placeholder="请输入" />
+      </a-form-item>
+      <a-form-item label="会员等级" name="hydj">
+        <a-select v-model:value="formState.hydj" placeholder="请选择">
+          <a-select-option :value="1">一级</a-select-option>
+          <a-select-option :value="2">二级</a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item label="跳转类型" name="tzlx">
-        <a-select v-model:value="formState.tzlx" placeholder="请选择">
-          <a-select-option
-            v-for="item in jumpType"
-            :key="item.value"
-            :value="item.value"
-          >
-            {{ item.label }}
-          </a-select-option>
-        </a-select>
+      <a-form-item label="登录IP" name="ips">
+        <a-textarea
+          v-model:value.trim="formState.ips"
+          placeholder="请输入"
+        ></a-textarea>
       </a-form-item>
-      <template v-if="formState.tzlx == 1">
-        <a-form-item label="视频合集编码" name="sphjbm">
-          <a-input v-model:value.trim="formState.sphjbm" placeholder="请输入" />
-        </a-form-item>
-        <a-form-item label="视频章节编码" name="spzjbm">
-          <a-input v-model:value.trim="formState.sphjbm" placeholder="请输入" />
-        </a-form-item>
-      </template>
-      <template v-if="formState.tzlx == 2">
-        <a-form-item label="广告" name="gg">
-          <a-input v-model:value.trim="formState.gg" placeholder="请输入" />
-        </a-form-item>
-      </template>
     </a-form>
   </a-modal>
 </template>
@@ -89,25 +72,19 @@ const formRef = ref()
 const formState = reactive<any>({})
 
 const rules = {
-  tp: [{ required: true, message: '请选择' }],
-  qz: [{ required: true, message: '请输入' }],
-  wz: [{ required: true, message: '请选择' }],
-  tzlx: [{ required: true, message: '请选择' }],
-  sphjbm: [{ required: true, message: '请输入' }],
-  spzjbm: [{ required: true, message: '请输入' }],
-  gg: [{ required: true, message: '请输入' }],
+  tx: [{ required: true, message: '请选择' }],
+  mm: [{ required: true, message: '请选择' }],
+  mc: [{ required: true, message: '请选择' }],
+  hydj: [{ required: true, message: '请输入' }],
 }
 
 const show = async (row: any) => {
   open.value = true
-  formState.tp = row.tp
-  formState.qz = row.qz
-  formState.wz = row.wz
-  formState.tjlx = row.tjlx
-  formState.tzlx = row.tzlx
-  formState.sphjbm = row.sphjbm
-  formState.spzjbm = row.spzjbm
-  formState.gg = row.gg
+  formState.tx = row.tx
+  formState.mm = row.mm
+  formState.mc = row.mc
+  formState.hydj = row.hydj
+  formState.ips = row.ips
 }
 
 const submit = async () => {
