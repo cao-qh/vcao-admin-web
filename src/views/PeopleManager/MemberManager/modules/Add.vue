@@ -1,0 +1,120 @@
+<template>
+  <a-modal title="添加" :open="open" @ok="submit" @cancel="open = false">
+    <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
+      <a-form-item label="头像" name="tx">
+        <UploadImage
+          v-model:value.trim="formState.tx"
+          placeholder="请输入"
+        ></UploadImage>
+      </a-form-item>
+      <a-form-item label="账户" name="zh">
+        <a-input v-model:value.trim="formState.zh" placeholder="请输入" />
+      </a-form-item>
+      <a-form-item label="密码" name="mm">
+        <a-input-password
+          v-model:value.trim="formState.mm"
+          placeholder="请输入"
+        />
+      </a-form-item>
+      <a-form-item label="名称" name="mc">
+        <a-input v-model:value.trim="formState.mc" placeholder="请输入" />
+      </a-form-item>
+      <a-form-item label="会员等级" name="hydj">
+        <a-select v-model:value="formState.hydj" placeholder="请选择">
+          <a-select-option :value="1">一级</a-select-option>
+          <a-select-option :value="2">二级</a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item label="启禁用" name="qjy">
+        <a-radio-group v-model:value="formState.qjy">
+          <a-radio-button
+            v-for="item in qijinyong"
+            :key="item.value"
+            :value="item.value"
+          >
+            {{ item.label }}
+          </a-radio-button>
+        </a-radio-group>
+      </a-form-item>
+    </a-form>
+  </a-modal>
+</template>
+<script lang="ts" setup>
+import { reactive, ref } from 'vue'
+import { message } from 'ant-design-vue'
+import { reqAdd } from '@/api/table/search/index'
+import UploadImage from '@/components/UploadImage/index.vue'
+
+defineOptions({ name: 'Add' })
+
+// 属性
+defineProps({
+  qijinyong: {
+    type: Array<any>,
+    default: () => [],
+  },
+})
+
+// 定义方法
+const $emit = defineEmits(['success'])
+
+const open = ref<boolean>(false)
+
+// 表单布局
+const layout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 7 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 13 },
+  },
+}
+
+const formRef = ref()
+const formState = reactive<any>({})
+
+const rules = {
+  tx: [{ required: true, message: '请选择' }],
+  zh: [{ required: true, message: '请输入' }],
+  mm: [{ required: true, message: '请选择' }],
+  mc: [{ required: true, message: '请选择' }],
+  hydj: [{ required: true, message: '请输入' }],
+  qjy: [{ required: true, message: '请输入' }],
+}
+
+const show = () => {
+  open.value = true
+  Object.assign(formState, {
+    tx: '',
+    zh: '',
+    mm: '',
+    mc: '',
+    hydj: '',
+    qjy: '',
+  })
+  formRef.value?.clearValidate()
+}
+
+const submit = async () => {
+  try {
+    await formRef.value.validate()
+    console.log('formState :>> ', formState)
+    const res = await reqAdd(formState)
+    if (res.code == 0) {
+      $emit('success')
+      open.value = false
+      message.success(res.msg)
+    } else {
+      message.error(res.msg)
+    }
+  } catch (error) {
+    console.log('error :>> ', error)
+  }
+}
+
+defineExpose({
+  show,
+})
+</script>

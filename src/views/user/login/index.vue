@@ -81,7 +81,9 @@
       </a-tabs>
 
       <a-flex style="margin-bottom: 10px" justify="space-between">
-        <RouterLink to="/user/register">注册账号</RouterLink>
+        <!-- <RouterLink to="/user/register">注册账号</RouterLink> -->
+        <!-- 占位的 -->
+        <div style="height: 22px"></div>
         <a-checkbox
           v-if="activeKey === '1'"
           v-model:checked="isRemembermima"

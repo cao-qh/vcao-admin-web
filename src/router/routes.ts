@@ -81,9 +81,9 @@ export const constantRoute = [
   },
 ]
 
-// 管理员路由
+// 异步路由
 export const asyncRoute = [
-  // 系统管理
+  // 应用配置
   {
     path: '/AppConfig',
     component: BaseLayout,
@@ -155,6 +155,38 @@ export const asyncRoute = [
         name: 'Pay',
         meta: {
           title: '支付',
+        },
+      },
+    ],
+  },
+  // 人员管理
+  {
+    path: '/PeopleManager',
+    component: BaseLayout,
+    name: 'PeopleManager',
+    meta: {
+      title: '人员管理',
+      icon: 'UserOutlined',
+    },
+    redirect: '/PeopleManager/UserManager',
+    children: [
+      // 用户管理
+      {
+        path: '/PeopleManager/UserManager',
+        component: () => import('@/views/PeopleManager/UserManager/index.vue'),
+        name: 'UserManager',
+        meta: {
+          title: '用户管理',
+        },
+      },
+      // 会员管理
+      {
+        path: '/PeopleManager/MemberManager',
+        component: () =>
+          import('@/views/PeopleManager/MemberManager/index.vue'),
+        name: 'MemberManager',
+        meta: {
+          title: '会员管理',
         },
       },
     ],
