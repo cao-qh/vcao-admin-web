@@ -29,6 +29,7 @@ function createUserList() {
         'Btn.UserManager.Update',
         'Swh.UserManager.Enable',
         'Btn.UserManager.Permission',
+        'Btn.MemberBuyOrder.Download',
       ],
       routes: [
         'AppConfig',
@@ -50,6 +51,9 @@ function createUserList() {
         'MemberViewingRecord',
         'MemberCatchRecord',
         'AdwatchOrOrderRecord',
+        'OrderManager',
+        'MemberBuyOrder',
+        'VideoManager',
       ],
       token: 'Admin Token',
     },

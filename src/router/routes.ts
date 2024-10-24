@@ -269,4 +269,39 @@ export const asyncRoute = [
       },
     ],
   },
+  // 订单管理
+  {
+    path: '/OrderManager',
+    component: BaseLayout,
+    name: 'OrderManager',
+    meta: {
+      title: '订单管理',
+      icon: 'UnorderedListOutlined',
+    },
+    redirect: '/OrderManager/MemberBuyOrder',
+    children: [
+      // 会员购买订单
+      {
+        path: '/OrderManager/MemberBuyOrder',
+        component: () =>
+          import('@/views/OrderManager/MemberBuyOrder/index.vue'),
+        name: 'MemberBuyOrder',
+        meta: {
+          title: '会员购买订单',
+        },
+      },
+    ],
+  },
+  // 影片管理
+  {
+    path: '/VideoManager',
+    component: BaseLayout,
+    name: 'VideoManager',
+    meta: {
+      title: '影片管理',
+      icon: 'UnorderedListOutlined',
+    },
+    redirect: '/VideoManager/VideoList',
+    children: [],
+  },
 ]
