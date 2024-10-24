@@ -17,16 +17,40 @@ import { reactive, ref } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import STable from '@/components/STable/index.vue'
 import { reqSearch } from '@/api/table/search/index'
+import dayjs from 'dayjs'
 
 defineOptions({
-  name: 'MemberBuyRecord',
+  name: 'AdwatchOrOrderRecord',
 })
 
 const formItems = reactive([
   {
+    type: 'datePicker',
+    label: '开始时间',
+    filed: 'startTime',
+    value: dayjs().subtract(15, 'day').format('YYYY-MM-DD HH:mm:ss'),
+    showTime: true,
+    valueFormat: 'YYYY-MM-DD HH:mm:ss',
+  },
+  {
+    type: 'datePicker',
+    label: '结束时间',
+    filed: 'endTime',
+    value: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+    showTime: true,
+    valueFormat: 'YYYY-MM-DD HH:mm:ss',
+  },
+  {
+    type: 'input',
+    label: '订单号',
+    filed: 'ddh',
+    value: '',
+    placeholder: '请输入',
+  },
+  {
     type: 'select',
-    label: '视频合集编码',
-    filed: 'sphjbm',
+    label: '会员名称',
+    filed: 'hymc',
     value: '',
     placeholder: '请选择',
     defaultOption: {
@@ -37,10 +61,22 @@ const formItems = reactive([
   },
   {
     type: 'input',
-    label: '会员名称',
-    filed: 'hymc',
+    label: '有效数据',
+    filed: 'yxsj',
     value: '',
     placeholder: '请输入',
+  },
+  {
+    type: 'select',
+    label: '广告名称',
+    filed: 'ggmc',
+    value: '',
+    placeholder: '请选择',
+    defaultOption: {
+      value: '',
+      label: '全部',
+    },
+    options: [],
   },
 ])
 
@@ -51,23 +87,33 @@ const columns = [
     align: 'center',
   },
   {
-    title: '视频合集名',
-    dataIndex: 'sphjm',
+    title: '广告名称',
+    dataIndex: 'ggmc',
     align: 'center',
   },
   {
-    title: '视频章节名',
-    dataIndex: 'spzjm',
+    title: '订单号',
+    dataIndex: 'ddh',
     align: 'center',
   },
   {
-    title: '购剧时间',
-    dataIndex: 'gjsj',
+    title: '上级落地页返回状态',
+    dataIndex: 'sldlyfhzt',
     align: 'center',
   },
   {
-    title: '更新时间',
-    dataIndex: 'gxsj',
+    title: '创建时间',
+    dataIndex: 'cjsj',
+    align: 'center',
+  },
+  {
+    title: '结束时间',
+    dataIndex: 'jssj',
+    align: 'center',
+  },
+  {
+    title: '有效数据',
+    dataIndex: 'yxsj',
     align: 'center',
   },
   {

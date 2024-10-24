@@ -191,4 +191,82 @@ export const asyncRoute = [
       },
     ],
   },
+  // 日志管理
+  {
+    path: '/LogManager',
+    component: BaseLayout,
+    name: 'LogManager',
+    meta: {
+      title: '日志管理',
+      icon: 'FileTextOutlined',
+    },
+    redirect: '/LogManager/UserLog',
+    children: [
+      // 用户日志
+      {
+        path: '/LogManager/UserLog',
+        component: () => import('@/views/LogManager/UserLog.vue'),
+        name: 'UserLog',
+        meta: {
+          title: '用户日志',
+        },
+      },
+      // 会员余额变动记录
+      {
+        path: '/LogManager/MemberBalanceChangeRecord',
+        component: () =>
+          import('@/views/LogManager/MemberBalanceChangeRecord.vue'),
+        name: 'MemberBalanceChangeRecord',
+        meta: {
+          title: '会员余额变动记录',
+        },
+      },
+      // 会员积分变动记录
+      {
+        path: '/LogManager/MemberScoreChangeRecord',
+        component: () =>
+          import('@/views/LogManager/MemberScoreChangeRecord.vue'),
+        name: 'MemberScoreChangeRecord',
+        meta: {
+          title: '会员积分变动记录',
+        },
+      },
+      // 会员购剧记录
+      {
+        path: '/LogManager/MemberBuyRecord',
+        component: () => import('@/views/LogManager/MemberBuyRecord.vue'),
+        name: 'MemberBuyRecord',
+        meta: {
+          title: '会员购剧记录',
+        },
+      },
+      // 会员观看记录
+      {
+        path: '/LogManager/MemberViewingRecord',
+        component: () => import('@/views/LogManager/MemberViewingRecord.vue'),
+        name: 'MemberViewingRecord',
+        meta: {
+          title: '会员观看记录',
+        },
+      },
+      // 会员追剧记录
+      {
+        path: '/LogManager/MemberCatchRecord',
+        component: () => import('@/views/LogManager/MemberCatchRecord.vue'),
+        name: 'MemberCatchRecord',
+        meta: {
+          title: '会员追剧记录',
+        },
+      },
+      // 广告观看或下单记录
+      {
+        path: '/LogManager/AdwatchOrOrderRecord',
+        component: () => import('@/views/LogManager/AdwatchOrOrderRecord.vue'),
+        name: 'AdwatchOrOrderRecord',
+        meta: {
+          title: '广告观看或下单记录',
+        },
+      },
+    ],
+  },
 ]

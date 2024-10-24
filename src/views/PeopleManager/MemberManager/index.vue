@@ -34,6 +34,12 @@
           <a v-has="'Btn.HomeSetting.Update'" @click="() => edit.show(row)">
             修改
           </a>
+          <a-divider type="vertical" />
+          <a @click="order.show(row)">订购</a>
+          <a-divider type="vertical" />
+          <a @click="balance.show(row)">余额</a>
+          <a-divider type="vertical" />
+          <a @click="score.show(row)">积分</a>
         </template>
       </template>
     </STable>
@@ -41,6 +47,12 @@
     <Add ref="add" :qijinyong="qijinyong" @success="table.refresh()" />
 
     <Edit ref="edit" @success="table.refresh()" />
+
+    <Order ref="order" @success="table.refresh()" />
+
+    <Balance ref="balance" @success="table.refresh()" />
+
+    <Score ref="score" @success="table.refresh()" />
   </PageWrapper>
 </template>
 
@@ -51,6 +63,9 @@ import { STable } from '@/components/STable'
 import { reqSearch, reqQijinyong } from '@/api/table/search/index'
 import Add from './modules/Add.vue'
 import Edit from './modules/Edit.vue'
+import Order from './modules/Order.vue'
+import Balance from './modules/Balance.vue'
+import Score from './modules/Score.vue'
 import { message } from 'ant-design-vue'
 
 // 启禁用
@@ -163,7 +178,7 @@ const columns = [
   {
     title: '操作',
     dataIndex: 'action',
-    width: '100px',
+    width: '150px',
     align: 'center',
   },
 ]
@@ -201,6 +216,12 @@ const table = ref()
 const add = ref()
 // 修改
 const edit = ref()
+// 订购
+const order = ref()
+// 余额
+const balance = ref()
+// 积分
+const score = ref()
 </script>
 
 <style></style>

@@ -13,150 +13,158 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import STable from '@/components/STable/index.vue'
 import { reqSearch } from '@/api/table/search/index'
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 
 defineOptions({
-  name: 'User-Log',
+  name: 'UserLog',
 })
 
-onMounted(() => {})
+// 状态
+const status = [
+  {
+    value: 1,
+    label: '登录',
+  },
+  {
+    value: 2,
+    label: '添加',
+  },
+  {
+    value: 3,
+    label: '修改',
+  },
+  {
+    value: 4,
+    label: '删除',
+  },
+  {
+    value: 5,
+    label: '配置',
+  },
+  {
+    value: 6,
+    label: '下载',
+  },
+]
 
-const typeList: any = {
-  1: '接口模板',
-  2: '参数模板',
-  3: '管理员',
-  4: '分销商',
-  5: '产品',
-  6: '订单',
-  7: '个人信息',
-}
-
-const actionList: any = {
-  1: '登录',
-  2: '添加',
-  3: '修改',
-  4: '删除',
-  5: '配置',
-  6: '下载',
-  7: '跳转',
-}
-
-let kaiShiDate = ref(dayjs().format('YYYY-MM-DD'))
-let jieShuDate = ref(dayjs().format('YYYY-MM-DD'))
+// 模块
+const module = [
+  {
+    value: 1,
+    label: '用户',
+  },
+  {
+    value: 2,
+    label: '支付',
+  },
+  {
+    value: 3,
+    label: '会员',
+  },
+  {
+    value: 4,
+    label: '积分',
+  },
+  {
+    value: 5,
+    label: '视频',
+  },
+  {
+    value: 6,
+    label: '用户协议',
+  },
+  {
+    value: 7,
+    label: '个人信息',
+  },
+  {
+    value: 8,
+    label: '设置',
+  },
+]
 
 const formItems = reactive([
   {
     type: 'datePicker',
     label: '开始时间',
-    filed: 'kaiShiDate',
-    value: kaiShiDate,
-    disabledDate: (val: Dayjs) => {
-      return (
-        val < dayjs(jieShuDate.value).subtract(31, 'days') ||
-        val > dayjs(jieShuDate.value)
-      )
-    },
-    valueFormat: 'YYYY-MM-DD',
-    placeholder: '请选择',
+    filed: 'startTime',
+    value: dayjs().subtract(15, 'day').format('YYYY-MM-DD HH:mm:ss'),
+    showTime: true,
+    valueFormat: 'YYYY-MM-DD HH:mm:ss',
   },
   {
     type: 'datePicker',
     label: '结束时间',
-    filed: 'jieShuDate',
-    value: jieShuDate,
-    disabledDate: (val: Dayjs) => {
-      return val > dayjs().endOf('year')
-    },
-    valueFormat: 'YYYY-MM-DD',
+    filed: 'endTime',
+    value: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+    showTime: true,
+    valueFormat: 'YYYY-MM-DD HH:mm:ss',
+  },
+  {
+    type: 'select',
+    label: '状态',
+    filed: 'status',
+    value: '',
     placeholder: '请选择',
-    onChange: (date: string) => {
-      console.log(date)
-      if (
-        dayjs(kaiShiDate.value) > dayjs(date) ||
-        dayjs(kaiShiDate.value).add(31, 'days') < dayjs(date)
-      ) {
-        kaiShiDate.value = dayjs(date).startOf('day').format('YYYY-MM-DD')
-      }
+    defaultOption: {
+      value: '',
+      label: '全部',
     },
+    options: status,
   },
   {
     type: 'input',
-    label: '日志详情',
-    filed: 'xiangqing',
+    label: '用户账户',
+    filed: 'zhanghu',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'select',
-    label: '日志类型',
-    filed: 'leixing',
-    value: 0,
+    label: '模块',
+    filed: 'module',
+    value: '',
     placeholder: '请选择',
     defaultOption: {
-      value: 0,
+      value: '',
       label: '全部',
     },
-    options: async () => {
-      return Object.keys(typeList).map((key: any) => {
-        return {
-          value: key,
-          label: typeList[key],
-        }
-      })
-    },
-  },
-  {
-    type: 'select',
-    label: '操作',
-    filed: 'zhuangtai',
-    value: 0,
-    placeholder: '请选择',
-    defaultOption: {
-      value: 0,
-      label: '全部',
-    },
-    options: async () => {
-      return Object.keys(actionList).map((key) => {
-        return {
-          value: key,
-          label: actionList[key],
-        }
-      })
-    },
+    options: module,
   },
 ])
 
 const columns = [
   {
-    title: 'ID',
-    dataIndex: 'id',
+    title: '账户',
+    dataIndex: 'zhanghu',
     align: 'center',
   },
   {
-    title: '日志类型',
-    dataIndex: 'leixing',
+    title: '状态',
+    dataIndex: 'status',
     align: 'center',
-    customRender({ text }: any) {
-      return typeList[text]
+    customRender: ({ text }: { text: string }) => {
+      const item = status.find((item: any) => item.value == text)
+      return item && item.label
     },
   },
   {
-    title: '操作',
-    dataIndex: 'zhuangtai',
+    title: '模块',
+    dataIndex: 'module',
     align: 'center',
-    customRender({ text }: any) {
-      return actionList[text]
+    customRender: ({ text }: { text: string }) => {
+      const item = module.find((item: any) => item.value == text)
+      return item && item.label
     },
   },
   {
-    title: '日志内容',
+    title: '详情',
     dataIndex: 'xiangqing',
     align: 'center',
-    width: 400,
   },
   {
     title: 'IP',
@@ -171,6 +179,7 @@ const columns = [
 ]
 
 const table = ref()
+
 const getData = async (currentPage: number, pageSize: number) => {
   const data: any = {
     currentPage,
