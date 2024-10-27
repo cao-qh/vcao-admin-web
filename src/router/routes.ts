@@ -332,6 +332,26 @@ export const asyncRoute = [
           title: '视频合集大类',
         },
       },
+      // 视频合集小类
+      {
+        path: '/VideoManager/VideoSmallClass',
+        component: () =>
+          import('@/views/VideoManager/VideoSmallClass/index.vue'),
+        name: 'VideoSmallClass',
+        meta: {
+          title: '视频合集小类',
+        },
+      },
+      // 视频合集
+      {
+        path: '/VideoManager/VideoCollection',
+        component: () =>
+          import('@/views/VideoManager/VideoCollection/index.vue'),
+        name: 'VideoCollection',
+        meta: {
+          title: '视频合集',
+        },
+      },
     ],
   },
 ]

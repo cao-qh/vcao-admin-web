@@ -16,6 +16,11 @@
           placeholder="请输入"
         />
       </a-form-item>
+      <a-form-item label="大类" name="qz">
+        <a-select v-model:value="formState.dl" placeholder="请选择">
+          <a-select-option value="1">大类1</a-select-option>
+        </a-select>
+      </a-form-item>
       <a-form-item label="启禁用" name="qjy">
         <a-radio-group v-model:value="formState.qjy">
           <a-radio-button
@@ -68,6 +73,7 @@ const rules = {
   bm: [{ required: true, message: '请输入' }],
   mc: [{ required: true, message: '请输入' }],
   qz: [{ required: true, message: '请选择' }],
+  dl: [{ required: true, message: '请选择' }],
   qjy: [{ required: true, message: '请选择' }],
 }
 
@@ -77,6 +83,7 @@ const show = () => {
     bm: '',
     mc: '',
     qz: '',
+    dl: '',
     qjy: '',
   })
   formRef.value?.clearValidate()

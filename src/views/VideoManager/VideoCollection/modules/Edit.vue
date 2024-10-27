@@ -4,6 +4,11 @@
       <a-form-item label="名称" name="mc">
         <a-input v-model:value.trim="formState.mc" placeholder="请输入" />
       </a-form-item>
+      <a-form-item label="大类" name="dl">
+        <a-select v-model:value="formState.dl" placeholder="请选择">
+          <a-select-option value="1">大类1</a-select-option>
+        </a-select>
+      </a-form-item>
       <a-form-item label="权重" name="qz">
         <a-input-password
           v-model:value.trim="formState.qz"
@@ -50,6 +55,7 @@ const formState = reactive<any>({})
 const show = async (row: any) => {
   open.value = true
   formState.mc = row.mc
+  formState.dl = row.dl
   formState.qz = row.qz
 }
 
