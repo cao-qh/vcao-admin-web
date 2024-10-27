@@ -35,6 +35,7 @@ import {
   MailOutlined,
   AppstoreOutlined,
   FileTextOutlined,
+  VideoCameraOutlined,
 } from '@ant-design/icons-vue'
 
 const antDesignIconsVue = {
@@ -74,6 +75,7 @@ const antDesignIconsVue = {
   MailOutlined,
   AppstoreOutlined,
   FileTextOutlined,
+  VideoCameraOutlined,
 }
 
 // 对外暴漏插件对象

@@ -299,9 +299,39 @@ export const asyncRoute = [
     name: 'VideoManager',
     meta: {
       title: '影片管理',
-      icon: 'UnorderedListOutlined',
+      icon: 'VideoCameraOutlined',
     },
-    redirect: '/VideoManager/VideoList',
-    children: [],
+    redirect: '/VideoManager/VideoShowClass',
+    children: [
+      // 视频展示类别
+      {
+        path: '/VideoManager/VideoShowClass',
+        component: () =>
+          import('@/views/VideoManager/VideoShowClass/index.vue'),
+        name: 'VideoShowClass',
+        meta: {
+          title: '视频展示类别',
+        },
+      },
+      // 视频演员角色
+      {
+        path: '/VideoManager/VideoActor',
+        component: () => import('@/views/VideoManager/VideoActor/index.vue'),
+        name: 'VideoActor',
+        meta: {
+          title: '视频演员角色',
+        },
+      },
+      // 视频合集大类
+      {
+        path: '/VideoManager/VideoLargeClass',
+        component: () =>
+          import('@/views/VideoManager/VideoLargeClass/index.vue'),
+        name: 'VideoLargeClass',
+        meta: {
+          title: '视频合集大类',
+        },
+      },
+    ],
   },
 ]
