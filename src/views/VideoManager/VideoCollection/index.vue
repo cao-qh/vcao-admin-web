@@ -44,7 +44,12 @@
       </template>
     </STable>
 
-    <Add ref="add" :shangxiajia="shangxiajia" @success="table.refresh()" />
+    <Add
+      ref="add"
+      :shangxiajia="shangxiajia"
+      :updateStatus="updateStatus"
+      @success="table.refresh()"
+    />
     <Edit ref="edit" @success="table.refresh()" />
   </PageWrapper>
 </template>
