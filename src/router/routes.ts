@@ -354,4 +354,54 @@ export const asyncRoute = [
       },
     ],
   },
+  // 积分管理
+  {
+    path: '/ScoreManager',
+    component: BaseLayout,
+    name: 'ScoreManager',
+    meta: {
+      title: '积分管理',
+      icon: 'SketchOutlined',
+    },
+    redirect: '/ScoreManager/ScoreExchange',
+    children: [
+      // 积分兑换
+      {
+        path: '/ScoreManager/ScoreExchange',
+        component: () => import('@/views/ScoreManager/ScoreExchange/index.vue'),
+        name: 'ScoreExchange',
+        meta: {
+          title: '积分兑换',
+        },
+      },
+      // 签到积分
+      {
+        path: '/ScoreManager/SigninScore',
+        component: () => import('@/views/ScoreManager/SigninScore/index.vue'),
+        name: 'SigninScore',
+        meta: {
+          title: '签到积分',
+        },
+      },
+      // 开宝箱+开心抽抽
+      {
+        path: '/ScoreManager/TreasureboxAndLottery',
+        component: () =>
+          import('@/views/ScoreManager/TreasureboxAndLottery/index.vue'),
+        name: 'TreasureboxAndLottery',
+        meta: {
+          title: '开宝箱+开心抽抽',
+        },
+      },
+      // 看剧积分
+      {
+        path: '/ScoreManager/ViewScore',
+        component: () => import('@/views/ScoreManager/ViewScore/index.vue'),
+        name: 'ViewScore',
+        meta: {
+          title: '看剧积分',
+        },
+      },
+    ],
+  },
 ]

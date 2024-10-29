@@ -10,9 +10,15 @@
       <a-form-item label="缩略图" name="slt">
         <UploadImage v-model:value="formState.slt" />
       </a-form-item>
-      <a-form-item label="名称" name="mc">
+      <a-form-item label="视频章节名称" name="mc">
         <a-input-password
           v-model:value.trim="formState.mc"
+          placeholder="请输入"
+        />
+      </a-form-item>
+      <a-form-item label="视频链接" name="splj">
+        <a-input-password
+          v-model:value.trim="formState.splj"
           placeholder="请输入"
         />
       </a-form-item>
@@ -32,39 +38,6 @@
           style="width: 100%"
         />
       </a-form-item>
-      <a-form-item label="推荐" name="tj">
-        <a-input v-model:value.trim="formState.tj" placeholder="请输入" />
-      </a-form-item>
-      <a-form-item label="简介" name="jj">
-        <a-textarea v-model:value.trim="formState.jj" placeholder="请输入" />
-      </a-form-item>
-      <a-form-item label="剧情介绍" name="jqjs">
-        <a-textarea v-model:value.trim="formState.jqjs" placeholder="请输入" />
-      </a-form-item>
-      <a-form-item label="点赞数" name="dzs">
-        <a-input-number
-          :min="0"
-          v-model:value.trim="formState.dzs"
-          placeholder="请输入"
-          style="width: 100%"
-        />
-      </a-form-item>
-      <a-form-item label="转发数" name="zfs">
-        <a-input-number
-          :min="0"
-          v-model:value.trim="formState.zfs"
-          placeholder="请输入"
-          style="width: 100%"
-        />
-      </a-form-item>
-      <a-form-item label="浏览数" name="lls">
-        <a-input-number
-          :min="0"
-          v-model:value.trim="formState.lls"
-          placeholder="请输入"
-          style="width: 100%"
-        />
-      </a-form-item>
       <a-form-item label="权重" name="qz">
         <a-input-number
           :min="0"
@@ -73,24 +46,17 @@
           style="width: 100%"
         />
       </a-form-item>
-      <a-form-item label="总集数" name="zjs">
-        <a-input-number
-          :min="0"
-          v-model:value.trim="formState.zjs"
+      <a-form-item label="PID" name="pid">
+        <a-input v-model:value.trim="formState.pid" placeholder="请输入" />
+      </a-form-item>
+      <a-form-item label="视频播放云服务文件ID" name="spbfysfwjid">
+        <a-input
+          v-model:value.trim="formState.spbfysfwjid"
           placeholder="请输入"
-          style="width: 100%"
         />
       </a-form-item>
-      <a-form-item label="更新状态" name="gxzt">
-        <a-select v-model:value="formState.gxzt" placeholder="请选择">
-          <a-select-option
-            v-for="item in updateStatus"
-            :key="item.value"
-            :value="item.value"
-          >
-            {{ item.label }}
-          </a-select-option>
-        </a-select>
+      <a-form-item label="云点播ID" name="ydbid">
+        <a-input v-model:value.trim="formState.ydbid" placeholder="请输入" />
       </a-form-item>
     </a-form>
   </a-modal>
@@ -102,13 +68,6 @@ import { reqEdit } from '@/api/table/search/index'
 import UploadImage from '@/components/UploadImage/index.vue'
 
 defineOptions({ name: 'Edit' })
-
-defineProps({
-  updateStatus: {
-    type: Array<any>,
-    default: () => [],
-  },
-})
 
 // 定义方法
 const $emit = defineEmits(['success'])

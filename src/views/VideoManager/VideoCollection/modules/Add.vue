@@ -40,6 +40,14 @@
           style="width: 100%"
         />
       </a-form-item>
+      <a-form-item label="转发数" name="zfs">
+        <a-input-number
+          :min="0"
+          v-model:value.trim="formState.zfs"
+          placeholder="请输入"
+          style="width: 100%"
+        />
+      </a-form-item>
       <a-form-item label="浏览数" name="lls">
         <a-input-number
           :min="0"

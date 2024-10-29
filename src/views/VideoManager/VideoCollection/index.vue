@@ -1,56 +1,93 @@
 <template>
   <PageWrapper>
-    <SearchForm :formItems="formItems" @search="table.refresh()"></SearchForm>
+    <template v-if="!isVideoChapter">
+      <SearchForm :formItems="formItems" @search="table.refresh()"></SearchForm>
 
-    <STable
-      ref="table"
-      rowKey="id"
-      :columns="columns"
-      :data="reqData"
-      :showPagination="true"
-      :scroll="{ y: 'calc(100vh - 408px)' }"
-    >
-      <template #toolbar>
-        <a-button
-          v-has="'Btn.VideoSmallClass.Add'"
-          type="primary"
-          @click="() => add.show()"
-        >
-          添加
-        </a-button>
-      </template>
-      <template #bodyCell="{ column, row }">
-        <template v-if="column.dataIndex === 'sxj'">
-          <a-popconfirm
-            v-if="userStore.hasPermission('Swh.VideoSmallClass.Enable')"
-            title="确定要修改吗？"
-            ok-text="是"
-            cancel-text="否"
-            @confirm="handelQijinyong(row)"
+      <STable
+        ref="table"
+        rowKey="id"
+        :columns="columns"
+        :data="reqData"
+        :showPagination="true"
+        :scroll="{ y: 'calc(100vh - 408px)' }"
+      >
+        <template #toolbar>
+          <a-button
+            v-has="'Btn.VideoCollection.Add'"
+            type="primary"
+            @click="() => add.show()"
           >
-            <a-switch :checked="row.qijinyong === 1" />
-          </a-popconfirm>
-          <span v-else>
-            {{
-              shangxiajia.find((item) => item.value === row.qijinyong)?.label
-            }}
-          </span>
+            添加
+          </a-button>
         </template>
-        <template v-if="column.dataIndex === 'action'">
-          <a v-has="'Btn.VideoSmallClass.Update'" @click="() => edit.show(row)">
-            修改
-          </a>
+        <template #bodyCell="{ column, row }">
+          <template v-if="column.dataIndex === 'sxj'">
+            <a-popconfirm
+              v-if="userStore.hasPermission('Btn.VideoCollection.UpDown')"
+              title="确定要修改吗？"
+              ok-text="是"
+              cancel-text="否"
+              @confirm="handelQijinyong(row)"
+            >
+              <a-switch :checked="row.qijinyong === 1" />
+            </a-popconfirm>
+            <span v-else>
+              {{
+                shangxiajia.find((item) => item.value === row.qijinyong)?.label
+              }}
+            </span>
+          </template>
+          <template v-if="column.dataIndex === 'action'">
+            <a
+              v-has="'Btn.VideoCollection.Update'"
+              @click="() => edit.show(row)"
+            >
+              修改
+            </a>
+            <span v-has="'Btn.VideoCollection.Detail'">
+              <a-divider type="vertical" />
+              <a @click="() => detail.show(row)">详情</a>
+            </span>
+            <span v-has="'Btn.VideoCollection.ConfigActor'">
+              <a-divider type="vertical" />
+              <a @click="() => detail.show(row)">演员配置</a>
+            </span>
+            <span v-has="'Btn.VideoCollection.ConfigClass'">
+              <a-divider type="vertical" />
+              <a @click="() => detail.show(row)">类别配置</a>
+            </span>
+            <span v-has="'Btn.VideoCollection.Chapter'">
+              <a-divider type="vertical" />
+              <a @click="isVideoChapter = true">视频章节</a>
+            </span>
+            <span v-has="'Btn.VideoCollection.Classify'">
+              <a-divider type="vertical" />
+              <a @click="() => detail.show(row)">分类配置</a>
+            </span>
+          </template>
         </template>
-      </template>
-    </STable>
+      </STable>
 
-    <Add
-      ref="add"
+      <Add
+        ref="add"
+        :shangxiajia="shangxiajia"
+        :updateStatus="updateStatus"
+        @success="table.refresh()"
+      />
+
+      <Edit
+        ref="edit"
+        :updateStatus="updateStatus"
+        @success="table.refresh()"
+      />
+
+      <Detail ref="detail" />
+    </template>
+    <VideoChapter
+      v-else
+      @back="isVideoChapter = false"
       :shangxiajia="shangxiajia"
-      :updateStatus="updateStatus"
-      @success="table.refresh()"
     />
-    <Edit ref="edit" @success="table.refresh()" />
   </PageWrapper>
 </template>
 
@@ -63,8 +100,13 @@ import { message } from 'ant-design-vue'
 import Add from './modules/Add.vue'
 import Edit from './modules/Edit.vue'
 import useUserStore from '@/store/modules/user'
+import Detail from './modules/Detail.vue'
+import VideoChapter from './components/VideoChapter/index.vue'
 
 const userStore = useUserStore()
+
+// 是否再视频章节
+const isVideoChapter = ref(true)
 
 // 上下架
 const shangxiajia = [
@@ -235,6 +277,8 @@ const columns = [
     title: '操作',
     dataIndex: 'action',
     align: 'center',
+    width: 240,
+    fixed: 'right',
   },
 ]
 
@@ -276,6 +320,7 @@ const handelQijinyong = async (row: any) => {
 
 const add = ref()
 const edit = ref()
+const detail = ref()
 </script>
 
 <style></style>

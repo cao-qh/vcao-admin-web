@@ -1,18 +1,24 @@
 <template>
   <a-modal
-    title="修改"
+    title="添加"
     :open="open"
     @ok="submit"
     @cancel="open = false"
     :body-style="{ maxHeight: '580px', overflow: 'auto' }"
   >
-    <a-form ref="formRef" :model="formState" v-bind="layout">
+    <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
       <a-form-item label="缩略图" name="slt">
         <UploadImage v-model:value="formState.slt" />
       </a-form-item>
-      <a-form-item label="名称" name="mc">
+      <a-form-item label="视频章节名称" name="mc">
         <a-input-password
           v-model:value.trim="formState.mc"
+          placeholder="请输入"
+        />
+      </a-form-item>
+      <a-form-item label="视频链接" name="splj">
+        <a-input-password
+          v-model:value.trim="formState.splj"
           placeholder="请输入"
         />
       </a-form-item>
@@ -32,39 +38,6 @@
           style="width: 100%"
         />
       </a-form-item>
-      <a-form-item label="推荐" name="tj">
-        <a-input v-model:value.trim="formState.tj" placeholder="请输入" />
-      </a-form-item>
-      <a-form-item label="简介" name="jj">
-        <a-textarea v-model:value.trim="formState.jj" placeholder="请输入" />
-      </a-form-item>
-      <a-form-item label="剧情介绍" name="jqjs">
-        <a-textarea v-model:value.trim="formState.jqjs" placeholder="请输入" />
-      </a-form-item>
-      <a-form-item label="点赞数" name="dzs">
-        <a-input-number
-          :min="0"
-          v-model:value.trim="formState.dzs"
-          placeholder="请输入"
-          style="width: 100%"
-        />
-      </a-form-item>
-      <a-form-item label="转发数" name="zfs">
-        <a-input-number
-          :min="0"
-          v-model:value.trim="formState.zfs"
-          placeholder="请输入"
-          style="width: 100%"
-        />
-      </a-form-item>
-      <a-form-item label="浏览数" name="lls">
-        <a-input-number
-          :min="0"
-          v-model:value.trim="formState.lls"
-          placeholder="请输入"
-          style="width: 100%"
-        />
-      </a-form-item>
       <a-form-item label="权重" name="qz">
         <a-input-number
           :min="0"
@@ -73,24 +46,34 @@
           style="width: 100%"
         />
       </a-form-item>
-      <a-form-item label="总集数" name="zjs">
-        <a-input-number
-          :min="0"
-          v-model:value.trim="formState.zjs"
+      <a-form-item label="PID" name="pid">
+        <a-input v-model:value.trim="formState.pid" placeholder="请输入" />
+      </a-form-item>
+      <a-form-item label="视频播放云服务文件ID" name="spbfysfwjid">
+        <a-input
+          v-model:value.trim="formState.spbfysfwjid"
           placeholder="请输入"
-          style="width: 100%"
         />
       </a-form-item>
-      <a-form-item label="更新状态" name="gxzt">
-        <a-select v-model:value="formState.gxzt" placeholder="请选择">
-          <a-select-option
-            v-for="item in updateStatus"
+      <a-form-item label="云点播ID" name="ydbid">
+        <a-input v-model:value.trim="formState.ydbid" placeholder="请输入" />
+      </a-form-item>
+      <a-form-item label="视频合集编码" name="sphjbm">
+        <a-input v-model:value.trim="formState.sphjbm" placeholder="请输入" />
+      </a-form-item>
+      <a-form-item label="内容" name="nr">
+        <a-textarea v-model:value.trim="formState.nr" placeholder="请输入" />
+      </a-form-item>
+      <a-form-item label="上下架" name="sxj">
+        <a-radio-group v-model:value="formState.sxj">
+          <a-radio-button
+            v-for="item in shangxiajia"
             :key="item.value"
             :value="item.value"
           >
             {{ item.label }}
-          </a-select-option>
-        </a-select>
+          </a-radio-button>
+        </a-radio-group>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -98,13 +81,13 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqEdit } from '@/api/table/search/index'
+import { reqAdd } from '@/api/table/search/index'
 import UploadImage from '@/components/UploadImage/index.vue'
 
-defineOptions({ name: 'Edit' })
+defineOptions({ name: 'Add' })
 
 defineProps({
-  updateStatus: {
+  shangxiajia: {
     type: Array<any>,
     default: () => [],
   },
@@ -130,18 +113,31 @@ const layout = {
 const formRef = ref()
 const formState = reactive<any>({})
 
-const show = async (row: any) => {
+const rules = {
+  bm: [{ required: true, message: '请输入' }],
+  mc: [{ required: true, message: '请输入' }],
+  qz: [{ required: true, message: '请选择' }],
+  dl: [{ required: true, message: '请选择' }],
+  qjy: [{ required: true, message: '请选择' }],
+}
+
+const show = () => {
   open.value = true
-  formState.mc = row.mc
-  formState.dl = row.dl
-  formState.qz = row.qz
+  Object.assign(formState, {
+    bm: '',
+    mc: '',
+    qz: '',
+    dl: '',
+    qjy: '',
+  })
+  formRef.value?.clearValidate()
 }
 
 const submit = async () => {
   try {
     await formRef.value.validate()
-
-    const res = await reqEdit(formState)
+    console.log('formState :>> ', formState)
+    const res = await reqAdd(formState)
     if (res.code == 0) {
       $emit('success')
       open.value = false
