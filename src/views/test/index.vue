@@ -16,7 +16,7 @@ defineOptions({
 const value = ref('河南省 焦作市 山阳区 华融国际大厦')
 
 const onClick = () => {
-  console.log(value.value)
+
 }
 </script>
 <style>

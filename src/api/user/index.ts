@@ -4,7 +4,7 @@ import request from '@/utils/request'
 // 统一管理接口
 enum API {
   // 登录
-  loginUrl = '/login',
+  loginUrl = '/pc/tYonghu/login',
   // 用户信息
   infoUrl = '/info',
   // 退出登录

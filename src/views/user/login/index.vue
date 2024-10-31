@@ -5,10 +5,10 @@
     <a-form ref="formRef" :model="loginForm" :rules="rules" class="login-form">
       <a-tabs v-model:activeKey="activeKey" centered>
         <a-tab-pane key="1" tab="账户密码登录">
-          <a-form-item name="username">
+          <a-form-item name="shoujihao">
             <a-input
               size="large"
-              v-model:value="loginForm.username"
+              v-model:value="loginForm.shoujihao"
               placeholder="用户名"
             >
               <template #prefix>
@@ -16,11 +16,11 @@
               </template>
             </a-input>
           </a-form-item>
-          <a-form-item name="password">
+          <a-form-item name="mima">
             <a-input-password
               size="large"
-              v-model:value="loginForm.password"
-              type="password"
+              v-model:value="loginForm.mima"
+              type="mima"
               placeholder="密码"
             >
               <template #prefix>
@@ -139,26 +139,18 @@ const isWaitCode = ref(false)
 
 // 表单验证
 const rules = {
-  username: [
+  shoujihao: [
     {
       required: true,
-      message: '用户名不能为空',
-      trigger: 'change',
-    },
-    {
       min: 5,
       max: 15,
       message: '用户名长度为5-15位',
       trigger: 'change',
     },
   ],
-  password: [
+  mima: [
     {
       required: true,
-      message: '密码不能为空',
-      trigger: 'change',
-    },
-    {
       min: 5,
       max: 15,
       message: '密码长度为5-15位',
@@ -189,8 +181,8 @@ onMounted(() => {
   )
   if (remembermima.status) {
     isRemembermima.value = remembermima.status
-    loginForm.username = remembermima.username
-    loginForm.password = remembermima.password
+    loginForm.shoujihao = remembermima.shoujihao
+    loginForm.mima = remembermima.mima
   }
 })
 
@@ -207,57 +199,83 @@ const login = async () => {
     // 通知仓库发登录请求
     // 请求成功->首页展示数据的地方
     // 请求失败->登录失败的提示
+    if (activeKey.value === '1') {
+      await accountLogin()
+    }
+
+    if (activeKey.value === '2') {
+      await phoneLogin()
+    }
+
+    const redirect = $route.query.redirect
+    // 编程式导航跳转到展示数据首页
+    $router.push({ path: redirect ? String(redirect) : '/' })
+    // 登录成功提示信息
+    notification.success({
+      message: '欢迎回来',
+      description: `HI，${getTime()}好`,
+    })
+  } catch (error: any) {
+    console.error(error)
+  }
+}
+
+// 账户密码登录
+const accountLogin = async () => {
+  try {
+    await formRef.value.validate(['shoujihao', 'mima'])
+  } catch (error: any) {
+    console.log('表单校验失败：', error)
+    throw new Error('表单校验失败')
+  }
+
+  // 账号密码登录
+  const data = {
+    shoujihao: loginForm.shoujihao,
+    mima: loginForm.mima,
+  }
+  try {
+    // 保证登录成功
+    await useStore.userLogin(data)
+  } catch (error: any) {
+    console.error(error)
+    throw new Error('登录失败')
+  }
+
+  // 记住密码
+  if (isRemembermima.value) {
+    localStorage.setItem(
+      'REMEMBER_PASSWORD',
+      JSON.stringify({
+        status: true,
+        shoujihao: loginForm.shoujihao,
+        mima: loginForm.mima,
+      }),
+    )
+  }
+}
+
+// 手机号登录
+const phoneLogin = async () => {
+  try {
+    await formRef.value.validate(['phone', 'yanZhengMa'])
+    // 手机验证码登录
+    const data = {
+      phone: loginForm.phone,
+      yanZhengMa: loginForm.yanZhengMa,
+    }
     try {
-      if (activeKey.value === '1') {
-        await formRef.value.validate(['username', 'password'])
-        // 账号密码登录
-        const data = {
-          username: loginForm.username,
-          password: loginForm.password,
-        }
-        // 保证登录成功
-        await useStore.userLogin(data)
-
-        // 记住密码
-        if (isRemembermima.value) {
-          localStorage.setItem(
-            'REMEMBER_PASSWORD',
-            JSON.stringify({
-              status: true,
-              username: loginForm.username,
-              password: loginForm.password,
-            }),
-          )
-        }
-      }
-      if (activeKey.value === '2') {
-        await formRef.value.validate(['phone', 'yanZhengMa'])
-        // 手机验证码登录
-        const data = {
-          phone: loginForm.phone,
-          yanZhengMa: loginForm.yanZhengMa,
-        }
-        // 保证登录成功
-        await useStore.phoneLogin(data)
-      }
-
-      const redirect = $route.query.redirect
-      // 编程式导航跳转到展示数据首页
-      $router.push({ path: redirect ? String(redirect) : '/' })
-      // 登录成功提示信息
-      notification.success({
-        message: '欢迎回来',
-        description: `HI，${getTime()}好`,
-      })
+      // 保证登录成功
+      await useStore.phoneLogin(data)
     } catch (error: any) {
       // 登录失败提示信息
       notification.error({
-        message: activeKey.value === '1' ? loginForm.username : loginForm.phone,
+        message: loginForm.phone,
         description: error.message,
       })
     }
-  } catch (error) {
-    console.log('error', error)
+  } catch (error: any) {
+    console.log('error :>> ', error)
   }
 }
 
