@@ -7,16 +7,8 @@
     "check-node-version": "node -e \"const semver = require('semver'); const { engines } = require('./package.json'); const version = process.version; if (!semver.satisfies(version, engines.node)) { console.error(`Node.js version ${version} does not satisfy the required version ${engines.node}`); process.exit(1); }\"",
     "dev": "npm run check-node-version && vite --host",
     "build": "npm run check-node-version && run-p type-check \"build-only {@}\" --",
-    "build:test": "vue-tsc && vite build --mode test",
-    "build:pro": "vue-tsc && vite build --mode production",
-    "preview": "vite preview",
     "build-only": "vite build",
-    "type-check": "vue-tsc --build --force",
-    "lint": "eslint src",
-    "fix": "eslint src --fix",
-    "format": "prettier --write \"./**/*.{html,vue,ts,js,json,md}\"",
-    "lint:eslint": "eslint src/**/*.{ts,vue} --cache --fix",
-    "lint:style": "stylelint src/**/*.{css,scss,vue} --cache --fix"
+    "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",

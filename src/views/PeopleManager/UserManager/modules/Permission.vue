@@ -29,7 +29,7 @@ import { reqEdit } from '@/api/table/search/index'
 defineOptions({ name: 'Permission' })
 
 // 定义方法
-const $emit = defineEmits(['success'])
+// const $emit = defineEmits(['success'])
 
 const open = ref<boolean>(false)
 
@@ -243,8 +243,8 @@ const findNode = (list: any, code: string) => {
 }
 
 const submit = async () => {
-  try {
-    const res = await reqEdit({
+  /* try {
+    const res: any = await reqEdit({
       phone: phone.value,
       codeS: [
         ...checkedKeys.value.checked,
@@ -260,7 +260,7 @@ const submit = async () => {
     }
   } catch (error) {
     console.log('error :>> ', error)
-  }
+  } */
 }
 
 defineExpose({

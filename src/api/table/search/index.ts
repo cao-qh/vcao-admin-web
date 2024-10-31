@@ -31,7 +31,7 @@ export const reqAddBatch = (data: FormData) =>
   request.post<any, any>(API.batchImport, data)
 
 // 更换通道并提单
-export const reqEdit = (data: Record) => request.post<any, any>(API.edit, data)
+export const reqEdit = (data: any) => request.post<any, any>(API.edit, data)
 
 // 提单
 export const reqSubmit = (dingdanhao: string) =>

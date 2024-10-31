@@ -45,7 +45,7 @@ export default defineConfig(({ mode }) => {
     },
     // 构建
     build: {
-      outDir: env.VITE_APP_BASE_URL,
+      // outDir: env.VITE_APP_BASE_URL,
       rollupOptions: {
         output: {
           // 手动分割包
