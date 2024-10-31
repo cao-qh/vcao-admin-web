@@ -10,7 +10,7 @@
     >
       <template #toolbar>
         <a-button
-          v-has="'Btn.ViewScore.Add'"
+          v-has="'Btn.AdScore.Add'"
           type="primary"
           @click="() => add.show()"
         >
@@ -19,9 +19,7 @@
       </template>
       <template #bodyCell="{ column, row }">
         <template v-if="column.dataIndex === 'action'">
-          <a v-has="'Btn.ViewScore.Update'" @click="() => edit.show(row)">
-            修改
-          </a>
+          <a v-has="'Btn.AdScore.Update'" @click="() => edit.show(row)">修改</a>
           <a-divider type="vertical"></a-divider>
           <a-popconfirm
             title="确定删除吗？"
@@ -29,7 +27,7 @@
             cancel-text="否"
             @confirm="handleDelete(row)"
           >
-            <a v-has="'Btn.ViewScore.Delete'">删除</a>
+            <a v-has="'Btn.AdScore.Delete'">删除</a>
           </a-popconfirm>
         </template>
       </template>

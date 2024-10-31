@@ -28,48 +28,48 @@ export const constantRoute = [
     ],
   },
   // 测试
-  {
-    path: '/',
-    component: BaseLayout,
-    name: 'Home',
-    meta: {
-      title: '测试',
-      icon: 'ExperimentOutlined',
-    },
-    redirect: '/test',
-    children: [
-      {
-        path: '/test',
-        component: () => import('@/views/test/index.vue'),
-        name: 'Test',
-        meta: {
-          title: '测试',
-        },
-      },
-    ],
-  },
+  // {
+  //   path: '/',
+  //   component: BaseLayout,
+  //   name: 'Home',
+  //   meta: {
+  //     title: '测试',
+  //     icon: 'ExperimentOutlined',
+  //   },
+  //   redirect: '/test',
+  //   children: [
+  //     {
+  //       path: '/test',
+  //       component: () => import('@/views/test/index.vue'),
+  //       name: 'Test',
+  //       meta: {
+  //         title: '测试',
+  //       },
+  //     },
+  //   ],
+  // },
   // 数据表格
-  {
-    path: '/table',
-    component: BaseLayout,
-    name: 'Table',
-    meta: {
-      title: '数据表格',
-      icon: 'TableOutlined',
-    },
-    redirect: '/table/search',
-    children: [
-      // 查询表格
-      {
-        path: '/table/search',
-        component: () => import('@/views/table/search/index.vue'),
-        name: 'Search',
-        meta: {
-          title: '查询表格',
-        },
-      },
-    ],
-  },
+  // {
+  //   path: '/table',
+  //   component: BaseLayout,
+  //   name: 'Table',
+  //   meta: {
+  //     title: '数据表格',
+  //     icon: 'TableOutlined',
+  //   },
+  //   redirect: '/table/search',
+  //   children: [
+  //     // 查询表格
+  //     {
+  //       path: '/table/search',
+  //       component: () => import('@/views/table/search/index.vue'),
+  //       name: 'Search',
+  //       meta: {
+  //         title: '查询表格',
+  //       },
+  //     },
+  //   ],
+  // },
   // 404页面
   {
     path: '/:pathMatch(.*)*',
@@ -400,6 +400,15 @@ export const asyncRoute = [
         name: 'ViewScore',
         meta: {
           title: '看剧积分',
+        },
+      },
+      // 广告积分
+      {
+        path: '/ScoreManager/AdScore',
+        component: () => import('@/views/ScoreManager/AdScore/index.vue'),
+        name: 'AdScore',
+        meta: {
+          title: '广告积分',
         },
       },
     ],
