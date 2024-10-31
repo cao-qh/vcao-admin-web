@@ -8,27 +8,47 @@ const useLayoutSettingStore = defineStore('settingStore', () => {
   const localData = JSON.parse(localStorage.getItem('SETTINGS') as string)
   const sessionData = JSON.parse(sessionStorage.getItem('SETTINGS') as string)
 
-  const fold = ref(sessionData?.fold || false) // 左侧layout.side是否折叠
-  const collapsedWidth = ref(50) // 左侧layout.side折叠宽度
+  // 左侧layout.side是否折叠
+  const fold = ref(sessionData?.fold || false)
+  // 左侧layout.side折叠宽度
+  const collapsedWidth = ref(50)
+  // 刷新页面状态
+  const refresh = ref(false)
+  // 右侧主题设置抽屉状态
+  const side = ref(false)
+  // 是否为暗黑
+  const dark = ref(localData?.dark || false)
+  // 主题色
+  const themeColor = ref(localData?.themeColor || setting.themeColor)
+  // 是否为移动端
+  const isMobile = ref(false)
+  // 多标签页列表
+  const tabList = ref<TabList>([])
+  // 页面加载状态
+  const pageLoading = ref(false)
+  // 是否记住密码
+  const rememberPassword = ref(localData?.rememberPassword || false)
+  // 账号密码
+  const accountPassword = ref(localData?.accountPassword || {})
 
-  const refresh = ref(false) // 刷新页面状态
-  const side = ref(false) // 右侧主题设置抽屉状态
-  const dark = ref(localData?.dark || false) // 是否为暗黑
-  const themeColor = ref(localData?.themeColor || setting.themeColor) // 主题色
-  const isMobile = ref(false) // 是否为移动端
-
-  const tabList = ref<TabList>([]) // 多标签页列表
-
-  const pageLoading = ref(false) // 页面加载状态
+  // 更新本地存储
+  const updateLocal = () => {
+    localStorage.setItem(
+      'SETTINGS',
+      JSON.stringify({
+        dark: dark.value,
+        themeColor: themeColor.value,
+        rememberPassword: rememberPassword.value,
+        accountPassword: accountPassword.value,
+      }),
+    )
+  }
 
   // 当暗黑模式和主题色变化时，更新本地存储
   watch(
     [dark, themeColor],
     () => {
-      localStorage.setItem(
-        'SETTINGS',
-        JSON.stringify({ dark: dark.value, themeColor: themeColor.value }),
-      )
+      updateLocal()
     },
     { immediate: true },
   )
@@ -58,6 +78,9 @@ const useLayoutSettingStore = defineStore('settingStore', () => {
     isMobile,
     tabList,
     pageLoading,
+    rememberPassword,
+    accountPassword,
+    updateLocal,
   }
 })
 

@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 // 引入接口
-import { reqLogin, reqInfo } from '@/api/user'
+import { reqLogin, reqPhoneLogin, reqInfo } from '@/api/user'
 
 // 引入路由（常量路由）
 import { constantRoute, asyncRoute } from '@/router/routes'
@@ -50,6 +50,23 @@ const useUserStore: any = defineStore('user', () => {
       return 'ok'
     } else {
       return Promise.reject(new Error(result.msg))
+    }
+  }
+
+  // 手机验证码登录
+  const phoneLogin = async (data: any) => {
+    const result: any = await reqPhoneLogin(data)
+    if (result.code == 0) {
+      // pinia仓库存储一下token
+      // 由于pinia|vuex存储数据其实利用js对象
+      token.value = result.data.token
+      // 本地存储持久化存储一份
+      localStorage.setItem('TOKEN', result.data.token)
+
+      // 能保证当前async函数返回一个成功的promise
+      return 'ok'
+    } else {
+      throw new Error(result.msg)
     }
   }
 
@@ -113,6 +130,7 @@ const useUserStore: any = defineStore('user', () => {
     buttons,
 
     userLogin,
+    phoneLogin,
     userInfo,
     userLogout,
     hasPermission,

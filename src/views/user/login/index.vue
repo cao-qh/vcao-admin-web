@@ -31,10 +31,10 @@
         </a-tab-pane>
 
         <a-tab-pane key="2" tab="手机号登录">
-          <a-form-item name="phone">
+          <a-form-item name="shoujihao">
             <a-input
               size="large"
-              v-model:value="loginForm.phone"
+              v-model:value="loginForm.shoujihao"
               placeholder="手机号"
             >
               <template #prefix>
@@ -86,8 +86,7 @@
         <div style="height: 22px"></div>
         <a-checkbox
           v-if="activeKey === '1'"
-          v-model:checked="isRemembermima"
-          @change="onRemembermimaChange"
+          v-model:checked="layoutSettingStore.rememberPassword"
         >
           记住密码
         </a-checkbox>
@@ -107,11 +106,11 @@ import { ref, onMounted, reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 // 引入用户相关的小仓库
 import useUserStore from '@/store/modules/user'
-import { notification } from 'ant-design-vue'
+import { message, notification } from 'ant-design-vue'
 // 引入获取当前时间的函数
 import { getTime } from '@/utils/time'
 import { phone } from '@/utils/regexp'
-// import { reqPhoneCode } from '@/api/user'
+import { reqPhoneCode } from '@/api/user'
 import setting from '@/setting'
 import useLayoutSettingStore from '@/store/modules/setting'
 
@@ -127,8 +126,6 @@ const $route = useRoute()
 const loginForm = reactive<any>({})
 // 表单引用
 const formRef = ref()
-// 记住密码
-const isRemembermima = ref(false)
 
 // 登录方式
 const activeKey = ref('1')
@@ -139,15 +136,6 @@ const isWaitCode = ref(false)
 
 // 表单验证
 const rules = {
-  shoujihao: [
-    {
-      required: true,
-      min: 5,
-      max: 15,
-      message: '用户名长度为5-15位',
-      trigger: 'change',
-    },
-  ],
   mima: [
     {
       required: true,
@@ -157,7 +145,7 @@ const rules = {
       trigger: 'change',
     },
   ],
-  phone: [
+  shoujihao: [
     {
       required: true,
       pattern: phone,
@@ -176,23 +164,11 @@ const rules = {
 
 onMounted(() => {
   // 是否记住密码
-  const remembermima = JSON.parse(
-    localStorage.getItem('REMEMBER_PASSWORD') || '{}',
-  )
-  if (remembermima.status) {
-    isRemembermima.value = remembermima.status
-    loginForm.shoujihao = remembermima.shoujihao
-    loginForm.mima = remembermima.mima
+  if (layoutSettingStore.rememberPassword) {
+    loginForm.shoujihao = layoutSettingStore.accountPassword.shoujihao
+    loginForm.mima = layoutSettingStore.accountPassword.mima
   }
 })
-
-// 记住密码状态改变
-const onRemembermimaChange = (e: any) => {
-  const remembermima = JSON.stringify({
-    status: e.target?.checked,
-  })
-  localStorage.setItem('REMEMBER_PASSWORD', remembermima)
-}
 
 const login = async () => {
   try {
@@ -238,30 +214,41 @@ const accountLogin = async () => {
     // 保证登录成功
     await useStore.userLogin(data)
   } catch (error: any) {
-    console.error(error)
+    // 登录失败提示信息
+    notification.error({
+      message: loginForm.shoujihao,
+      description: `登录失败，${error.message}`,
+    })
     throw new Error('登录失败')
   }
 
   // 记住密码
-  if (isRemembermima.value) {
-    localStorage.setItem(
-      'REMEMBER_PASSWORD',
-      JSON.stringify({
-        status: true,
-        shoujihao: loginForm.shoujihao,
-        mima: loginForm.mima,
-      }),
-    )
+  if (layoutSettingStore.rememberPassword) {
+    layoutSettingStore.accountPassword = {
+      shoujihao: loginForm.shoujihao,
+      mima: loginForm.mima,
+    }
+    layoutSettingStore.updateLocal()
   }
+  // if (isRemembermima.value) {
+  //   localStorage.setItem(
+  //     'REMEMBER_PASSWORD',
+  //     JSON.stringify({
+  //       status: true,
+  //       shoujihao: loginForm.shoujihao,
+  //       mima: loginForm.mima,
+  //     }),
+  //   )
+  // }
 }
 
 // 手机号登录
 const phoneLogin = async () => {
   try {
-    await formRef.value.validate(['phone', 'yanZhengMa'])
+    await formRef.value.validate(['shoujihao', 'yanZhengMa'])
     // 手机验证码登录
     const data = {
-      phone: loginForm.phone,
+      shoujihao: loginForm.shoujihao,
       yanZhengMa: loginForm.yanZhengMa,
     }
     try {
@@ -270,7 +257,7 @@ const phoneLogin = async () => {
     } catch (error: any) {
       // 登录失败提示信息
       notification.error({
-        message: loginForm.phone,
+        message: loginForm.shoujihao,
         description: error.message,
       })
     }
@@ -285,23 +272,23 @@ const onFinish = () => {
 
 // 获取验证码
 const getCode = async () => {
-  // try {
-  //   await formRef.value.validate(['phone'])
-  //   deadline.value = new Date().getTime() + 60 * 1000
-  //   isWaitCode.value = true
-  //   const data = {
-  //     phone: loginForm.phone,
-  //   }
-  //   const res = await reqPhoneCode(data)
-  //   if (res.code == 0) {
-  //     message.success(res.msg)
-  //   } else {
-  //     message.error(res.msg)
-  //     isWaitCode.value = false
-  //   }
-  // } catch (e: any) {
-  //   console.log('e :>> ', e)
-  // }
+  try {
+    await formRef.value.validate(['shoujihao'])
+    deadline.value = new Date().getTime() + 60 * 1000
+    isWaitCode.value = true
+    const data = {
+      shoujihao: loginForm.shoujihao,
+    }
+    const res = await reqPhoneCode(data)
+    if (res.code == 0) {
+      message.success(res.msg)
+    } else {
+      message.error(res.msg)
+      isWaitCode.value = false
+    }
+  } catch (e: any) {
+    console.log('e :>> ', e)
+  }
 }
 </script>
 
