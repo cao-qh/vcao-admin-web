@@ -70,6 +70,148 @@ export const constantRoute = [
   //     },
   //   ],
   // },
+
+  //#region 临时代码，因为没有登录后查询权限接口
+  // 应用配置
+  {
+    path: '/',
+    component: BaseLayout,
+    name: 'AppConfig',
+    meta: {
+      title: '应用配置',
+      icon: 'AppstoreOutlined',
+    },
+    redirect: '/AppConfig/Protocol',
+    children: [
+      // 用户协议
+      {
+        path: '/AppConfig/Protocol',
+        component: () => import('@/views/AppConfig/Protocol/index.vue'),
+        name: 'Protocol',
+        meta: {
+          title: '用户协议',
+        },
+      },
+      // 首页设置
+      {
+        path: '/AppConfig/HomeSetting',
+        component: () => import('@/views/AppConfig/HomeSetting/index.vue'),
+        name: 'HomeSetting',
+        meta: {
+          title: '首页设置',
+        },
+      },
+      // 广告设置
+      {
+        path: '/AppConfig/AdSetting',
+        component: () => import('@/views/AppConfig/AdSetting/index.vue'),
+        name: 'AdSetting',
+        meta: {
+          title: '广告设置',
+        },
+      },
+      // 会员订购
+      {
+        path: '/AppConfig/MemberOrder',
+        component: () => import('@/views/AppConfig/MemberOrder/index.vue'),
+        name: 'MemberOrder',
+        meta: {
+          title: '会员订购',
+        },
+      },
+      // 视频解锁方式
+      {
+        path: '/AppConfig/VideoUnlock',
+        component: () => import('@/views/AppConfig/VideoUnlock/index.vue'),
+        name: 'VideoUnlock',
+        meta: {
+          title: '视频解锁方式',
+        },
+      },
+      // 云点播
+      {
+        path: '/AppConfig/CloudPlay',
+        component: () => import('@/views/AppConfig/CloudPlay/index.vue'),
+        name: 'CloudPlay',
+        meta: {
+          title: '云点播',
+        },
+      },
+      // 支付
+      {
+        path: '/AppConfig/Pay',
+        component: () => import('@/views/AppConfig/Pay/index.vue'),
+        name: 'Pay',
+        meta: {
+          title: '支付',
+        },
+      },
+    ],
+  },
+  // 影片管理
+  {
+    path: '/VideoManager',
+    component: BaseLayout,
+    name: 'VideoManager',
+    meta: {
+      title: '影片管理',
+      icon: 'VideoCameraOutlined',
+    },
+    redirect: '/VideoManager/VideoShowClass',
+    children: [
+      // 视频展示类别
+      {
+        path: '/VideoManager/VideoShowClass',
+        component: () =>
+          import('@/views/VideoManager/VideoShowClass/index.vue'),
+        name: 'VideoShowClass',
+        meta: {
+          title: '视频展示类别',
+        },
+      },
+      // 视频演员角色
+      {
+        path: '/VideoManager/VideoActor',
+        component: () => import('@/views/VideoManager/VideoActor/index.vue'),
+        name: 'VideoActor',
+        meta: {
+          title: '视频演员角色',
+        },
+      },
+      // 视频合集大类
+      {
+        path: '/VideoManager/VideoLargeClass',
+        component: () =>
+          import('@/views/VideoManager/VideoLargeClass/index.vue'),
+        name: 'VideoLargeClass',
+        meta: {
+          title: '视频合集大类',
+        },
+      },
+      // 视频合集小类
+      {
+        path: '/VideoManager/VideoSmallClass',
+        component: () =>
+          import('@/views/VideoManager/VideoSmallClass/index.vue'),
+        name: 'VideoSmallClass',
+        meta: {
+          title: '视频合集小类',
+        },
+      },
+      // 视频合集
+      {
+        path: '/VideoManager/VideoCollection',
+        component: () =>
+          import('@/views/VideoManager/VideoCollection/index.vue'),
+        name: 'VideoCollection',
+        meta: {
+          title: '视频合集',
+        },
+      },
+    ],
+  },
+  //#endregion
+
   // 404页面
   {
     path: '/:pathMatch(.*)*',

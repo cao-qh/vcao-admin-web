@@ -4,9 +4,15 @@ import request, { obj2Query } from '@/utils/request'
 // 统一管理接口
 enum API {
   // 查询
-  searchUrl = '/tAdmin/tAdminLog/selectAdminLog',
+  searchUrl = '/pc/tYonghuXieyi/select',
+  // 添加或修改
+  addOrUpdate = '/pc/tYonghuXieyi/insertOrUpdate',
 }
 
-// 获取省份
+// 查询
 export const reqSearch = (data: any) =>
   request.post(API.searchUrl, obj2Query(data))
+
+// 添加或修改
+export const reqAddOrUpdate = (data: any) =>
+  request.post(API.addOrUpdate, obj2Query(data))

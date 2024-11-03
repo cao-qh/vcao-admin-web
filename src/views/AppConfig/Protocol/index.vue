@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { STable } from '@/components/STable'
-import { reqSearch } from '@/api/table/search/index'
+import { reqSearch } from '@/api/AppConfig/Protocol'
 import Add from './modules/Add.vue'
 import Edit from './modules/Edit.vue'
 
