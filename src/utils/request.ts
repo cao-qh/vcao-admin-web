@@ -33,10 +33,10 @@ request.interceptors.response.use(
     settingStore.pageLoading = false
 
     if (
-      response.data.data === -120 ||
-      response.data.data === -130 ||
-      response.data.data === -140 ||
-      response.data.data === -150
+      response.data.code === -120 ||
+      response.data.code === -130 ||
+      response.data.code === -140 ||
+      response.data.code === -150
     ) {
       const userStore = useUserStore()
       userStore.userLogout()

@@ -11,8 +11,8 @@ enum API {
 
 // 查询
 export const reqSearch = (data: any) =>
-  request.post(API.searchUrl, obj2Query(data))
+  request.post<any, any>(API.searchUrl, obj2Query(data))
 
 // 添加或修改
 export const reqAddOrUpdate = (data: any) =>
-  request.post(API.addOrUpdate, obj2Query(data))
+  request.post<any, any>(API.addOrUpdate, obj2Query(data))

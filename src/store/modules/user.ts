@@ -30,63 +30,9 @@ const useUserStore: any = defineStore('user', () => {
 
   // 小仓库存储数据地方
   const token = ref(localStorage.getItem('TOKEN'))
-  // const menuRoutes = ref<RouteRecordRaw[]>([])
+  const menuRoutes = ref<RouteRecordRaw[]>([])
   const username = ref('')
-  // const buttons = ref<string[]>([])
-
-  // 测试代码
-  const menuRoutes = ref<RouteRecordRaw[]>(constantRoute)
-  const buttons = ref<string[]>([
-    'Btn.Protocol.Add',
-    'Btn.Protocol.Update',
-    'Btn.HomeSetting.Add',
-    'Btn.HomeSetting.Update',
-    'Btn.HomeSetting.Delete',
-    'Btn.AdSetting.Add',
-    'Btn.AdSetting.Update',
-    'Swh.AdSetting.UpDown',
-    'Btn.MemberOrder.Add',
-    'Btn.MemberOrder.Update',
-    'Swh.MemberOrder.UpDown',
-    'Btn.VideoUnlock.Add',
-    'Btn.VideoUnlock.Update',
-    'Btn.CloudPlay.Add',
-    'Btn.CloudPlay.UpdateParams',
-    'Btn.Pay.UpdateParams',
-    'Btn.Pay.Add',
-    'Btn.UserManager.Add',
-    'Btn.UserManager.Update',
-    'Swh.UserManager.Enable',
-    'Btn.UserManager.Permission',
-    'Btn.MemberBuyOrder.Download',
-    'Btn.VideoShowClass.Add',
-    'Btn.VideoShowClass.Update',
-    'Btn.VideoShowClass.Enable',
-    'Btn.VideoShowClass.Delete',
-    'Btn.VideoActor.Add',
-    'Btn.VideoActor.Update',
-    'Btn.VideoActor.Enable',
-    'Btn.VideoLargeClass.Add',
-    'Swh.VideoLargeClass.Enable',
-    'Btn.VideoLargeClass.Update',
-    'Btn.VideoSmallClass.Add',
-    'Btn.VideoSmallClass.Update',
-    'Swh.VideoSmallClass.Enable',
-    'Btn.VideoCollection.Add',
-    'Btn.VideoCollection.Update',
-    'Btn.VideoCollection.Detail',
-    'Btn.VideoCollection.UpDown',
-    'Btn.VideoCollection.ConfigActor',
-    'Btn.VideoCollection.ConfigClass',
-    'Btn.VideoCollection.Chapter',
-    'Btn.VideoCollection.Classify',
-    'Btn.ViewScore.Delete',
-    'Btn.ViewScore.Add',
-    'Btn.ViewScore.Update',
-    'Btn.AdScore.Add',
-    'Btn.AdScore.Update',
-    'Btn.AdScore.Delete',
-  ])
+  const buttons = ref<string[]>([])
 
   // 用户登录的方法
   const userLogin = async (data: any) => {

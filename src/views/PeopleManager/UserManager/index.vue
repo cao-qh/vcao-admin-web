@@ -58,7 +58,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
-import { reqSearch, reqQijinyong } from '@/api/table/search/index'
+import { reqSearch } from '@/api/PeopleManager/UserManager'
 import { STable } from '@/components/STable'
 import { message } from 'ant-design-vue'
 import Add from './modules/Add.vue'
@@ -90,7 +90,7 @@ const formItems = reactive([
   {
     type: 'input',
     label: '姓名',
-    filed: 'mingcheng',
+    filed: 'xingming',
     value: '',
     placeholder: '请输入',
   },
@@ -116,17 +116,17 @@ const columns = [
   },
   {
     title: '姓名',
-    dataIndex: 'mingcheng',
+    dataIndex: 'xingming',
     align: 'center',
   },
   {
     title: '邮箱',
-    dataIndex: 'yx',
+    dataIndex: 'youxiang',
     align: 'center',
   },
   {
     title: '登录IP',
-    dataIndex: 'ipS',
+    dataIndex: 'ip',
     align: 'center',
   },
   {
@@ -136,7 +136,7 @@ const columns = [
   },
   {
     title: '更新时间',
-    dataIndex: 'gxsj',
+    dataIndex: 'gengxinshijian',
     align: 'center',
   },
   {

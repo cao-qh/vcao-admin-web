@@ -20,21 +20,22 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { message } from 'ant-design-vue'
-// import {
-//   reqConfigPermissionSearch,
-//   reqConfigPermission,
-// } from '@/api/admin/channel/admin'
-import { reqEdit } from '@/api/table/search/index'
+import {
+  reqSearchPermission,
+  reqConfigPermission,
+} from '@/api/PeopleManager/UserManager'
+import useUserStore from '@/store/modules/user'
 
 defineOptions({ name: 'Permission' })
 
 // 定义方法
-// const $emit = defineEmits(['success'])
+const $emit = defineEmits(['success'])
 
 const open = ref<boolean>(false)
+const userStore = useUserStore()
 
 const menuArr = ref<any>([])
-const fieldNames = { key: 'code', title: 'name' }
+const fieldNames = { key: 'quanxianbianma', title: 'name' }
 const checkedKeys = ref<{
   checked: string[]
   halfChecked: string[]
@@ -58,7 +59,7 @@ const show = async (row: any) => {
   checkedKeys.value.checked = []
   checkedKeys.value.halfChecked = []
 
-  const res = await reqEdit({ shoujihao: row.shoujihao })
+  const res = await reqSearchPermission({ username: row.shoujihao })
   if (res.code == 0) {
     open.value = true
     menuArr.value = res.data
@@ -78,12 +79,12 @@ const show = async (row: any) => {
 const filterCheckedArr = (allData: any, checkArr: any, halfCheckArr: any) => {
   for (let i = 0; i < allData.length; i++) {
     const item = allData[i]
-    if (item.select) {
+    if (item.qijinyong == 1) {
       if (isChildrenAllChecked(item)) {
-        checkArr.push(item.code)
+        checkArr.push(item.quanxianbianma)
         item.state = CheckState.checked
       } else {
-        halfCheckArr.push(item.code)
+        halfCheckArr.push(item.quanxianbianma)
         item.state = CheckState.halfChecked
       }
     }
@@ -101,7 +102,7 @@ const filterCheckedArr = (allData: any, checkArr: any, halfCheckArr: any) => {
 // 子节点是否全部勾选
 const isChildrenAllChecked = (node: any) => {
   if (node.children && node.children.length > 0) {
-    return node.children.every((item: any) => item.select)
+    return node.children.every((item: any) => item.qijinyong == 1)
   }
   return true
 }
@@ -130,9 +131,9 @@ const checkAll = (list: any) => {
   list.forEach((item: any) => {
     item.state = CheckState.checked
     // 先重置状态
-    toggleChecked(item.code, CheckState.unchecked)
+    toggleChecked(item.quanxianbianma, CheckState.unchecked)
     // 勾选子节点
-    toggleChecked(item.code, CheckState.checked)
+    toggleChecked(item.quanxianbianma, CheckState.checked)
 
     if (item.children && item.children.length > 0) {
       checkAll(item.children)
@@ -146,7 +147,7 @@ const checkParent = (self: any) => {
   // 重置状态
   node.state = CheckState.unchecked
   // 设为不勾选
-  toggleChecked(node.code, CheckState.unchecked)
+  toggleChecked(node.quanxianbianma, CheckState.unchecked)
 
   // 子节点的勾选数量
   let checkChildCount = 0
@@ -161,11 +162,11 @@ const checkParent = (self: any) => {
   if (checkChildCount == node.children.length) {
     node.state = CheckState.checked
     // 设为勾选
-    toggleChecked(node.code, CheckState.checked)
+    toggleChecked(node.quanxianbianma, CheckState.checked)
   } else {
     node.state = CheckState.halfChecked
     // 设为半勾选
-    toggleChecked(node.code, CheckState.halfChecked)
+    toggleChecked(node.quanxianbianma, CheckState.halfChecked)
   }
 
   if (parent) {
@@ -179,7 +180,7 @@ const unCheckAll = (list: any) => {
     if (item.disabled) return
 
     item.state = CheckState.unchecked
-    toggleChecked(item.code, CheckState.unchecked)
+    toggleChecked(item.quanxianbianma, CheckState.unchecked)
 
     if (item.children && item.children.length > 0) {
       unCheckAll(item.children)
@@ -188,31 +189,31 @@ const unCheckAll = (list: any) => {
 }
 
 // 切换节点勾选状态
-const toggleChecked = (code: string, state: CheckState) => {
+const toggleChecked = (quanxianbianma: string, state: CheckState) => {
   if (state == CheckState.unchecked) {
-    if (checkedKeys.value.halfChecked.indexOf(code) !== -1) {
+    if (checkedKeys.value.halfChecked.indexOf(quanxianbianma) !== -1) {
       checkedKeys.value.halfChecked.splice(
-        checkedKeys.value.halfChecked.indexOf(code),
+        checkedKeys.value.halfChecked.indexOf(quanxianbianma),
         1,
       )
     }
-    if (checkedKeys.value.checked.indexOf(code) !== -1) {
+    if (checkedKeys.value.checked.indexOf(quanxianbianma) !== -1) {
       checkedKeys.value.checked.splice(
-        checkedKeys.value.checked.indexOf(code),
+        checkedKeys.value.checked.indexOf(quanxianbianma),
         1,
       )
     }
   }
 
   if (state == CheckState.checked) {
-    if (checkedKeys.value.checked.indexOf(code) == -1) {
-      checkedKeys.value.checked.push(code)
+    if (checkedKeys.value.checked.indexOf(quanxianbianma) == -1) {
+      checkedKeys.value.checked.push(quanxianbianma)
     }
   }
 
   if (state == CheckState.halfChecked) {
-    if (checkedKeys.value.halfChecked.indexOf(code) == -1) {
-      checkedKeys.value.halfChecked.push(code)
+    if (checkedKeys.value.halfChecked.indexOf(quanxianbianma) == -1) {
+      checkedKeys.value.halfChecked.push(quanxianbianma)
     }
   }
 }
@@ -220,20 +221,23 @@ const toggleChecked = (code: string, state: CheckState) => {
 // 设置权限管理节点，一旦勾选就禁用，不可取消
 const setConfigPermissionNodeDisabled = (menuArr: any) => {
   // 找到管理员权限配置节点
-  const configPermissionNode: any = findNode(menuArr, 'Btn.Admin.Permission')
-  if (configPermissionNode && configPermissionNode.select) {
+  const configPermissionNode: any = findNode(
+    menuArr,
+    'Btn.UserManager.Permission',
+  )
+  if (configPermissionNode && configPermissionNode.qijinyong == 1) {
     configPermissionNode.disabled = true
   }
 }
 
 // 递归查找节点
-const findNode = (list: any, code: string) => {
+const findNode = (list: any, quanxianbianma: string) => {
   for (let i = 0; i < list.length; i++) {
-    if (list[i].code == code) {
+    if (list[i].quanxianbianma == quanxianbianma) {
       return list[i]
     }
     if (list[i].children && list[i].children.length > 0) {
-      const res: any = findNode(list[i].children, code)
+      const res: any = findNode(list[i].children, quanxianbianma)
       if (res) {
         return res
       }
@@ -243,10 +247,10 @@ const findNode = (list: any, code: string) => {
 }
 
 const submit = async () => {
-  /* try {
-    const res: any = await reqEdit({
-      phone: phone.value,
-      codeS: [
+  try {
+    const res: any = await reqConfigPermission({
+      admin: phone.value,
+      quanxianbianma: [
         ...checkedKeys.value.checked,
         ...checkedKeys.value.halfChecked,
       ].join(','),
@@ -255,12 +259,16 @@ const submit = async () => {
       $emit('success')
       open.value = false
       message.success('配置成功')
+      // 如果配置的是自己则刷新
+      if (phone.value == userStore.username) {
+        window.location.reload()
+      }
     } else {
       message.error(res.msg)
     }
   } catch (error) {
     console.log('error :>> ', error)
-  } */
+  }
 }
 
 defineExpose({

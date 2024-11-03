@@ -10,9 +10,7 @@ enum API {
   // 手机登录获取验证码
   phoneCodeUrl = '/pc/yonghu/getYanZhengMa',
   // 用户信息
-  infoUrl = '/info',
-  // 退出登录
-  logoutUrl = '/tAdmin/cunliang/tuiChu',
+  infoUrl = '/pc/yonghu/selectYiPeiZhiQuanXian',
 }
 
 // 登录接口方法
@@ -29,6 +27,3 @@ export const reqPhoneCode = (data: any) =>
 
 // 用户信息接口方法
 export const reqInfo = () => request.post<any, any>(API.infoUrl)
-
-// 退出登录接口方法
-export const reqLogout = () => request.post<any, any>(API.logoutUrl)
