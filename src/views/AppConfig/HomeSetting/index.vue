@@ -20,6 +20,9 @@
         </a-button>
       </template>
       <template #bodyCell="{ column, row }">
+        <template v-if="column.dataIndex === 'tupian'">
+          <a-image :width="50" :src="baseUrl + row.tupian" />
+        </template>
         <template v-if="column.dataIndex === 'action'">
           <a v-has="'Btn.HomeSetting.Update'" @click="() => edit.show(row)">
             修改
@@ -41,6 +44,9 @@
       ref="add"
       :position="position"
       :jumpType="jumpType"
+      :videoCollectionList="videoCollectionList"
+      :videoChapterList="videoChapterList"
+      :adList="adList"
       @success="table.refresh()"
     />
 
@@ -48,19 +54,25 @@
       ref="edit"
       :position="position"
       :jumpType="jumpType"
+      :videoCollectionList="videoCollectionList"
+      :videoChapterList="videoChapterList"
+      :adList="adList"
       @success="table.refresh()"
     />
   </PageWrapper>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import { STable } from '@/components/STable'
-import { reqSearch } from '@/api/AppConfig/HomeSetting'
+import { reqSearch, reqDelete } from '@/api/AppConfig/HomeSetting'
 import Add from './modules/Add.vue'
 import Edit from './modules/Edit.vue'
 import { message } from 'ant-design-vue'
+import { reqVideoCollection, reqAd, reqVideoChapter } from '@/api/common'
+
+const baseUrl = import.meta.env.VITE_SERVE
 
 // 位置
 const position: any = [
@@ -90,7 +102,7 @@ const formItems = reactive([
   {
     type: 'select',
     label: '位置',
-    filed: 'position',
+    filed: 'weizhi',
     value: '',
     placeholder: '请输入',
     options: position,
@@ -102,7 +114,7 @@ const formItems = reactive([
   {
     type: 'select',
     label: '跳转类型',
-    filed: 'jumpType',
+    filed: 'tiaozhuanleixing',
     value: '',
     placeholder: '请选择',
     options: jumpType,
@@ -116,38 +128,46 @@ const formItems = reactive([
 const columns = [
   {
     title: '图片',
-    dataIndex: 'tp',
+    dataIndex: 'tupian',
     align: 'center',
   },
   {
     title: '权重',
-    dataIndex: 'qz',
+    dataIndex: 'quanzhong',
     align: 'center',
   },
   {
     title: '跳转类型',
-    dataIndex: 'tzlx',
+    dataIndex: 'tiaozhuanleixing',
     align: 'center',
+    customRender: ({ text }: any) => {
+      const item = jumpType.find((item: any) => item.value == text)
+      return item && item.label
+    },
   },
   {
     title: '视频合集编码',
-    dataIndex: 'sphjbm',
+    dataIndex: 'shipinhejibianma',
     align: 'center',
   },
   {
     title: '视频章节编码',
-    dataIndex: 'spzjbm',
+    dataIndex: 'shipinzhangjiebianma',
     align: 'center',
   },
   {
-    title: '广告名',
-    dataIndex: 'ggm',
+    title: '广告编码',
+    dataIndex: 'guanggaobianma',
     align: 'center',
   },
   {
     title: '位置',
-    dataIndex: 'wz',
+    dataIndex: 'weizhi',
     align: 'center',
+    customRender: ({ text }: any) => {
+      const item = position.find((item: any) => item.value == text)
+      return item && item.label
+    },
   },
   {
     title: '操作',
@@ -157,11 +177,39 @@ const columns = [
   },
 ]
 
+const videoCollectionList = ref([])
+const videoChapterList = ref([])
+const adList = ref([])
+
+onMounted(async () => {
+  const [res1, res2, res3] = await Promise.all([
+    reqVideoCollection(),
+    reqVideoChapter(),
+    reqAd(),
+  ])
+
+  if (res1.code == 0) {
+    videoCollectionList.value = res1.data
+  }
+  if (res2.code == 0) {
+    videoChapterList.value = res2.data
+  }
+  if (res3.code == 0) {
+    adList.value = res3.data
+  }
+})
+
 const reqData = async (currentPage: number, pageSize: number) => {
   const data: any = {
     currentPage,
     pageSize,
   }
+
+  formItems.forEach((item) => {
+    if (item.value) {
+      data[item.filed] = item.value
+    }
+  })
 
   const res: any = await reqSearch(data)
   if (res.code == 0) {
@@ -173,8 +221,9 @@ const reqData = async (currentPage: number, pageSize: number) => {
 }
 
 const handleDelete = async (row: any) => {
-  const res = await reqSubmit(row.id)
+  const res = await reqDelete(row.id)
   if (res.code == 0) {
+    table.value.refresh()
     message.success(res.msg)
   } else {
     message.error(res.msg)

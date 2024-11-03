@@ -1,17 +1,20 @@
 <template>
   <a-modal title="添加" :open="open" @ok="submit" @cancel="open = false">
-    <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
-      <a-form-item label="图片" name="tp">
+    <a-form ref="formRef" :model="formState" v-bind="layout">
+      <a-form-item label="图片" name="tuPianFile">
         <UploadImage
-          v-model:value.trim="formState.tp"
+          v-model:value.trim="formState.tuPianFile"
           placeholder="请输入"
         ></UploadImage>
       </a-form-item>
-      <a-form-item label="权重" name="qz">
-        <a-input v-model:value.trim="formState.qz" placeholder="请输入" />
+      <a-form-item label="权重" name="quanzhong">
+        <a-input
+          v-model:value.trim="formState.quanzhong"
+          placeholder="请输入"
+        />
       </a-form-item>
-      <a-form-item label="位置" name="wz">
-        <a-select v-model:value="formState.wz" placeholder="请选择">
+      <a-form-item label="位置" name="weizhi">
+        <a-select v-model:value="formState.weizhi" placeholder="请选择">
           <a-select-option
             v-for="item in position"
             :key="item.value"
@@ -21,8 +24,11 @@
           </a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item label="跳转类型" name="tzlx">
-        <a-select v-model:value="formState.tzlx" placeholder="请选择">
+      <a-form-item label="跳转类型" name="tiaozhuanleixing">
+        <a-select
+          v-model:value="formState.tiaozhuanleixing"
+          placeholder="请选择"
+        >
           <a-select-option
             v-for="item in jumpType"
             :key="item.value"
@@ -32,17 +38,50 @@
           </a-select-option>
         </a-select>
       </a-form-item>
-      <template v-if="formState.tzlx == 1">
-        <a-form-item label="视频合集编码" name="sphjbm">
-          <a-input v-model:value.trim="formState.sphjbm" placeholder="请输入" />
+      <template v-if="formState.tiaozhuanleixing == 1">
+        <a-form-item label="视频合集编码" name="shipinhejibianma">
+          <a-select
+            v-model:value="formState.shipinhejibianma"
+            placeholder="请选择"
+          >
+            <a-select-option
+              v-for="item in videoCollectionList"
+              :key="item.bm"
+              :value="item.bm"
+            >
+              {{ item.mc }}
+            </a-select-option>
+          </a-select>
         </a-form-item>
-        <a-form-item label="视频章节编码" name="spzjbm">
-          <a-input v-model:value.trim="formState.sphjbm" placeholder="请输入" />
+        <a-form-item label="视频章节编码" name="shipinzhangjiebianma">
+          <a-select
+            v-model:value="formState.shipinzhangjiebianma"
+            placeholder="请选择"
+          >
+            <a-select-option
+              v-for="item in videoChapterList"
+              :key="item.bianma"
+              :value="item.bianma"
+            >
+              {{ item.mingcheng }}
+            </a-select-option>
+          </a-select>
         </a-form-item>
       </template>
-      <template v-if="formState.tzlx == 2">
-        <a-form-item label="广告" name="gg">
-          <a-input v-model:value.trim="formState.gg" placeholder="请输入" />
+      <template v-if="formState.tiaozhuanleixing == 2">
+        <a-form-item label="广告" name="guanggaobianma">
+          <a-select
+            v-model:value="formState.guanggaobianma"
+            placeholder="请选择"
+          >
+            <a-select-option
+              v-for="item in adList"
+              :key="item.bianma"
+              :value="item.bianma"
+            >
+              {{ item.mingcheng }}
+            </a-select-option>
+          </a-select>
         </a-form-item>
       </template>
     </a-form>
@@ -51,7 +90,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqAdd } from '@/api/table/search/index'
+import { reqAdd } from '@/api/AppConfig/HomeSetting'
 import UploadImage from '@/components/UploadImage/index.vue'
 
 defineOptions({ name: 'Add' })
@@ -63,6 +102,18 @@ defineProps({
     default: () => [],
   },
   jumpType: {
+    type: Array<any>,
+    default: () => [],
+  },
+  videoCollectionList: {
+    type: Array<any>,
+    default: () => [],
+  },
+  videoChapterList: {
+    type: Array<any>,
+    default: () => [],
+  },
+  adList: {
     type: Array<any>,
     default: () => [],
   },
@@ -88,26 +139,16 @@ const layout = {
 const formRef = ref()
 const formState = reactive<any>({})
 
-const rules = {
-  tp: [{ required: true, message: '请选择' }],
-  qz: [{ required: true, message: '请输入' }],
-  wz: [{ required: true, message: '请选择' }],
-  tzlx: [{ required: true, message: '请选择' }],
-  sphjbm: [{ required: true, message: '请输入' }],
-  spzjbm: [{ required: true, message: '请输入' }],
-  gg: [{ required: true, message: '请输入' }],
-}
-
 const show = () => {
   open.value = true
   Object.assign(formState, {
-    tp: '',
-    qz: '',
-    wz: '',
-    tjlx: '',
-    sphjbm: '',
-    spzjbm: '',
-    gg: '',
+    tuPianFile: null,
+    quanzhong: '',
+    weizhi: null,
+    tiaozhuanleixing: null,
+    shipinhejibianma: null,
+    shipinzhangjiebianma: null,
+    guanggaobianma: null,
   })
   formRef.value?.clearValidate()
 }
@@ -116,7 +157,17 @@ const submit = async () => {
   try {
     await formRef.value.validate()
     console.log('formState :>> ', formState)
-    const res = await reqAdd(formState)
+
+    const formData = new FormData()
+    formData.append('tuPianFile', formState.tuPianFile)
+    formData.append('quanzhong', formState.quanzhong)
+    formData.append('weizhi', formState.weizhi)
+    formData.append('tiaozhuanleixing', formState.tiaozhuanleixing)
+    formData.append('shipinhejibianma', formState.shipinhejibianma)
+    formData.append('shipinzhangjiebianma', formState.shipinzhangjiebianma)
+    formData.append('guanggaobianma', formState.guanggaobianma)
+
+    const res = await reqAdd(formData)
     if (res.code == 0) {
       $emit('success')
       open.value = false

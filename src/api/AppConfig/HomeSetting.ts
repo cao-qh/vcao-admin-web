@@ -4,13 +4,13 @@ import request, { obj2Query } from '@/utils/request'
 // 统一管理接口
 enum API {
   // 查询
-  searchUrl = '/pc/tGuanggaoShezhi/selectAll',
+  searchUrl = '/pc/tShouyeJuchangShezhi/selectsyjc',
   // 添加
-  addUrl = '/pc/tGuanggaoShezhi/insert',
+  addUrl = '/pc/tShouyeJuchangShezhi/insert',
   // 修改
-  editUrl = '/pc/tGuanggaoShezhi/updateGg',
-  // 上下架
-  upDownUrl = '/pc/tGuanggaoShezhi/updateGgDel',
+  editUrl = '/pc/tShouyeJuchangShezhi/updatesyjc',
+  // 删除
+  deleteUrl = '/pc/tShouyeJuchangShezhi/deletasyjc',
 }
 
 // 查询
@@ -18,13 +18,11 @@ export const reqSearch = (data: any) =>
   request.post<any, any>(API.searchUrl, obj2Query(data))
 
 // 添加
-export const reqAdd = (data: any) =>
-  request.post<any, any>(API.addUrl, obj2Query(data))
+export const reqAdd = (data: any) => request.post<any, any>(API.addUrl, data)
 
 // 修改
-export const reqEdit = (data: any) =>
-  request.post<any, any>(API.editUrl, obj2Query(data))
+export const reqEdit = (data: any) => request.post<any, any>(API.editUrl, data)
 
-// 上下架
-export const reqUpDown = (data: any) =>
-  request.post<any, any>(API.upDownUrl, obj2Query(data))
+// 删除
+export const reqDelete = (id: number) =>
+  request.post<any, any>(API.deleteUrl, obj2Query({ id }))
