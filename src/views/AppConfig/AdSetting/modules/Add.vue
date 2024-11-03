@@ -1,14 +1,17 @@
 <template>
   <a-modal title="添加" :open="open" @ok="submit" @cancel="open = false">
-    <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
-      <a-form-item label="广告名称" name="ggmc">
-        <a-input v-model:value.trim="formState.ggmc" placeholder="请输入" />
+    <a-form ref="formRef" :model="formState" v-bind="layout">
+      <a-form-item label="广告名称" name="mingcheng">
+        <a-input
+          v-model:value.trim="formState.mingcheng"
+          placeholder="请输入"
+        />
       </a-form-item>
-      <a-form-item label="广告编码" name="ggbm">
-        <a-input v-model:value.trim="formState.ggbm" placeholder="请输入" />
-      </a-form-item>
-      <a-form-item label="广告类型" name="gglx">
-        <a-select v-model:value="formState.gglx" placeholder="请选择">
+      <a-form-item label="广告类型" name="guanggaoleixing">
+        <a-select
+          v-model:value="formState.guanggaoleixing"
+          placeholder="请选择"
+        >
           <a-select-option
             v-for="item in adType"
             :key="item.value"
@@ -18,35 +21,60 @@
           </a-select-option>
         </a-select>
       </a-form-item>
-      <template v-if="formState.gglx == 1">
-        <a-form-item label="有效观看视频时长" name="yxygspsc">
-          <a-input
-            v-model:value.trim="formState.yxygspsc"
+      <template v-if="formState.guanggaoleixing == 1">
+        <a-form-item label="有效观看视频时长" name="youxiaoshichang">
+          <a-input-number
+            :min="0"
+            v-model:value.trim="formState.youxiaoshichang"
             placeholder="请输入"
           />
         </a-form-item>
       </template>
-      <template v-if="formState.gglx == 2">
-        <a-form-item label="落地页返回状态" name="ldyfhzt">
+      <template v-if="formState.guanggaoleixing == 2">
+        <a-form-item label="广告链接" name="guanggaolianjie">
           <a-input
-            v-model:value.trim="formState.ldyfhzt"
+            v-model:value.trim="formState.guanggaolianjie"
             placeholder="请输入"
           />
         </a-form-item>
+        <a-form-item label="落地页返回状态" name="luodiyefanhui">
+          <a-select
+            v-model:value="formState.luodiyefanhui"
+            placeholder="请选择"
+          >
+            <a-select-option
+              v-for="item in status"
+              :key="item.value"
+              :value="item.value"
+            >
+              {{ item.label }}
+            </a-select-option>
+          </a-select>
+        </a-form-item>
       </template>
+      <a-form-item label="上下架" name="shangxiajia">
+        <a-radio-group v-model:value="formState.shangxiajia">
+          <a-radio-button :value="1">上架</a-radio-button>
+          <a-radio-button :value="2">下架</a-radio-button>
+        </a-radio-group>
+      </a-form-item>
     </a-form>
   </a-modal>
 </template>
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqAdd } from '@/api/table/search/index'
+import { reqAdd } from '@/api/AppConfig/AdSetting'
 
 defineOptions({ name: 'Add' })
 
 // 属性
 defineProps({
   adType: {
+    type: Array<any>,
+    default: () => [],
+  },
+  status: {
     type: Array<any>,
     default: () => [],
   },
@@ -72,22 +100,15 @@ const layout = {
 const formRef = ref()
 const formState = reactive<any>({})
 
-const rules = {
-  ggmc: [{ required: true, message: '请输入' }],
-  ggbm: [{ required: true, message: '请输入' }],
-  gglx: [{ required: true, message: '请选择' }],
-  yxygspsc: [{ required: true, message: '请输入' }],
-  ldyfhzt: [{ required: true, message: '请输入' }],
-}
-
 const show = () => {
   open.value = true
   Object.assign(formState, {
-    ggmc: '',
-    ggbm: '',
-    gglx: undefined,
-    yxygspsc: '',
-    ldyfhzt: '',
+    mingcheng: '',
+    guanggaoleixing: undefined,
+    youxiaoshichang: '',
+    luodiyefanhui: '',
+    guanggaolianjie: '',
+    shangxiajia: 1,
   })
   formRef.value?.clearValidate()
 }

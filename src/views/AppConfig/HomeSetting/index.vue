@@ -57,7 +57,7 @@
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import { STable } from '@/components/STable'
-import { reqSearch, reqSubmit } from '@/api/table/search/index'
+import { reqSearch } from '@/api/AppConfig/HomeSetting'
 import Add from './modules/Add.vue'
 import Edit from './modules/Edit.vue'
 import { message } from 'ant-design-vue'

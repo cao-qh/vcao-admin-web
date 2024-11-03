@@ -20,7 +20,7 @@
         </a-button>
       </template>
       <template #bodyCell="{ column, row }">
-        <template v-if="column.dataIndex === 'sxj'">
+        <template v-if="column.dataIndex === 'shangxiajia'">
           <a-popconfirm
             v-if="userStore.hasPermission('Swh.AdSetting.UpDown')"
             title="确定要修改吗？"
@@ -28,10 +28,10 @@
             cancel-text="否"
             @confirm="handleUpDown(row)"
           >
-            <a-switch :checked="row.sxj === 1" />
+            <a-switch :checked="row.shangxiajia === 1" />
           </a-popconfirm>
           <span v-else>
-            {{ row.sxj === 1 ? '上架' : '下架' }}
+            {{ row.shangxiajia === 1 ? '上架' : '下架' }}
           </span>
         </template>
         <template v-if="column.dataIndex === 'action'">
@@ -42,9 +42,19 @@
       </template>
     </STable>
 
-    <Add ref="add" :adType="adType" @success="table.refresh()" />
+    <Add
+      ref="add"
+      :adType="adType"
+      :status="status"
+      @success="table.refresh()"
+    />
 
-    <Edit ref="edit" :adType="adType" @success="table.refresh()" />
+    <Edit
+      ref="edit"
+      :adType="adType"
+      :status="status"
+      @success="table.refresh()"
+    />
   </PageWrapper>
 </template>
 
@@ -52,7 +62,7 @@
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import { STable } from '@/components/STable'
-import { reqSearch, reqQijinyong } from '@/api/table/search/index'
+import { reqSearch, reqUpDown } from '@/api/AppConfig/AdSetting'
 import Add from './modules/Add.vue'
 import Edit from './modules/Edit.vue'
 import { message } from 'ant-design-vue'
@@ -72,25 +82,37 @@ const adType: any = [
   },
 ]
 
+// 落地页返回状态
+const status: any = [
+  {
+    value: 1,
+    label: '下单成功',
+  },
+  {
+    value: 2,
+    label: '订购成功',
+  },
+]
+
 const formItems = reactive([
   {
     type: 'input',
     label: '广告名称',
-    filed: 'adName',
+    filed: 'mingcheng',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'input',
     label: '广告编码',
-    filed: 'adBm',
+    filed: 'bianma',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'select',
     label: '广告类型',
-    filed: 'adType',
+    filed: 'guanggaoleixing',
     value: '',
     placeholder: '请选择',
     options: adType,
@@ -104,32 +126,44 @@ const formItems = reactive([
 const columns = [
   {
     title: '广告名称',
-    dataIndex: 'ggmc',
+    dataIndex: 'mingcheng',
     align: 'center',
   },
   {
     title: '广告编码',
-    dataIndex: 'ggbm',
+    dataIndex: 'bianma',
     align: 'center',
   },
   {
     title: '广告类型',
-    dataIndex: 'gglx',
+    dataIndex: 'guanggaoleixing',
     align: 'center',
+    customRender: ({ text }: { text: number }) => {
+      return adType.find((item: any) => item.value == text)?.label
+    },
   },
   {
     title: '落地页返回状态',
-    dataIndex: 'ldyfhzt',
+    dataIndex: 'luodiyefanhui',
     align: 'center',
+    customRender: ({ text }: { text: number }) => {
+      const item = status.find((item: any) => item.value == text)
+      return item && item.label
+    },
   },
   {
     title: '有效观看视频时长',
-    dataIndex: 'yxgkscs',
+    dataIndex: 'youxiaoshichang',
+    align: 'center',
+  },
+  {
+    title: '链接',
+    dataIndex: 'guanggaolianjie',
     align: 'center',
   },
   {
     title: '上下架',
-    dataIndex: 'sxj',
+    dataIndex: 'shangxiajia',
     align: 'center',
   },
   {
@@ -146,6 +180,12 @@ const reqData = async (currentPage: number, pageSize: number) => {
     pageSize,
   }
 
+  formItems.forEach((item) => {
+    if (item.value) {
+      data[item.filed] = item.value
+    }
+  })
+
   const res: any = await reqSearch(data)
   if (res.code == 0) {
     return {
@@ -157,11 +197,12 @@ const reqData = async (currentPage: number, pageSize: number) => {
 
 // 上下架
 const handleUpDown = async (row: any) => {
-  const result = await reqQijinyong({
-    id: row.id,
-    qijinyong: row.qijinyong === 1 ? 2 : 1,
+  const result = await reqUpDown({
+    bianma: row.bianma,
+    shangxiajia: row.shangxiajia === 1 ? 2 : 1,
   })
   if (result.code == 0) {
+    table.value.refresh()
     message.success(result.msg)
   } else {
     message.error(result.msg)
