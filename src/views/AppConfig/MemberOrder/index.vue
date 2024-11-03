@@ -20,7 +20,10 @@
         </a-button>
       </template>
       <template #bodyCell="{ column, row }">
-        <template v-if="column.dataIndex === 'sxj'">
+        <template v-if="column.dataIndex === 'tupian'">
+          <a-image :width="50" :src="baseUrl + row.tupian" />
+        </template>
+        <template v-if="column.dataIndex === 'shangxiajia'">
           <a-popconfirm
             v-if="userStore.hasPermission('Swh.MemberOrder.UpDown')"
             title="确定要修改吗？"
@@ -28,10 +31,10 @@
             cancel-text="否"
             @confirm="handleUpDown(row)"
           >
-            <a-switch :checked="row.sxj === 1" />
+            <a-switch :checked="row.shangxiajia === 1" />
           </a-popconfirm>
           <span v-else>
-            {{ row.sxj === 1 ? '上架' : '下架' }}
+            {{ row.shangxiajia === 1 ? '上架' : '下架' }}
           </span>
         </template>
         <template v-if="column.dataIndex === 'action'">
@@ -52,13 +55,14 @@
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import { STable } from '@/components/STable'
-import { reqSearch, reqQijinyong } from '@/api/table/search/index'
+import { reqSearch, reqUpDown } from '@/api/AppConfig/MemberOrder'
 import Add from './modules/Add.vue'
 import Edit from './modules/Edit.vue'
 import { message } from 'ant-design-vue'
 import useUserStore from '@/store/modules/user'
 
 const userStore = useUserStore()
+const baseUrl = import.meta.env.VITE_SERVE
 
 // 上下架
 const upDown: any = [
@@ -76,14 +80,14 @@ const formItems = reactive([
   {
     type: 'input',
     label: '时长',
-    filed: 'sc',
+    filed: 'shichang',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'select',
     label: '上下架',
-    filed: 'upDown',
+    filed: 'shangxiajia',
     value: '',
     placeholder: '请选择',
     options: upDown,
@@ -97,27 +101,27 @@ const formItems = reactive([
 const columns = [
   {
     title: '图片',
-    dataIndex: 'tp',
+    dataIndex: 'tupian',
     align: 'center',
   },
   {
     title: '时长',
-    dataIndex: 'sc',
+    dataIndex: 'shichang',
     align: 'center',
   },
   {
     title: '原价',
-    dataIndex: 'yj',
+    dataIndex: 'yuanjia',
     align: 'center',
   },
   {
     title: '优惠价',
-    dataIndex: 'yhj',
+    dataIndex: 'youhuijia',
     align: 'center',
   },
   {
     title: '上下架',
-    dataIndex: 'sxj',
+    dataIndex: 'shangxiajia',
     align: 'center',
   },
   {
@@ -134,6 +138,12 @@ const reqData = async (currentPage: number, pageSize: number) => {
     pageSize,
   }
 
+  formItems.forEach((item) => {
+    if (item.value) {
+      data[item.filed] = item.value
+    }
+  })
+
   const res: any = await reqSearch(data)
   if (res.code == 0) {
     return {
@@ -145,12 +155,13 @@ const reqData = async (currentPage: number, pageSize: number) => {
 
 // 上下架
 const handleUpDown = async (row: any) => {
-  const result = await reqQijinyong({
+  const result = await reqUpDown({
     id: row.id,
-    qijinyong: row.qijinyong === 1 ? 2 : 1,
+    shangxiajia: row.shangxiajia === 1 ? 2 : 1,
   })
   if (result.code == 0) {
     message.success(result.msg)
+    table.value.refresh()
   } else {
     message.error(result.msg)
   }

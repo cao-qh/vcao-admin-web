@@ -10,8 +10,8 @@ enum API {
 }
 
 // 查询
-export const reqSearch = (data: any) =>
-  request.post<any, any>(API.searchUrl, obj2Query(data))
+export const reqSearch = (id: number) =>
+  request.post<any, any>(API.searchUrl, obj2Query({ id }))
 
 // 添加或修改
 export const reqAddOrUpdate = (data: any) =>

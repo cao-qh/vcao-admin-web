@@ -1,82 +1,59 @@
 <template>
   <PageWrapper>
-    <STable
-      ref="table"
-      rowKey="id"
-      :columns="columns"
-      :data="reqData"
-      :showPagination="true"
-      :scroll="{ y: 'calc(100vh - 450px)' }"
+    <a-descriptions
+      v-if="data"
+      title="协议与政策"
+      :column="1"
+      bordered
+      :labelStyle="{ width: '150px' }"
     >
-      <template #toolbar>
-        <a-button
-          v-has="'Btn.Protocol.Add'"
-          type="primary"
-          @click="() => add.show()"
-        >
-          添加
-        </a-button>
+      <template #extra>
+        <a-button type="primary" @click="edit.show(data)">修改</a-button>
       </template>
-      <template #bodyCell="{ column, row }">
-        <template v-if="column.dataIndex === 'action'">
-          <a v-has="'Btn.Protocol.Update'" @click="() => edit.show(row)">
-            修改
-          </a>
+      <a-descriptions-item label="用户协议">
+        {{ data.yonghuxieyi }}
+      </a-descriptions-item>
+      <a-descriptions-item label="隐私政策">
+        {{ data.yinsizhengce }}
+      </a-descriptions-item>
+    </a-descriptions>
+    <div v-else>
+      <a-empty>
+        <template #description>
+          <span>未上传用户协议与隐私政策</span>
         </template>
-      </template>
-    </STable>
+        <a-button type="primary" @click="add.show()">现在添加</a-button>
+      </a-empty>
+    </div>
 
-    <Add ref="add" @success="table.refresh()" />
+    <Add ref="add" @success="getDate()" />
 
-    <Edit ref="edit" @success="table.refresh()" />
+    <Edit ref="edit" @success="getDate()" />
   </PageWrapper>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { STable } from '@/components/STable'
+import { ref, onMounted } from 'vue'
 import { reqSearch } from '@/api/AppConfig/Protocol'
 import Add from './modules/Add.vue'
 import Edit from './modules/Edit.vue'
 
-const columns = [
-  {
-    title: '用户协议',
-    dataIndex: '用户协议',
-    align: 'center',
-  },
-  {
-    title: '隐私政策',
-    dataIndex: '隐私政策',
-    align: 'center',
-  },
-  {
-    title: '操作',
-    dataIndex: 'action',
-    width: '100px',
-    align: 'center',
-  },
-]
+defineOptions({ name: 'Protocol' })
 
-const reqData = async (currentPage: number, pageSize: number) => {
-  const data: any = {
-    currentPage,
-    pageSize,
-  }
+const data = ref()
 
-  const res: any = await reqSearch(data)
+onMounted(async () => {
+  getDate()
+})
+
+const getDate = async () => {
+  const res: any = await reqSearch(1)
   if (res.code == 0) {
-    return {
-      data: res.data.list,
-      total: res.data.total,
-    }
+    data.value = res.data
   }
 }
 
-const table = ref()
-// 添加记录
 const add = ref()
-// 修改
 const edit = ref()
 </script>
 

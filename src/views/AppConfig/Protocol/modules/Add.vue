@@ -1,6 +1,6 @@
 <template>
   <a-modal title="添加" :open="open" @ok="submit" @cancel="open = false">
-    <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
+    <a-form ref="formRef" :model="formState" v-bind="layout">
       <a-form-item label="用户协议" name="yonghuxieyi">
         <a-textarea
           v-model:value.trim="formState.yonghuxieyi"
@@ -42,11 +42,6 @@ const layout = {
 
 const formRef = ref()
 const formState = reactive<any>({})
-
-const rules = {
-  yonghuxieyi: [{ required: true, message: '请输入' }],
-  yinsizhengce: [{ required: true, message: '请输入' }],
-}
 
 const show = () => {
   open.value = true
