@@ -80,14 +80,14 @@ const formItems = reactive([
   {
     type: 'input',
     label: '时长',
-    filed: 'shichang',
+    field: 'shichang',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'select',
     label: '上下架',
-    filed: 'shangxiajia',
+    field: 'shangxiajia',
     value: '',
     placeholder: '请选择',
     options: upDown,
@@ -140,7 +140,7 @@ const reqData = async (currentPage: number, pageSize: number) => {
 
   formItems.forEach((item) => {
     if (item.value) {
-      data[item.filed] = item.value
+      data[item.field] = item.value
     }
   })
 

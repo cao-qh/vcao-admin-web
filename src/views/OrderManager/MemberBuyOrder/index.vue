@@ -178,7 +178,7 @@ const formItems = reactive([
   {
     type: 'datePicker',
     label: '开始时间',
-    filed: 'kaishiDate',
+    field: 'kaishiDate',
     value: dayjs().subtract(15, 'day').format('YYYY-MM-DD'),
     valueFormat: 'YYYY-MM-DD',
     allowClear: false,
@@ -186,7 +186,7 @@ const formItems = reactive([
   {
     type: 'datePicker',
     label: '结束时间',
-    filed: 'jieshuDate',
+    field: 'jieshuDate',
     value: dayjs().format('YYYY-MM-DD'),
     valueFormat: 'YYYY-MM-DD',
     allowClear: false,
@@ -194,14 +194,14 @@ const formItems = reactive([
   {
     type: 'input',
     label: '订单号',
-    filed: 'ddh',
+    field: 'ddh',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'select',
     label: '会员',
-    filed: 'hy',
+    field: 'hy',
     value: '',
     placeholder: '请选择',
     defaultOption: {
@@ -213,7 +213,7 @@ const formItems = reactive([
   {
     type: 'select',
     label: '支付类型',
-    filed: 'payType',
+    field: 'payType',
     value: '',
     placeholder: '请选择',
     defaultOption: {
@@ -225,7 +225,7 @@ const formItems = reactive([
   {
     type: 'select',
     label: '购买类型',
-    filed: 'buyType',
+    field: 'buyType',
     value: '',
     placeholder: '请选择',
     defaultOption: {
@@ -328,7 +328,7 @@ const getData = async (currentPage: number, pageSize: number) => {
   }
   formItems.forEach((item) => {
     if (item.value) {
-      data[item.filed] = item.value
+      data[item.field] = item.value
     }
   })
 
@@ -346,7 +346,7 @@ const handleExport = async () => {
   // const data: any = {}
   // formItems.forEach((item) => {
   //   if (item.value) {
-  //     data[item.filed] = item.value
+  //     data[item.field] = item.value
   //   }
   // })
   // const res = await reqExport(data)

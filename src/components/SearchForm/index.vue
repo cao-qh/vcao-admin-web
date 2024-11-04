@@ -1,7 +1,7 @@
 <template>
   <a-form style="margin-bottom: 10px">
     <a-row :gutter="32">
-      <template v-for="(item, index) in formItems" :key="item.filed">
+      <template v-for="(item, index) in formItems" :key="item.field">
         <a-col
           v-if="(index < 3 || advanced) && !item.hidden"
           :xs="24"
@@ -42,7 +42,7 @@
               </template>
               <template v-else>
                 <a-select-option
-                  v-for="option in promiseOptionsResult[item.filed]"
+                  v-for="option in promiseOptionsResult[item.field]"
                   :key="option.value"
                   :label="option.label"
                 >
@@ -112,7 +112,7 @@ const props = withDefaults(defineProps<SearchFormProps>(), {
     {
       type: 'input',
       label: '用户名',
-      filed: 'username',
+      field: 'username',
       value: '',
       placeholder: '请输入用户名',
     },
@@ -134,10 +134,34 @@ onMounted(() => {
   props.formItems.forEach((item) => {
     if (typeof item.options === 'function') {
       item.options().then((res) => {
-        promiseOptionsResult[item.filed] = res
+        promiseOptionsResult[item.field] = res
       })
     }
   })
+})
+
+// 获取某个表单项
+const getFormItem = (field: string) => {
+  const item = props.formItems.find((item) => item.field === field)
+  if (item) {
+    return item
+  }
+}
+
+// 获取全部表单项的值
+const getFormValues = () => {
+  const values: any = {}
+  props.formItems.forEach((item) => {
+    if (item.value) {
+      values[item.field] = item.value
+    }
+  })
+  return values
+}
+
+defineExpose({
+  getFormItem,
+  getFormValues,
 })
 </script>
 

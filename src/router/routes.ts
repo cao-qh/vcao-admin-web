@@ -85,7 +85,7 @@ export const constantRoute = [
 export const asyncRoute = [
   // 应用配置
   {
-    path: '/AppConfig',
+    path: '/',
     component: BaseLayout,
     name: 'AppConfig',
     meta: {

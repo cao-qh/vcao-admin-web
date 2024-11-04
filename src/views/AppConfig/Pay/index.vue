@@ -70,7 +70,7 @@ const formItems = reactive([
   {
     type: 'select',
     label: '支付方式',
-    filed: 'payType',
+    field: 'payType',
     value: '',
     placeholder: '请选择',
     options: payType,

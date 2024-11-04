@@ -1,8 +1,8 @@
 <template>
   <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
-    <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
-      <a-form-item label="锁方式" name="sfs">
-        <a-select v-model:value="formState.sfs" placeholder="请选择">
+    <a-form ref="formRef" :model="formState" v-bind="layout">
+      <a-form-item label="锁方式" name="jiesuofangshi">
+        <a-select v-model:value="formState.jiesuofangshi" placeholder="请选择">
           <a-select-option
             v-for="item in lockType"
             :key="item.value"
@@ -12,8 +12,37 @@
           </a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item v-if="formState.sfs == 1" label="广告" name="gg">
-        <a-input v-model:value.trim="formState.gg" placeholder="请输入" />
+      <a-form-item
+        v-if="formState.jiesuofangshi == 2"
+        label="广告编码"
+        name="guanggaobianma"
+      >
+        <a-select v-model:value="formState.guanggaobianma" placeholder="请选择">
+          <a-select-option
+            v-for="item in adList"
+            :key="item.value"
+            :value="item.value"
+          >
+            {{ item.label }}
+          </a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item label="视频合集编码" name="hejibianma">
+        <a-select v-model:value="formState.hejibianma" placeholder="请选择">
+          <a-select-option
+            v-for="item in videoCollectionList"
+            :key="item.value"
+            :value="item.value"
+          >
+            {{ item.label }}
+          </a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item label="权重" name="quanzhong">
+        <a-input
+          v-model:value.trim="formState.quanzhong"
+          placeholder="请输入"
+        />
       </a-form-item>
     </a-form>
   </a-modal>
@@ -21,7 +50,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqEdit } from '@/api/table/search/index'
+import { reqEdit } from '@/api/AppConfig/VideoUnlock'
 
 defineOptions({ name: 'Edit' })
 
@@ -31,6 +60,14 @@ const $emit = defineEmits(['success'])
 // 属性
 defineProps({
   lockType: {
+    type: Array<any>,
+    default: () => [],
+  },
+  adList: {
+    type: Array<any>,
+    default: () => [],
+  },
+  videoCollectionList: {
     type: Array<any>,
     default: () => [],
   },
@@ -53,15 +90,13 @@ const layout = {
 const formRef = ref()
 const formState = reactive<any>({})
 
-const rules = {
-  sfs: [{ required: true, message: '请输入' }],
-  gg: [{ required: true, message: '请输入' }],
-}
-
 const show = async (row: any) => {
   open.value = true
-  formState.sfs = row.sfs
-  formState.gg = row.gg
+  formState.id = row.id
+  formState.jiesuofangshi = row.jiesuofangshi
+  formState.guanggaobianma = row.guanggaobianma
+  formState.hejibianma = row.hejibianma
+  formState.quanzhong = row.quanzhong
 }
 
 const submit = async () => {

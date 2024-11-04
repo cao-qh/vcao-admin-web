@@ -80,21 +80,21 @@ const formItems = reactive([
   {
     type: 'input',
     label: '合集编码',
-    filed: 'hjbm',
+    field: 'hjbm',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'input',
     label: '章节名称',
-    filed: 'zjmc',
+    field: 'zjmc',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'select',
     label: '上下架',
-    filed: 'shangxiajia',
+    field: 'shangxiajia',
     value: '',
     placeholder: '请输入',
     options: props.shangxiajia,
@@ -168,7 +168,7 @@ const reqData = async (currentPage: number, pageSize: number) => {
   }
   formItems.forEach((item) => {
     if (item.value) {
-      data[item.filed] = item.value
+      data[item.field] = item.value
     }
   })
 

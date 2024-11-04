@@ -69,7 +69,7 @@ const formItems = reactive([
   {
     type: 'select',
     label: '云点播方式',
-    filed: 'cloudPlaform',
+    field: 'cloudPlaform',
     value: '',
     placeholder: '请选择',
     options: cloudPlaform,

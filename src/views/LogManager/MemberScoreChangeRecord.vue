@@ -59,7 +59,7 @@ const formItems = reactive([
   {
     type: 'datePicker',
     label: '开始时间',
-    filed: 'startTime',
+    field: 'startTime',
     value: dayjs().subtract(15, 'day').format('YYYY-MM-DD HH:mm:ss'),
     showTime: true,
     valueFormat: 'YYYY-MM-DD HH:mm:ss',
@@ -67,7 +67,7 @@ const formItems = reactive([
   {
     type: 'datePicker',
     label: '结束时间',
-    filed: 'endTime',
+    field: 'endTime',
     value: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     showTime: true,
     valueFormat: 'YYYY-MM-DD HH:mm:ss',
@@ -75,7 +75,7 @@ const formItems = reactive([
   {
     type: 'select',
     label: '类型',
-    filed: 'type',
+    field: 'type',
     value: '',
     placeholder: '请选择',
     defaultOption: {
@@ -87,14 +87,14 @@ const formItems = reactive([
   {
     type: 'input',
     label: '会员名称',
-    filed: 'hymc',
+    field: 'hymc',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'select',
     label: '模块',
-    filed: 'module',
+    field: 'module',
     value: '',
     placeholder: '请选择',
     defaultOption: {
@@ -169,7 +169,7 @@ const getData = async (currentPage: number, pageSize: number) => {
     pageSize,
   }
   formItems.forEach((item) => {
-    data[item.filed] = item.value
+    data[item.field] = item.value
   })
 
   const res: any = await reqSearch(data)

@@ -98,21 +98,21 @@ const formItems = reactive([
   {
     type: 'input',
     label: '广告名称',
-    filed: 'mingcheng',
+    field: 'mingcheng',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'input',
     label: '广告编码',
-    filed: 'bianma',
+    field: 'bianma',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'select',
     label: '广告类型',
-    filed: 'guanggaoleixing',
+    field: 'guanggaoleixing',
     value: '',
     placeholder: '请选择',
     options: adType,
@@ -182,7 +182,7 @@ const reqData = async (currentPage: number, pageSize: number) => {
 
   formItems.forEach((item) => {
     if (item.value) {
-      data[item.filed] = item.value
+      data[item.field] = item.value
     }
   })
 

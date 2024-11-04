@@ -148,14 +148,14 @@ const formItems = reactive([
   {
     type: 'input',
     label: '名称',
-    filed: 'mc',
+    field: 'mc',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'select',
     label: '上下架',
-    filed: 'shangxiajia',
+    field: 'shangxiajia',
     value: '',
     placeholder: '请输入',
     options: shangxiajia,
@@ -167,7 +167,7 @@ const formItems = reactive([
   {
     type: 'select',
     label: '推荐',
-    filed: 'recommend',
+    field: 'recommend',
     value: '',
     placeholder: '请输入',
     options: recommend,
@@ -179,7 +179,7 @@ const formItems = reactive([
   {
     type: 'select',
     label: '类列',
-    filed: 'll',
+    field: 'll',
     value: '',
     placeholder: '请输入',
     options: [],
@@ -191,7 +191,7 @@ const formItems = reactive([
   {
     type: 'select',
     label: '更新状态',
-    filed: 'updateStatus',
+    field: 'updateStatus',
     value: '',
     placeholder: '请输入',
     options: updateStatus,
@@ -291,7 +291,7 @@ const reqData = async (currentPage: number, pageSize: number) => {
   }
   formItems.forEach((item) => {
     if (item.value) {
-      data[item.filed] = item.value
+      data[item.field] = item.value
     }
   })
 

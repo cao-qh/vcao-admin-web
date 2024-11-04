@@ -169,7 +169,7 @@ const formItems = reactive([
   {
     type: 'datePicker',
     label: '开始时间',
-    filed: 'startTime',
+    field: 'startTime',
     value: dayjs().subtract(15, 'day').format('YYYY-MM-DD HH:mm:ss'),
     showTime: true,
     valueFormat: 'YYYY-MM-DD HH:mm:ss',
@@ -177,7 +177,7 @@ const formItems = reactive([
   {
     type: 'datePicker',
     label: '结束时间',
-    filed: 'endTime',
+    field: 'endTime',
     value: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     showTime: true,
     valueFormat: 'YYYY-MM-DD HH:mm:ss',
@@ -185,14 +185,14 @@ const formItems = reactive([
   {
     type: 'input',
     label: '手机号',
-    filed: 'phone',
+    field: 'phone',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'select',
     label: '面值',
-    filed: 'faceValue',
+    field: 'faceValue',
     value: '',
     placeholder: '请输入',
     options: faceValue,
@@ -204,7 +204,7 @@ const formItems = reactive([
   {
     type: 'select',
     label: '通道',
-    filed: 'tongdao',
+    field: 'tongdao',
     value: '',
     placeholder: '请选择',
     options: channel,
@@ -216,7 +216,7 @@ const formItems = reactive([
   {
     type: 'select',
     label: '状态',
-    filed: 'zhuangtai',
+    field: 'zhuangtai',
     value: '',
     placeholder: '请选择',
     options: orderStatus,
@@ -314,7 +314,7 @@ const reqData = async (currentPage: number, pageSize: number) => {
   }
   formItems.forEach((item) => {
     if (item.value) {
-      data[item.filed] = item.value
+      data[item.field] = item.value
     }
   })
 
