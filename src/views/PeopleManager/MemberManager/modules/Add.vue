@@ -1,32 +1,37 @@
 <template>
   <a-modal title="添加" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
-      <a-form-item label="头像" name="tx">
+      <a-form-item label="头像" name="img">
         <UploadImage
-          v-model:value.trim="formState.tx"
+          v-model:value.trim="formState.img"
           placeholder="请输入"
         ></UploadImage>
       </a-form-item>
-      <a-form-item label="账户" name="zh">
-        <a-input v-model:value.trim="formState.zh" placeholder="请输入" />
+      <a-form-item label="账户" name="zhanghu">
+        <a-input v-model:value.trim="formState.zhanghu" placeholder="请输入" />
       </a-form-item>
-      <a-form-item label="密码" name="mm">
+      <a-form-item label="密码" name="mima">
         <a-input-password
-          v-model:value.trim="formState.mm"
+          v-model:value.trim="formState.mima"
           placeholder="请输入"
         />
       </a-form-item>
-      <a-form-item label="名称" name="mc">
-        <a-input v-model:value.trim="formState.mc" placeholder="请输入" />
+      <a-form-item label="名称" name="mingcheng">
+        <a-input
+          v-model:value.trim="formState.mingcheng"
+          placeholder="请输入"
+        />
       </a-form-item>
-      <a-form-item label="会员等级" name="hydj">
-        <a-select v-model:value="formState.hydj" placeholder="请选择">
-          <a-select-option :value="1">一级</a-select-option>
-          <a-select-option :value="2">二级</a-select-option>
-        </a-select>
+      <a-form-item label="会员等级" name="huiyuandengji">
+        <a-input-number
+          :min="0"
+          v-model:value="formState.huiyuandengji"
+          placeholder="请选择"
+          style="width: 100%"
+        />
       </a-form-item>
-      <a-form-item label="启禁用" name="qjy">
-        <a-radio-group v-model:value="formState.qjy">
+      <a-form-item label="启禁用" name="qijinyong">
+        <a-radio-group v-model:value="formState.qijinyong">
           <a-radio-button
             v-for="item in qijinyong"
             :key="item.value"
@@ -36,9 +41,9 @@
           </a-radio-button>
         </a-radio-group>
       </a-form-item>
-      <a-form-item label="登录IP" name="ips">
+      <a-form-item label="登录IP" name="dengluip">
         <a-textarea
-          v-model:value.trim="formState.ips"
+          v-model:value.trim="formState.dengluip"
           placeholder="请输入"
         ></a-textarea>
       </a-form-item>
@@ -48,7 +53,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqAdd } from '@/api/table/search/index'
+import { reqAdd } from '@/api/PeopleManager/MemberManager'
 import UploadImage from '@/components/UploadImage/index.vue'
 
 defineOptions({ name: 'Add' })
@@ -82,24 +87,25 @@ const formRef = ref()
 const formState = reactive<any>({})
 
 const rules = {
-  tx: [{ required: true, message: '请选择' }],
-  zh: [{ required: true, message: '请输入' }],
-  mm: [{ required: true, message: '请选择' }],
-  mc: [{ required: true, message: '请选择' }],
-  hydj: [{ required: true, message: '请输入' }],
-  qjy: [{ required: true, message: '请输入' }],
+  img: [{ required: true, message: '请选择' }],
+  zhanghu: [{ required: true, message: '请输入' }],
+  mima: [{ required: true, message: '请选择' }],
+  mingcheng: [{ required: true, message: '请选择' }],
+  huiyuandengji: [{ required: true, message: '请输入' }],
+  qijinyong: [{ required: true, message: '请选择' }],
+  dengluip: [{ required: true, message: '请输入' }],
 }
 
 const show = () => {
   open.value = true
   Object.assign(formState, {
-    tx: '',
-    zh: '',
-    mm: '',
-    mc: '',
-    hydj: '',
-    qjy: '',
-    ips: '',
+    img: null,
+    zhanghu: '',
+    mima: '',
+    mingcheng: '',
+    huiyuandengji: 0,
+    qijinyong: 1,
+    dengluip: '',
   })
   formRef.value?.clearValidate()
 }
@@ -108,7 +114,17 @@ const submit = async () => {
   try {
     await formRef.value.validate()
     console.log('formState :>> ', formState)
-    const res = await reqAdd(formState)
+
+    const formData = new FormData()
+    formData.append('img', formState.img)
+    formData.append('zhanghu', formState.zhanghu)
+    formData.append('mima', formState.mima)
+    formData.append('mingcheng', formState.mingcheng)
+    formData.append('huiyuandengji', formState.huiyuandengji)
+    formData.append('qijinyong', formState.qijinyong)
+    formData.append('dengluip', formState.dengluip)
+
+    const res = await reqAdd(formData)
     if (res.code == 0) {
       $emit('success')
       open.value = false

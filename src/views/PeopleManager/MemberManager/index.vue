@@ -1,6 +1,10 @@
 <template>
   <PageWrapper>
-    <SearchForm :formItems="formItems" @search="table.refresh()"></SearchForm>
+    <SearchForm
+      ref="searchForm"
+      :formItems="formItems"
+      @search="table.refresh()"
+    ></SearchForm>
 
     <STable
       ref="table"
@@ -8,11 +12,11 @@
       :columns="columns"
       :data="reqData"
       :showPagination="true"
-      :scroll="{ y: 'calc(100vh - 450px)' }"
+      :scroll="{ x: 1600, y: 'calc(100vh - 450px)' }"
     >
       <template #toolbar>
         <a-button
-          v-has="'Btn.HomeSetting.Add'"
+          v-has="'Btn.MemberManager.Add'"
           type="primary"
           @click="() => add.show()"
         >
@@ -20,7 +24,10 @@
         </a-button>
       </template>
       <template #bodyCell="{ column, row }">
-        <template v-if="column.dataIndex === 'qjy'">
+        <template v-if="column.dataIndex === 'touxiang'">
+          <a-image :width="50" :src="baseUrl + row.touxiang" />
+        </template>
+        <template v-if="column.dataIndex === 'qijinyong'">
           <a-popconfirm
             title="确定要修改吗？"
             ok-text="是"
@@ -31,15 +38,21 @@
           </a-popconfirm>
         </template>
         <template v-if="column.dataIndex === 'action'">
-          <a v-has="'Btn.HomeSetting.Update'" @click="() => edit.show(row)">
+          <a v-has="'Btn.MemberManager.Update'" @click="() => edit.show(row)">
             修改
           </a>
-          <a-divider type="vertical" />
-          <a @click="order.show(row)">订购</a>
-          <a-divider type="vertical" />
-          <a @click="balance.show(row)">余额</a>
-          <a-divider type="vertical" />
-          <a @click="score.show(row)">积分</a>
+          <div v-has="'Btn.MemberManager.Order'">
+            <a-divider type="vertical" />
+            <a @click="order.show(row)">订购</a>
+          </div>
+          <div v-has="'Btn.MemberManager.Balance'">
+            <a-divider type="vertical" />
+            <a @click="balance.show(row)">余额</a>
+          </div>
+          <div v-has="'Btn.MemberManager.Score'">
+            <a-divider type="vertical" />
+            <a @click="score.show(row)">积分</a>
+          </div>
         </template>
       </template>
     </STable>
@@ -60,13 +73,15 @@
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import { STable } from '@/components/STable'
-import { reqSearch, reqQijinyong } from '@/api/table/search/index'
+import { reqSearch, reqEnable } from '@/api/PeopleManager/MemberManager'
 import Add from './modules/Add.vue'
 import Edit from './modules/Edit.vue'
 import Order from './modules/Order.vue'
 import Balance from './modules/Balance.vue'
 import Score from './modules/Score.vue'
 import { message } from 'ant-design-vue'
+
+const baseUrl = import.meta.env.VITE_SERVE
 
 // 启禁用
 const qijinyong = [
@@ -84,14 +99,14 @@ const formItems = reactive([
   {
     type: 'input',
     label: '手机号',
-    field: 'sjh',
+    field: 'zhanghu',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'input',
     label: '名称',
-    field: 'mc',
+    field: 'mingcheng',
     value: '',
     placeholder: '请输入',
   },
@@ -111,68 +126,63 @@ const formItems = reactive([
 
 const columns = [
   {
-    title: '编码',
-    dataIndex: 'bm',
-    align: 'center',
-  },
-  {
-    title: '账户/手机号',
-    dataIndex: 'sjh',
-    align: 'center',
-  },
-  {
-    title: '名称',
-    dataIndex: 'mc',
-    align: 'center',
-  },
-  {
-    title: '微信OpenID',
-    dataIndex: 'wx',
-    align: 'center',
-  },
-  {
-    title: '会员价',
-    dataIndex: 'hyj',
+    title: '头像',
+    dataIndex: 'touxiang',
     align: 'center',
   },
   {
     title: '抖音OpenID',
-    dataIndex: 'dy',
+    dataIndex: 'dyopenid',
     align: 'center',
   },
   {
-    title: '头像',
-    dataIndex: 'tx',
+    title: '会员等级',
+    dataIndex: 'huiyuandengji',
     align: 'center',
   },
   {
-    title: '会员',
-    dataIndex: 'hy',
+    title: '账户/手机号',
+    dataIndex: 'zhanghu',
+    align: 'center',
+  },
+  {
+    title: '名称',
+    dataIndex: 'mingcheng',
+    align: 'center',
+  },
+  {
+    title: '编码',
+    dataIndex: 'bianma',
+    align: 'center',
+  },
+  {
+    title: '微信OpenID',
+    dataIndex: 'wxopenid',
     align: 'center',
   },
   {
     title: '登录IP',
-    dataIndex: 'dlip',
+    dataIndex: 'dengluip',
     align: 'center',
   },
   {
     title: '会员到期时间',
-    dataIndex: 'dqsj',
+    dataIndex: 'huiyuandaoqishijian',
     align: 'center',
   },
   {
     title: '创建时间',
-    dataIndex: 'cjsh',
+    dataIndex: 'chuangjianshijian',
     align: 'center',
   },
   {
     title: '更新时间',
-    dataIndex: 'gxsj',
+    dataIndex: 'gengxinshijian',
     align: 'center',
   },
   {
     title: '启禁用',
-    dataIndex: 'qjy',
+    dataIndex: 'qijinyong',
     align: 'center',
   },
   {
@@ -187,6 +197,7 @@ const reqData = async (currentPage: number, pageSize: number) => {
   const data: any = {
     currentPage,
     pageSize,
+    ...searchForm.value.getFormValues(),
   }
 
   const res: any = await reqSearch(data)
@@ -200,17 +211,19 @@ const reqData = async (currentPage: number, pageSize: number) => {
 
 // 启禁用
 const handelQijinyong = async (row: any) => {
-  const result = await reqQijinyong({
-    id: row.id,
+  const result = await reqEnable({
+    bianma: row.bianma,
     qijinyong: row.qijinyong === 1 ? 2 : 1,
   })
   if (result.code == 0) {
     message.success(result.msg)
+    table.value.refresh()
   } else {
     message.error(result.msg)
   }
 }
 
+const searchForm = ref()
 const table = ref()
 // 添加记录
 const add = ref()

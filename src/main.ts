@@ -4,7 +4,7 @@ import App from './App.vue'
 import './styles/index.scss'
 // svg插件需要的配置代码
 import 'virtual:svg-icons-register'
-// 引入自定义擦火箭对象：注册整个项目全局组件
+// 引入自定义组件对象：注册整个项目全局组件
 import gloalComponent from '@/components'
 // ant-design组件按需引入
 import antComponents from '@/core/components'

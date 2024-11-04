@@ -1,6 +1,6 @@
 <template>
   <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
-    <a-form ref="formRef" :model="formState" v-bind="layout">
+    <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
       <a-form-item label="账户/手机号" name="shoujihao">
         <a-input
           v-model:value.trim="formState.shoujihao"
@@ -14,18 +14,15 @@
           placeholder="请输入"
         />
       </a-form-item>
-      <a-form-item label="姓名" name="mingcheng">
-        <a-input
-          v-model:value.trim="formState.mingcheng"
-          placeholder="请输入"
-        />
+      <a-form-item label="姓名" name="xingming">
+        <a-input v-model:value.trim="formState.xingming" placeholder="请输入" />
       </a-form-item>
-      <a-form-item label="邮箱" name="yx">
-        <a-input v-model:value.trim="formState.yx" placeholder="请输入" />
+      <a-form-item label="邮箱" name="youxiang">
+        <a-input v-model:value.trim="formState.youxiang" placeholder="请输入" />
       </a-form-item>
-      <a-form-item label="登录IP" name="ips">
+      <a-form-item label="登录IP" name="ip">
         <a-textarea
-          v-model:value.trim="formState.ips"
+          v-model:value.trim="formState.ip"
           placeholder="请输入"
         ></a-textarea>
       </a-form-item>
@@ -35,7 +32,8 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqEdit } from '@/api/table/search/index'
+import { reqEdit } from '@/api/PeopleManager/UserManager'
+import { phone } from '@/utils/regexp'
 
 defineOptions({ name: 'Edit' })
 
@@ -59,13 +57,27 @@ const layout = {
 const formRef = ref()
 const formState = reactive<any>({})
 
+const rules = {
+  shoujihao: [
+    { required: true, pattern: phone, message: '请输入正确的手机号' },
+  ],
+  mima: [
+    {
+      required: true,
+      min: 6,
+      message: '请输入6位以上密码',
+    },
+  ],
+  xingming: [{ required: true, message: '请输入' }],
+}
+
 const show = async (row: any) => {
   open.value = true
   formState.shoujihao = row.shoujihao
   formState.mima = row.mima
-  formState.mingcheng = row.mingcheng
-  formState.yx = row.yx
-  formState.ips = row.ips
+  formState.xingming = row.xingming
+  formState.youxiang = row.youxiang
+  formState.ip = row.ip
 }
 
 const submit = async () => {
