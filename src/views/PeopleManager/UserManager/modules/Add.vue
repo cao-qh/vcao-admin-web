@@ -13,23 +13,20 @@
           placeholder="请输入"
         />
       </a-form-item>
-      <a-form-item label="姓名" name="mingcheng">
-        <a-input
-          v-model:value.trim="formState.mingcheng"
-          placeholder="请输入"
-        />
+      <a-form-item label="姓名" name="xingming">
+        <a-input v-model:value.trim="formState.xingming" placeholder="请输入" />
       </a-form-item>
-      <a-form-item label="邮箱" name="yx">
-        <a-input v-model:value.trim="formState.yx" placeholder="请输入" />
+      <a-form-item label="邮箱" name="youxiang">
+        <a-input v-model:value.trim="formState.youxiang" placeholder="请输入" />
       </a-form-item>
-      <a-form-item label="登录IP" name="ips">
+      <a-form-item label="登录IP" name="ip">
         <a-textarea
-          v-model:value.trim="formState.ips"
+          v-model:value.trim="formState.ip"
           placeholder="请输入"
         ></a-textarea>
       </a-form-item>
-      <a-form-item label="启禁用" name="qjy">
-        <a-radio-group v-model:value="formState.qjy">
+      <a-form-item label="启禁用" name="qijinyong">
+        <a-radio-group v-model:value="formState.qijinyong">
           <a-radio-button
             v-for="item in qijinyong"
             :key="item.value"
@@ -45,7 +42,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqAdd } from '@/api/table/search/index'
+import { reqAdd } from '@/api/PeopleManager/UserManager'
 import { phone, email } from '@/utils/regexp'
 
 defineOptions({ name: 'Add' })
@@ -88,17 +85,20 @@ const rules = {
       message: '请输入6位以上密码',
     },
   ],
-  mingcheng: [{ required: true, message: '请输入' }],
-  yx: [{ required: true, pattern: email, message: '请输入正确的邮箱' }],
-  qjy: [{ required: true, message: '请选择' }],
+  xingming: [{ required: true, message: '请输入' }],
+  youxiang: [{ pattern: email, message: '请输入正确的邮箱' }],
+  qijinyong: [{ required: true, message: '请选择' }],
 }
 
 const show = () => {
   open.value = true
   Object.assign(formState, {
-    mingcheng: '',
-    mima: '',
     shoujihao: '',
+    xingming: '',
+    mima: '',
+    youxiang: '',
+    ip: '',
+    qijinyong: 1,
   })
   formRef.value?.clearValidate()
 }

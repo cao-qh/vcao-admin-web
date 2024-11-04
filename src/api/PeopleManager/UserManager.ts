@@ -9,6 +9,12 @@ enum API {
   searchPermissionUrl = '/pc/yonghu/selectQuanXian',
   // 配置权限
   configPermissionUrl = '/pc/yonghu/peiZhiQuanXian',
+  // 启禁用
+  enableUrl = '/pc/yonghu/qijinyong',
+  // 添加
+  addUrl = '/pc/yonghu/add',
+  // 修改
+  editUrl = '/pc/yonghu/xiugai',
 }
 
 // 查询
@@ -22,3 +28,15 @@ export const reqSearchPermission = (data: any) =>
 // 配置权限
 export const reqConfigPermission = (data: any) =>
   request.post<any, any>(API.configPermissionUrl, obj2Query(data))
+
+// 启禁用
+export const reqEnable = (data: any) =>
+  request.post<any, any>(API.enableUrl, obj2Query(data))
+
+// 添加
+export const reqAdd = (data: any) =>
+  request.post<any, any>(API.addUrl, obj2Query(data))
+
+// 修改
+export const reqEdit = (data: any) =>
+  request.post<any, any>(API.editUrl, obj2Query(data))

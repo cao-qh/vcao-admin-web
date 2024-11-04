@@ -20,7 +20,7 @@ export const constantRoute = [
       {
         path: '/user/login',
         component: () => import('@/views/user/login/index.vue'),
-        name: 'AdminLogin',
+        name: 'Login',
         meta: {
           title: '管理员登录',
         },
@@ -85,7 +85,8 @@ export const constantRoute = [
 export const asyncRoute = [
   // 应用配置
   {
-    path: '/',
+    path: '/AppConfig',
+    alias: '/',
     component: BaseLayout,
     name: 'AppConfig',
     meta: {

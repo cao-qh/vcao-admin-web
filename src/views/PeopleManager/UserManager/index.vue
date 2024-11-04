@@ -58,7 +58,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
-import { reqSearch } from '@/api/PeopleManager/UserManager'
+import { reqSearch, reqEnable } from '@/api/PeopleManager/UserManager'
 import { STable } from '@/components/STable'
 import { message } from 'ant-design-vue'
 import Add from './modules/Add.vue'
@@ -175,8 +175,8 @@ const reqData = async (currentPage: number, pageSize: number) => {
 
 // 启禁用
 const handelQijinyong = async (row: any) => {
-  const result = await reqQijinyong({
-    id: row.id,
+  const result = await reqEnable({
+    shoujihao: row.shoujihao,
     qijinyong: row.qijinyong === 1 ? 2 : 1,
   })
   if (result.code == 0) {
