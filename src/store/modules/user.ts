@@ -6,7 +6,7 @@ import { reqLogin, reqPhoneLogin, reqInfo } from '@/api/user'
 
 // 引入路由（常量路由）
 import { constantRoute, asyncRoute } from '@/router/routes'
-import router, { resetRouter } from '@/router'
+import router from '@/router'
 import { deepCopy } from '@/utils/deepCopy'
 import type { RouteRecordRaw } from 'vue-router'
 import useLayoutSettingStore from '@/store/modules/setting'
@@ -33,6 +33,8 @@ const useUserStore: any = defineStore('user', () => {
   const menuRoutes = ref<RouteRecordRaw[]>([])
   const username = ref('')
   const buttons = ref<string[]>([])
+  // 动态添加的路由返回删除
+  const delMenuRoutes = ref<any>([])
 
   // 用户登录的方法
   const userLogin = async (data: any) => {
@@ -90,7 +92,8 @@ const useUserStore: any = defineStore('user', () => {
       menuRoutes.value = [...constantRoute, ...userAsyncRoute]
       //目前路由器管理的只有常量路由:用户计算完毕异步路由、任意路由动态追加
       userAsyncRoute.forEach((route: any) => {
-        router.addRoute(route)
+        const removeRoute = router.addRoute(route)
+        delMenuRoutes.value.push(removeRoute)
       })
       return 'ok'
     } else {
@@ -113,7 +116,8 @@ const useUserStore: any = defineStore('user', () => {
     setting.tabList = []
 
     // 重置路由
-    resetRouter()
+    delMenuRoutes.value.forEach((item: any) => item())
+    delMenuRoutes.value = []
 
     router.push({
       name: 'Login',
