@@ -1,8 +1,8 @@
 <template>
   <a-modal title="添加" :open="open" @ok="submit" @cancel="open = false">
-    <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
-      <a-form-item label="支付方式" name="zffs">
-        <a-select v-model:value="formState.zffs" placeholder="请选择">
+    <a-form ref="formRef" :model="formState" v-bind="layout">
+      <a-form-item label="支付方式" name="zhifenfangshi">
+        <a-select v-model:value="formState.zhifenfangshi" placeholder="请选择">
           <a-select-option
             v-for="item in payType"
             :key="item.value"
@@ -12,8 +12,11 @@
           </a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item label="支付参数" name="zfcs">
-        <a-input v-model:value.trim="formState.zfcs" placeholder="请输入" />
+      <a-form-item label="支付参数" name="zhifucanshu">
+        <a-textarea
+          v-model:value.trim="formState.zhifucanshu"
+          placeholder="请输入"
+        />
       </a-form-item>
     </a-form>
   </a-modal>
@@ -21,7 +24,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqAdd } from '@/api/table/search/index'
+import { reqAdd } from '@/api/AppConfig/Pay'
 
 defineOptions({ name: 'Add' })
 
@@ -53,16 +56,11 @@ const layout = {
 const formRef = ref()
 const formState = reactive<any>({})
 
-const rules = {
-  zffs: [{ required: true, message: '请选择' }],
-  zfcs: [{ required: true, message: '请输入' }],
-}
-
 const show = () => {
   open.value = true
   Object.assign(formState, {
-    zffs: undefined,
-    zfcs: '',
+    zhifenfangshi: undefined,
+    zhifucanshu: '',
   })
   formRef.value?.clearValidate()
 }

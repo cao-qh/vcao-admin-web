@@ -33,7 +33,11 @@
 
     <Add ref="add" :cloudPlaform="cloudPlaform" @success="table.refresh()" />
 
-    <EditParams ref="editParams" @success="table.refresh()" />
+    <EditParams
+      ref="editParams"
+      :cloudPlaform="cloudPlaform"
+      @success="table.refresh()"
+    />
   </PageWrapper>
 </template>
 
@@ -41,7 +45,7 @@
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import { STable } from '@/components/STable'
-import { reqSearch } from '@/api/table/search/index'
+import { reqSearch } from '@/api/AppConfig/CloudPlay'
 import Add from './modules/Add.vue'
 import EditParams from './modules/EditParams.vue'
 
@@ -69,7 +73,7 @@ const formItems = reactive([
   {
     type: 'select',
     label: '云点播方式',
-    field: 'cloudPlaform',
+    field: 'yundianbofangshi',
     value: '',
     placeholder: '请选择',
     options: cloudPlaform,
@@ -83,12 +87,16 @@ const formItems = reactive([
 const columns = [
   {
     title: '云点播方式',
-    dataIndex: 'yddfs',
+    dataIndex: 'yundianbofangshi',
     align: 'center',
+    customRender: ({ text }: any) => {
+      const item = cloudPlaform.find((item: any) => item.value == text)
+      return item?.label
+    },
   },
   {
     title: '云点播参数',
-    dataIndex: 'yddcs',
+    dataIndex: 'yundianbocanshu',
     align: 'center',
   },
   {

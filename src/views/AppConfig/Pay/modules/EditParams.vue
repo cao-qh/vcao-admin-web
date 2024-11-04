@@ -1,19 +1,40 @@
 <template>
   <a-modal title="修改参数" :open="open" @ok="submit" @cancel="open = false">
-    <a-form
-      ref="formRef"
-      :model="formState"
-      v-bind="layout"
-      :rules="rules"
-    ></a-form>
+    <a-form ref="formRef" :model="formState" v-bind="layout">
+      <a-form-item label="支付方式" name="zhifenfangshi">
+        <a-select v-model:value="formState.zhifenfangshi" placeholder="请选择">
+          <a-select-option
+            v-for="item in payType"
+            :key="item.value"
+            :value="item.value"
+          >
+            {{ item.label }}
+          </a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item label="支付参数" name="zhifucanshu">
+        <a-textarea
+          v-model:value.trim="formState.zhifucanshu"
+          placeholder="请输入"
+        />
+      </a-form-item>
+    </a-form>
   </a-modal>
 </template>
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqEdit } from '@/api/table/search/index'
+import { reqEdit } from '@/api/AppConfig/Pay'
 
 defineOptions({ name: 'Edit' })
+
+// 属性
+defineProps({
+  payType: {
+    type: Array<any>,
+    default: () => [],
+  },
+})
 
 // 定义方法
 const $emit = defineEmits(['success'])
@@ -35,19 +56,11 @@ const layout = {
 const formRef = ref()
 const formState = reactive<any>({})
 
-const rules = {
-  tp: [{ required: true, message: '请选择' }],
-  sc: [{ required: true, message: '请输入' }],
-  yj: [{ required: true, message: '请输入' }],
-  yhj: [{ required: true, message: '请输入' }],
-}
-
 const show = async (row: any) => {
   open.value = true
-  formState.tp = row.tp
-  formState.sc = row.sc
-  formState.yj = row.yj
-  formState.yhj = row.yhj
+  formState.id = row.id
+  formState.zhifenfangshi = row.zhifenfangshi
+  formState.zhifucanshu = row.zhifucanshu
 }
 
 const submit = async () => {

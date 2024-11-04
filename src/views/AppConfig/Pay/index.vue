@@ -1,6 +1,10 @@
 <template>
   <PageWrapper>
-    <SearchForm :formItems="formItems" @search="table.refresh()"></SearchForm>
+    <SearchForm
+      ref="searchForm"
+      :formItems="formItems"
+      @search="table.refresh()"
+    ></SearchForm>
 
     <STable
       ref="table"
@@ -8,7 +12,7 @@
       :columns="columns"
       :data="reqData"
       :showPagination="true"
-      :scroll="{ y: 'calc(100vh - 450px)' }"
+      :scroll="{ y: 'calc(100vh - 420px)' }"
     >
       <template #toolbar>
         <a-button
@@ -30,7 +34,11 @@
 
     <Add ref="add" :payType="payType" @success="table.refresh()" />
 
-    <EditParams ref="editParams" @success="table.refresh()" />
+    <EditParams
+      ref="editParams"
+      :payType="payType"
+      @success="table.refresh()"
+    />
   </PageWrapper>
 </template>
 
@@ -38,7 +46,7 @@
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import { STable } from '@/components/STable'
-import { reqSearch } from '@/api/table/search/index'
+import { reqSearch } from '@/api/AppConfig/Pay'
 import Add from './modules/Add.vue'
 import EditParams from './modules/EditParams.vue'
 
@@ -84,12 +92,16 @@ const formItems = reactive([
 const columns = [
   {
     title: '支付方式',
-    dataIndex: 'payType',
+    dataIndex: 'zhifenfangshi',
     align: 'center',
+    customRender: ({ text }: any) => {
+      const item = payType.find((item: any) => item.value == text)
+      return item?.label
+    },
   },
   {
     title: '支付参数',
-    dataIndex: 'payParams',
+    dataIndex: 'zhifucanshu',
     align: 'center',
   },
   {
@@ -104,6 +116,7 @@ const reqData = async (currentPage: number, pageSize: number) => {
   const data: any = {
     currentPage,
     pageSize,
+    ...searchForm.value.getFormValues(),
   }
 
   const res: any = await reqSearch(data)
@@ -115,6 +128,7 @@ const reqData = async (currentPage: number, pageSize: number) => {
   }
 }
 
+const searchForm = ref()
 const table = ref()
 // 添加记录
 const add = ref()

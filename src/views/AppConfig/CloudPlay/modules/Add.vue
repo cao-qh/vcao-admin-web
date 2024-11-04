@@ -1,8 +1,11 @@
 <template>
   <a-modal title="添加" :open="open" @ok="submit" @cancel="open = false">
-    <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
-      <a-form-item label="云点播方式" name="ydbfs">
-        <a-select v-model:value="formState.ydbfs" placeholder="请选择">
+    <a-form ref="formRef" :model="formState" v-bind="layout">
+      <a-form-item label="云点播方式" name="yundianbofangshi">
+        <a-select
+          v-model:value="formState.yundianbofangshi"
+          placeholder="请选择"
+        >
           <a-select-option
             v-for="item in cloudPlaform"
             :key="item.value"
@@ -12,8 +15,11 @@
           </a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item label="云点播参数" name="ydbcs">
-        <a-input v-model:value.trim="formState.ydbcs" placeholder="请输入" />
+      <a-form-item label="云点播参数" name="yundianbocanshu">
+        <a-textarea
+          v-model:value.trim="formState.yundianbocanshu"
+          placeholder="请输入"
+        />
       </a-form-item>
     </a-form>
   </a-modal>
@@ -21,7 +27,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqAdd } from '@/api/table/search/index'
+import { reqAdd } from '@/api/AppConfig/CloudPlay'
 
 defineOptions({ name: 'Add' })
 
@@ -53,16 +59,11 @@ const layout = {
 const formRef = ref()
 const formState = reactive<any>({})
 
-const rules = {
-  ydbfs: [{ required: true, message: '请选择' }],
-  ydbcs: [{ required: true, message: '请输入' }],
-}
-
 const show = () => {
   open.value = true
   Object.assign(formState, {
-    ydbfs: undefined,
-    ydbcs: '',
+    yundianbofangshi: undefined,
+    yundianbocanshu: '',
   })
   formRef.value?.clearValidate()
 }
