@@ -89,7 +89,13 @@ const formState = reactive<any>({})
 const rules = {
   img: [{ required: true, message: '请选择' }],
   zhanghu: [{ required: true, message: '请输入' }],
-  mima: [{ required: true, message: '请选择' }],
+  mima: [
+    {
+      required: true,
+      min: 6,
+      message: '请输入6位以上密码',
+    },
+  ],
   mingcheng: [{ required: true, message: '请选择' }],
   huiyuandengji: [{ required: true, message: '请输入' }],
   qijinyong: [{ required: true, message: '请选择' }],

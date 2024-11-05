@@ -12,7 +12,7 @@
       :columns="columns"
       :data="reqData"
       :showPagination="true"
-      :scroll="{ x: 1600, y: 'calc(100vh - 450px)' }"
+      :scroll="{ x: 1600, y: 'calc(100vh - 430px)' }"
     >
       <template #toolbar>
         <a-button
@@ -47,11 +47,11 @@
           </div>
           <div v-has="'Btn.MemberManager.Balance'">
             <a-divider type="vertical" />
-            <a @click="balance.show(row)">余额</a>
+            <a @click="balance.show(row)">修改余额</a>
           </div>
           <div v-has="'Btn.MemberManager.Score'">
             <a-divider type="vertical" />
-            <a @click="score.show(row)">积分</a>
+            <a @click="score.show(row)">修改积分</a>
           </div>
         </template>
       </template>

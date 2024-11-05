@@ -1,30 +1,36 @@
 <template>
   <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
-      <a-form-item label="头像" name="tx">
-        <UploadImage
-          v-model:value.trim="formState.tx"
+      <a-form-item label="编码" name="bianma">
+        <a-input
+          v-model:value.trim="formState.bianma"
           placeholder="请输入"
-        ></UploadImage>
+          disabled
+        ></a-input>
       </a-form-item>
-      <a-form-item label="密码" name="mm">
+      <a-form-item label="密码" name="mima">
         <a-input-password
-          v-model:value.trim="formState.mm"
+          v-model:value.trim="formState.mima"
           placeholder="请输入"
         />
       </a-form-item>
-      <a-form-item label="名称" name="mc">
-        <a-input v-model:value.trim="formState.mc" placeholder="请输入" />
+      <a-form-item label="名称" name="mingcheng">
+        <a-input
+          v-model:value.trim="formState.mingcheng"
+          placeholder="请输入"
+        />
       </a-form-item>
-      <a-form-item label="会员等级" name="hydj">
-        <a-select v-model:value="formState.hydj" placeholder="请选择">
-          <a-select-option :value="1">一级</a-select-option>
-          <a-select-option :value="2">二级</a-select-option>
-        </a-select>
+      <a-form-item label="会员等级" name="huiyuandengji">
+        <a-input-number
+          :min="0"
+          v-model:value="formState.huiyuandengji"
+          placeholder="请选择"
+          style="width: 100%"
+        />
       </a-form-item>
-      <a-form-item label="登录IP" name="ips">
+      <a-form-item label="登录IP" name="dengluip">
         <a-textarea
-          v-model:value.trim="formState.ips"
+          v-model:value.trim="formState.dengluip"
           placeholder="请输入"
         ></a-textarea>
       </a-form-item>
@@ -34,22 +40,9 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqEdit } from '@/api/table/search/index'
-import UploadImage from '@/components/UploadImage/index.vue'
+import { reqEdit } from '@/api/PeopleManager/MemberManager'
 
 defineOptions({ name: 'Edit' })
-
-// 属性
-defineProps({
-  position: {
-    type: Array<any>,
-    default: () => [],
-  },
-  jumpType: {
-    type: Array<any>,
-    default: () => [],
-  },
-})
 
 // 定义方法
 const $emit = defineEmits(['success'])
@@ -72,19 +65,25 @@ const formRef = ref()
 const formState = reactive<any>({})
 
 const rules = {
-  tx: [{ required: true, message: '请选择' }],
-  mm: [{ required: true, message: '请选择' }],
-  mc: [{ required: true, message: '请选择' }],
-  hydj: [{ required: true, message: '请输入' }],
+  bianma: [{ required: true, message: '请选择' }],
+  mima: [
+    {
+      min: 6,
+      message: '请输入6位以上密码',
+    },
+  ],
+  mingcheng: [{ required: true, message: '请输入' }],
+  huiyuandengji: [{ required: true, message: '请输入' }],
+  dengluip: [{ required: true, message: '请输入' }],
 }
 
 const show = async (row: any) => {
   open.value = true
-  formState.tx = row.tx
-  formState.mm = row.mm
-  formState.mc = row.mc
-  formState.hydj = row.hydj
-  formState.ips = row.ips
+  formState.bianma = row.bianma
+  formState.mima = row.mima
+  formState.mingcheng = row.mingcheng
+  formState.huiyuandengji = row.huiyuandengji
+  formState.dengluip = row.dengluip
 }
 
 const submit = async () => {
