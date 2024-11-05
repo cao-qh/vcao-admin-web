@@ -1,6 +1,10 @@
 <template>
   <PageWrapper>
-    <SearchForm :formItems="formItems" @search="table.refresh()" />
+    <SearchForm
+      ref="searchForm"
+      :formItems="formItems"
+      @search="table.refresh()"
+    />
 
     <STable
       ref="table"
@@ -8,7 +12,7 @@
       :columns="columns"
       :data="getData"
       :showPagination="true"
-      :scroll="{ x: 2050, y: 'calc(100vh - 510px)' }"
+      :scroll="{ x: 2050, y: 'calc(100vh - 420px)' }"
     >
       <template #toolbar>
         <a-button
@@ -19,112 +23,6 @@
           导出
         </a-button>
       </template>
-      <template #bodyCell="{ column, row }">
-        <template v-if="column.dataIndex === 'dingdanbianma'">
-          <MultipartTableCell>
-            <template #label>
-              <div>兴投订单编码：</div>
-              <div>下级订单编码：</div>
-              <div>上级订单编码：</div>
-            </template>
-            <template #value>
-              <div>{{ row.dingdanhao }}</div>
-              <div>{{ row.dingdanhaoXiaji }}</div>
-              <div>{{ row.dingdanhaoShangji }}</div>
-            </template>
-          </MultipartTableCell>
-        </template>
-        <template v-if="column.dataIndex === 'chanpinxinxi'">
-          <MultipartTableCell>
-            <template #label>
-              <div>产品名称：</div>
-              <div>兴投产品编码：</div>
-              <div>上级产品编码：</div>
-            </template>
-            <template #value>
-              <div>{{ row.chanpinmingcheng }}</div>
-              <div>{{ row.chanpinbianma }}</div>
-              <div>{{ row.shangJiChanpinBianMa }}</div>
-            </template>
-          </MultipartTableCell>
-        </template>
-        <template v-if="column.dataIndex === 'qudaoshangxinixi'">
-          <MultipartTableCell>
-            <template #label>
-              <div>上游渠道商：</div>
-              <div>下游渠道商：</div>
-            </template>
-            <template #value>
-              <div>{{ row.shangyouqudaoshang }}</div>
-              <div>{{ row.xiayouqudaoshang }}</div>
-            </template>
-          </MultipartTableCell>
-        </template>
-        <template v-if="column.dataIndex === 'haomaxinxi'">
-          <MultipartTableCell>
-            <template #label>
-              <div>办理手机号：</div>
-              <div>验证码：</div>
-            </template>
-            <template #value>
-              <div>{{ row.shoujihao }}</div>
-              <div>{{ row.yanzhengma }}</div>
-            </template>
-          </MultipartTableCell>
-        </template>
-        <template v-if="column.dataIndex === 'tuiguangxinxi'">
-          <MultipartTableCell>
-            <template #label>
-              <div>触点：</div>
-              <div>产品页面链接：</div>
-              <div>下级备注：</div>
-            </template>
-            <template #value>
-              <div>{{ row.xiajiChudian }}</div>
-              <div>{{ row.xiajiLuodiyeUrl }}</div>
-              <div>{{ row.xiajiBeizhu }}</div>
-            </template>
-          </MultipartTableCell>
-        </template>
-        <template v-if="column.dataIndex === 'dinggoujiage'">
-          <MultipartTableCell>
-            <template #label>
-              <div>订购价格：</div>
-              <div>下级佣金：</div>
-            </template>
-            <template #value>
-              <div>{{ row.dinggoujiage }}</div>
-              <div>{{ row.xiajiYongjin }}</div>
-            </template>
-          </MultipartTableCell>
-        </template>
-        <template v-if="column.dataIndex === 'dizhixinxi'">
-          <MultipartTableCell>
-            <template #label>
-              <div>省份：</div>
-              <div>地址：</div>
-            </template>
-            <template #value>
-              <div>{{ row.shengfen }}</div>
-              <div>{{ row.dishi }}</div>
-            </template>
-          </MultipartTableCell>
-        </template>
-        <template v-if="column.dataIndex === 'shijianxinxi'">
-          <MultipartTableCell>
-            <template #label>
-              <div>创建时间：</div>
-              <div>校验时间：</div>
-              <div>返回时间：</div>
-            </template>
-            <template #value>
-              <div>{{ row.chuangjianshijian }}</div>
-              <div>{{ row.jiaoyanshijian }}</div>
-              <div>{{ row.shoulishijian }}</div>
-            </template>
-          </MultipartTableCell>
-        </template>
-      </template>
     </STable>
   </PageWrapper>
 </template>
@@ -132,14 +30,42 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
-import { STable, MultipartTableCell } from '@/components/STable'
+import { STable } from '@/components/STable'
 import dayjs from 'dayjs'
-import { reqSearch } from '@/api/table/search/index'
-// import { message } from 'ant-design-vue'
+import { reqSearch, reqExport } from '@/api/OrderManager/MemberBuyOrder'
+import { reqMember } from '@/api/common'
+import { message } from 'ant-design-vue'
+import { linkDownload } from '@/utils/download'
 
 defineOptions({
   name: 'MemberBuyOrder',
 })
+
+const baseUrl = import.meta.env.VITE_SERVE
+
+// 支付方式
+const payWay: any = [
+  {
+    value: 1,
+    label: '微信小程序',
+  },
+  {
+    value: 2,
+    label: 'H5',
+  },
+  {
+    value: 3,
+    label: '公众号',
+  },
+  {
+    value: 4,
+    label: '支付宝',
+  },
+  {
+    value: 5,
+    label: '做任务',
+  },
+]
 
 // 支付类型
 const payType = [
@@ -178,7 +104,7 @@ const formItems = reactive([
   {
     type: 'datePicker',
     label: '开始时间',
-    field: 'kaishiDate',
+    field: 'startTime',
     value: dayjs().subtract(15, 'day').format('YYYY-MM-DD'),
     valueFormat: 'YYYY-MM-DD',
     allowClear: false,
@@ -186,7 +112,7 @@ const formItems = reactive([
   {
     type: 'datePicker',
     label: '结束时间',
-    field: 'jieshuDate',
+    field: 'endTime',
     value: dayjs().format('YYYY-MM-DD'),
     valueFormat: 'YYYY-MM-DD',
     allowClear: false,
@@ -194,26 +120,36 @@ const formItems = reactive([
   {
     type: 'input',
     label: '订单号',
-    field: 'ddh',
+    field: 'dingdanhao',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'select',
     label: '会员',
-    field: 'hy',
+    field: 'huiyuanBianma',
     value: '',
     placeholder: '请选择',
     defaultOption: {
       label: '全部',
       value: '',
     },
-    options: [],
+    options: async () => {
+      const res = await reqMember()
+      if (res.code == 0) {
+        return res.data.map((item: any) => {
+          return {
+            label: item.mc,
+            value: item.bm,
+          }
+        })
+      }
+    },
   },
   {
     type: 'select',
     label: '支付类型',
-    field: 'payType',
+    field: 'zhifuleixing',
     value: '',
     placeholder: '请选择',
     defaultOption: {
@@ -225,7 +161,7 @@ const formItems = reactive([
   {
     type: 'select',
     label: '购买类型',
-    field: 'buyType',
+    field: 'maileiixng',
     value: '',
     placeholder: '请选择',
     defaultOption: {
@@ -236,87 +172,100 @@ const formItems = reactive([
   },
 ])
 
+const searchForm = ref()
 const table = ref()
 
 const columns = [
   {
     title: '订单号',
-    dataIndex: 'ddh',
+    dataIndex: 'dingdanhao',
     align: 'center',
   },
   {
     title: '会员编码',
-    dataIndex: 'hybm',
+    dataIndex: 'huiyuanBianma',
     align: 'center',
   },
   {
     title: '会员名称',
-    dataIndex: 'hymc',
+    dataIndex: 'huiYuanMingCheng',
     align: 'center',
   },
   {
     title: '原始价格',
-    dataIndex: 'ysjg',
+    dataIndex: 'yuanshijiage',
     align: 'center',
   },
   {
     title: '支付价格',
-    dataIndex: 'zfjg',
+    dataIndex: 'zhifujiage',
     align: 'center',
   },
   {
     title: '支付方式',
-    dataIndex: 'zhuangtaixinxi',
+    dataIndex: 'zhifufangshi',
     align: 'center',
+    customRender: ({ text }: any) => {
+      const item: any = payWay.find((item: any) => item.value == text)
+      return item && item.label
+    },
   },
   {
     title: '支付类型',
-    dataIndex: 'dinggoujiage',
+    dataIndex: 'zhifuleixing',
     align: 'center',
+    customRender: ({ text }: any) => {
+      const item: any = payType.find((item: any) => item.value == text)
+      return item && item.label
+    },
   },
   {
     title: '购买类型',
-    dataIndex: 'gmlx',
+    dataIndex: 'maileiixng',
     align: 'center',
+    customRender: ({ text }: any) => {
+      const item: any = buyType.find((item: any) => item.value == text)
+      return item && item.label
+    },
   },
   {
     title: '视频合集',
-    dataIndex: 'sphj',
+    dataIndex: 'shiPinHejiMingCheng',
     align: 'center',
   },
   {
     title: '视频章节',
-    dataIndex: 'spzj',
+    dataIndex: 'shiPinZhangJieMingCheng',
     align: 'center',
   },
   {
     title: '创建时间',
-    dataIndex: 'cjsj',
+    dataIndex: 'chuangjianshijian',
     align: 'center',
   },
   {
     title: '发起支付时间',
-    dataIndex: 'fqzfsj',
+    dataIndex: 'faqizhifushijian',
     align: 'center',
   },
   {
     title: '支付成功时间',
-    dataIndex: 'zfcg',
+    dataIndex: 'zhifuchenggong',
     align: 'center',
   },
   {
     title: '第三方订单号',
-    dataIndex: 'dsfddh',
+    dataIndex: 'disanfangdingdanhao',
     align: 'center',
   },
   {
     title: '备注',
-    dataIndex: 'bz',
+    dataIndex: 'beizhu',
     align: 'center',
   },
   {
     title: '时长',
-    dataIndex: 'sc',
+    dataIndex: 'shichang',
     align: 'center',
   },
 ]
@@ -343,17 +292,12 @@ const getData = async (currentPage: number, pageSize: number) => {
 
 // 导出
 const handleExport = async () => {
-  // const data: any = {}
-  // formItems.forEach((item) => {
-  //   if (item.value) {
-  //     data[item.field] = item.value
-  //   }
-  // })
-  // const res = await reqExport(data)
-  // if (res.code === 0) {
-  //   message.success(res.msg)
-  // } else {
-  //   message.error(res.msg)
-  // }
+  const res = await reqExport(searchForm.value.getFormValues())
+  if (res.code === 0) {
+    linkDownload(baseUrl + '/' + res.data)
+    message.success(res.msg)
+  } else {
+    message.error(res.msg)
+  }
 }
 </script>

@@ -9,6 +9,8 @@ enum API {
   videoChapterUrl = '/common/selectByShiPinZhangJie',
   // 广告
   adUrl = '/common/selectByGuangGao',
+  // 会员
+  memberUrl = '/common/selectHuiYuanMingChengAndBianMa',
 }
 
 // 视频合集
@@ -20,3 +22,6 @@ export const reqVideoChapter = () => request.post<any, any>(API.videoChapterUrl)
 
 // 广告
 export const reqAd = () => request.post<any, any>(API.adUrl)
+
+// 会员
+export const reqMember = () => request.post<any, any>(API.memberUrl)
