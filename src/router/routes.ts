@@ -413,4 +413,26 @@ export const asyncRoute = [
       },
     ],
   },
+  // 下载管理
+  {
+    path: '/Download',
+    component: BaseLayout,
+    name: 'DownloadManager',
+    meta: {
+      title: '下载管理',
+      icon: 'DownloadOutlined',
+    },
+    redirect: '/Download/List',
+    children: [
+      // 下载列表
+      {
+        path: '/Download/List',
+        component: () => import('@/views/Download/index.vue'),
+        name: 'DownloadList',
+        meta: {
+          title: '下载列表',
+        },
+      },
+    ],
+  },
 ]

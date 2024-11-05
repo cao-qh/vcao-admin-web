@@ -47,23 +47,36 @@
           >
             <a v-has="'Btn.VideoShowClass.Delete'">删除</a>
           </a-popconfirm>
+          <a-divider type="vertical" />
+          <a
+            v-has="'Btn.VideoShowClass.Config'"
+            @click="() => config.show(row)"
+          >
+            配置
+          </a>
         </template>
       </template>
     </STable>
 
     <Add ref="add" :qijinyong="qijinyong" @success="table.refresh()" />
     <Edit ref="edit" @success="table.refresh()" />
+    <Config ref="config" @success="table.refresh()" />
   </PageWrapper>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
-import { reqSearch, reqQijinyong, reqSubmit } from '@/api/table/search/index'
+import {
+  reqSearch,
+  reqEnable,
+  reqDelete,
+} from '@/api/VideoManager/VideoShowClass'
 import { STable } from '@/components/STable'
 import { message } from 'ant-design-vue'
 import Add from './modules/Add.vue'
 import Edit from './modules/Edit.vue'
+import Config from './modules/Config.vue'
 import useUserStore from '@/store/modules/user'
 
 const userStore = useUserStore()
@@ -104,7 +117,7 @@ const formItems = reactive([
 const columns = [
   {
     title: '编码',
-    dataIndex: 'bm',
+    dataIndex: 'bianma',
     align: 'center',
   },
   {
@@ -114,7 +127,7 @@ const columns = [
   },
   {
     title: '权重',
-    dataIndex: 'qz',
+    dataIndex: 'quanzhong',
     align: 'center',
   },
   {
@@ -153,8 +166,9 @@ const reqData = async (currentPage: number, pageSize: number) => {
 
 // 启禁用
 const handelQijinyong = async (row: any) => {
-  const result = await reqQijinyong({
+  const result = await reqEnable({
     id: row.id,
+    bianma: row.bianma,
     qijinyong: row.qijinyong === 1 ? 2 : 1,
   })
   if (result.code == 0) {
@@ -167,9 +181,10 @@ const handelQijinyong = async (row: any) => {
 
 // 删除
 const handleDelete = async (row: any) => {
-  const res = await reqSubmit(row.id)
+  const res = await reqDelete(row.id)
   if (res.code == 0) {
     message.success(res.msg)
+    table.value.refresh()
   } else {
     message.error(res.msg)
   }
@@ -177,6 +192,7 @@ const handleDelete = async (row: any) => {
 
 const add = ref()
 const edit = ref()
+const config = ref()
 </script>
 
 <style></style>
