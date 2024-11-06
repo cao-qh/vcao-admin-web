@@ -13,6 +13,8 @@ enum API {
   memberUrl = '/common/selectHuiYuanMingChengAndBianMa',
   // 合集大类
   largeClassUrl = '/common/selectByShiPinHeJiDaLei',
+  // 合集小类
+  smallClassUrl = '/common/selectByShiPinHeJiXiaoLei',
 }
 
 // 视频合集
@@ -30,3 +32,6 @@ export const reqMember = () => request.post<any, any>(API.memberUrl)
 
 // 合集大类
 export const reqLargeClass = () => request.post<any, any>(API.largeClassUrl)
+
+// 合集小类
+export const reqSmallClass = () => request.post<any, any>(API.smallClassUrl)

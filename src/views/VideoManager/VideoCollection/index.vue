@@ -1,7 +1,11 @@
 <template>
   <PageWrapper>
     <template v-if="!isVideoChapter">
-      <SearchForm :formItems="formItems" @search="table.refresh()"></SearchForm>
+      <SearchForm
+        ref="searchForm"
+        :formItems="formItems"
+        @search="table.refresh()"
+      ></SearchForm>
 
       <STable
         ref="table"
@@ -9,7 +13,7 @@
         :columns="columns"
         :data="reqData"
         :showPagination="true"
-        :scroll="{ y: 'calc(100vh - 520px)' }"
+        :scroll="{ x: 1500, y: 'calc(100vh - 480px)' }"
       >
         <template #toolbar>
           <a-button
@@ -21,19 +25,41 @@
           </a-button>
         </template>
         <template #bodyCell="{ column, row }">
-          <template v-if="column.dataIndex === 'sxj'">
+          <template v-if="column.dataIndex === 'suoluetu'">
+            <a-image :width="50" :src="baseUrl + row.suoluetu" />
+          </template>
+          <template v-if="column.dataIndex === 'juqingjieshao'">
+            <a-popover>
+              <template #content>
+                <p>{{ row.juqingjieshao }}</p>
+              </template>
+              <span
+                style="
+                  display: inline-block;
+                  width: 100%;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+              >
+                {{ row.juqingjieshao }}
+              </span>
+            </a-popover>
+          </template>
+          <template v-if="column.dataIndex === 'shangxiajia'">
             <a-popconfirm
               v-if="userStore.hasPermission('Btn.VideoCollection.UpDown')"
               title="确定要修改吗？"
               ok-text="是"
               cancel-text="否"
-              @confirm="handelQijinyong(row)"
+              @confirm="handelUpDown(row)"
             >
-              <a-switch :checked="row.qijinyong === 1" />
+              <a-switch :checked="row.shangxiajia === 1" />
             </a-popconfirm>
             <span v-else>
               {{
-                shangxiajia.find((item) => item.value === row.qijinyong)?.label
+                shangxiajia.find((item) => item.value === row.shangxiajia)
+                  ?.label
               }}
             </span>
           </template>
@@ -72,6 +98,7 @@
         ref="add"
         :shangxiajia="shangxiajia"
         :updateStatus="updateStatus"
+        :recommend="recommend"
         @success="table.refresh()"
       />
 
@@ -94,7 +121,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
-import { reqSearch, reqQijinyong } from '@/api/table/search/index'
+import { reqSearch, reqUpDown } from '@/api/VideoManager/VideoCollection'
 import { STable } from '@/components/STable'
 import { message } from 'ant-design-vue'
 import Add from './modules/Add.vue'
@@ -102,11 +129,13 @@ import Edit from './modules/Edit.vue'
 import useUserStore from '@/store/modules/user'
 import Detail from './modules/Detail.vue'
 import VideoChapter from './components/VideoChapter/index.vue'
+import { reqSmallClass } from '@/api/common'
 
 const userStore = useUserStore()
 
 // 是否再视频章节
 const isVideoChapter = ref(false)
+const baseUrl = import.meta.env.VITE_SERVE
 
 // 上下架
 const shangxiajia = [
@@ -148,7 +177,7 @@ const formItems = reactive([
   {
     type: 'input',
     label: '名称',
-    field: 'mc',
+    field: 'mingcheng',
     value: '',
     placeholder: '请输入',
   },
@@ -156,33 +185,43 @@ const formItems = reactive([
     type: 'select',
     label: '上下架',
     field: 'shangxiajia',
-    value: '',
+    value: 0,
     placeholder: '请输入',
     options: shangxiajia,
     defaultOption: {
-      value: '',
+      value: 0,
       label: '全部',
     },
   },
   {
     type: 'select',
     label: '推荐',
-    field: 'recommend',
-    value: '',
+    field: 'tuijian',
+    value: 0,
     placeholder: '请输入',
     options: recommend,
     defaultOption: {
-      value: '',
+      value: 0,
       label: '全部',
     },
   },
   {
     type: 'select',
-    label: '类列',
-    field: 'll',
-    value: '',
+    label: '视频合集小类',
+    field: 'xiaoleis',
+    mode: 'multiple',
+    value: [],
     placeholder: '请输入',
-    options: [],
+    options: async () => {
+      const res = await reqSmallClass()
+      if (res.code == 0) {
+        return res.data.map((item: any) => ({
+          value: item.bm,
+          label: item.mc,
+        }))
+      }
+      return []
+    },
     defaultOption: {
       value: '',
       label: '全部',
@@ -191,12 +230,12 @@ const formItems = reactive([
   {
     type: 'select',
     label: '更新状态',
-    field: 'updateStatus',
-    value: '',
+    field: 'gengxinzhuangtai',
+    value: 0,
     placeholder: '请输入',
     options: updateStatus,
     defaultOption: {
-      value: '',
+      value: 0,
       label: '全部',
     },
   },
@@ -205,72 +244,87 @@ const formItems = reactive([
 const columns = [
   {
     title: '编码',
-    dataIndex: 'bm',
+    dataIndex: 'bianma',
     align: 'center',
   },
   {
     title: '名称',
-    dataIndex: 'mc',
+    dataIndex: 'mingcheng',
     align: 'center',
   },
   {
     title: '缩略图',
-    dataIndex: 'slt',
+    dataIndex: 'suoluetu',
     align: 'center',
   },
   {
     title: '普通价格',
-    dataIndex: 'ptjg',
+    dataIndex: 'pujia',
     align: 'center',
   },
   {
     title: '会员价格',
-    dataIndex: 'hyjg',
+    dataIndex: 'huiyuanjia',
+    align: 'center',
+  },
+  {
+    title: '简介',
+    dataIndex: 'jianjie',
+    align: 'center',
+  },
+  {
+    title: '剧情介绍',
+    dataIndex: 'juqingjieshao',
     align: 'center',
   },
   {
     title: '推荐',
-    dataIndex: 'tj',
+    dataIndex: 'tuijian',
+    align: 'center',
+  },
+  {
+    title: '创建时间',
+    dataIndex: 'chuangjianshijian',
     align: 'center',
   },
   {
     title: '点赞数',
-    dataIndex: 'dzs',
+    dataIndex: 'dianzan',
     align: 'center',
   },
   {
     title: '转发数',
-    dataIndex: 'zfs',
+    dataIndex: 'zhuanfa',
     align: 'center',
   },
   {
     title: '浏览数',
-    dataIndex: 'lls',
+    dataIndex: 'liulanshu',
     align: 'center',
   },
   {
     title: '权重',
-    dataIndex: 'qz',
+    dataIndex: 'quanzhong',
     align: 'center',
   },
   {
     title: '更新时间',
-    dataIndex: 'gxsj',
+    dataIndex: 'gengxinshijian',
     align: 'center',
   },
   {
     title: '总集数',
-    dataIndex: 'zjs',
+    dataIndex: 'zongjishu',
     align: 'center',
   },
   {
     title: '更新状态',
-    dataIndex: 'gxzt',
+    dataIndex: 'gengxinzhuangtai',
     align: 'center',
   },
   {
     title: '上下架',
-    dataIndex: 'sxj',
+    dataIndex: 'shangxiajia',
     align: 'center',
   },
   {
@@ -282,18 +336,15 @@ const columns = [
   },
 ]
 
+const searchForm = ref()
 const table = ref()
 
 const reqData = async (currentPage: number, pageSize: number) => {
   const data: any = {
     currentPage,
     pageSize,
+    ...searchForm.value.getFormValues(),
   }
-  formItems.forEach((item) => {
-    if (item.value) {
-      data[item.field] = item.value
-    }
-  })
 
   const res: any = await reqSearch(data)
   if (res.code == 0) {
@@ -305,10 +356,11 @@ const reqData = async (currentPage: number, pageSize: number) => {
 }
 
 // 启禁用
-const handelQijinyong = async (row: any) => {
-  const result = await reqQijinyong({
+const handelUpDown = async (row: any) => {
+  const result = await reqUpDown({
     id: row.id,
-    qijinyong: row.qijinyong === 1 ? 2 : 1,
+    bianma: row.bianma,
+    shangxiajia: row.shangxiajia === 1 ? 2 : 1,
   })
   if (result.code == 0) {
     message.success(result.msg)

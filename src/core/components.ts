@@ -37,6 +37,7 @@ import {
   Result,
   Image,
   Empty,
+  Popover,
 } from 'ant-design-vue'
 
 const allComponent = [
@@ -78,6 +79,7 @@ const allComponent = [
   Result,
   Image,
   Empty,
+  Popover,
 ]
 
 export default {

@@ -19,6 +19,7 @@
               v-if="item.type === 'select'"
               v-model:value="item.value"
               :placeholder="item.placeholder"
+              :mode="item.mode"
               :allowClear="item.allowClear === false ? false : true"
               showSearch
               :filterOption="filterOption"
@@ -152,7 +153,7 @@ const getFormItem = (field: string) => {
 const getFormValues = () => {
   const values: any = {}
   props.formItems.forEach((item) => {
-    if (item.value) {
+    if (item.value !== '' && item.value !== undefined && item.value !== null) {
       values[item.field] = item.value
     }
   })

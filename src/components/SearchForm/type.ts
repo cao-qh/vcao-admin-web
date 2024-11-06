@@ -10,9 +10,10 @@ interface FormItem {
   label: string
   type: string
   placeholder?: string
-  value: string | number | null | dayjs.Dayjs
+  value: string | number | null | dayjs.Dayjs | Array<string>
   options?: SelectOption[] | (() => Promise<SelectOptions>)
   defaultOption?: SelectOption
+  mode?: string
   showTime?: boolean
   valueFormat?: string
   allowClear?: boolean
