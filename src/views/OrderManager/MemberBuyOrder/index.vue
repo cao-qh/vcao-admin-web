@@ -35,13 +35,10 @@ import dayjs from 'dayjs'
 import { reqSearch, reqExport } from '@/api/OrderManager/MemberBuyOrder'
 import { reqMember } from '@/api/common'
 import { message } from 'ant-design-vue'
-import { linkDownload } from '@/utils/download'
 
 defineOptions({
   name: 'MemberBuyOrder',
 })
-
-const baseUrl = import.meta.env.VITE_SERVE
 
 // 支付方式
 const payWay: any = [
@@ -294,7 +291,6 @@ const getData = async (currentPage: number, pageSize: number) => {
 const handleExport = async () => {
   const res = await reqExport(searchForm.value.getFormValues())
   if (res.code === 0) {
-    linkDownload(baseUrl + '/' + res.data)
     message.success(res.msg)
   } else {
     message.error(res.msg)

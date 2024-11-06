@@ -157,6 +157,15 @@ export const asyncRoute = [
           title: '支付',
         },
       },
+      // 服务
+      {
+        path: '/AppConfig/Service',
+        component: () => import('@/views/AppConfig/Service/index.vue'),
+        name: 'Service',
+        meta: {
+          title: '服务',
+        },
+      },
     ],
   },
   // 人员管理
@@ -290,6 +299,15 @@ export const asyncRoute = [
           title: '会员购买订单',
         },
       },
+      // 导出订单
+      {
+        path: '/OrderManager/DownloadOrder',
+        component: () => import('@/views/OrderManager/DownloadOrder/index.vue'),
+        name: 'DownloadOrder',
+        meta: {
+          title: '导出订单',
+        },
+      },
     ],
   },
   // 影片管理
@@ -409,28 +427,6 @@ export const asyncRoute = [
         name: 'AdScore',
         meta: {
           title: '广告积分',
-        },
-      },
-    ],
-  },
-  // 下载管理
-  {
-    path: '/Download',
-    component: BaseLayout,
-    name: 'DownloadManager',
-    meta: {
-      title: '下载管理',
-      icon: 'DownloadOutlined',
-    },
-    redirect: '/Download/List',
-    children: [
-      // 下载列表
-      {
-        path: '/Download/List',
-        component: () => import('@/views/Download/index.vue'),
-        name: 'DownloadList',
-        meta: {
-          title: '下载列表',
         },
       },
     ],

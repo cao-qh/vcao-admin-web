@@ -8,7 +8,13 @@
       :labelStyle="{ width: '150px' }"
     >
       <template #extra>
-        <a-button type="primary" @click="edit.show(data)">修改</a-button>
+        <a-button
+          v-has="'Btn.Protocol.Update'"
+          type="primary"
+          @click="edit.show(data)"
+        >
+          修改
+        </a-button>
       </template>
       <a-descriptions-item label="用户协议">
         {{ data.yonghuxieyi }}
@@ -22,7 +28,9 @@
         <template #description>
           <span>未上传用户协议与隐私政策</span>
         </template>
-        <a-button type="primary" @click="add.show()">现在添加</a-button>
+        <a-button v-has="'Btn.Protocol.Add'" type="primary" @click="add.show()">
+          现在添加
+        </a-button>
       </a-empty>
     </div>
 

@@ -18,7 +18,10 @@
 
 <script setup lang="ts">
 import { STable } from '@/components/STable'
-import { reqSearchExport, reqDownload } from '@/api/common'
+import { reqSearch } from '@/api/OrderManager/DownloadOrder'
+import { linkDownload } from '@/utils/download'
+
+const baseUrl = import.meta.env.VITE_SERVE
 
 const columns = [
   {
@@ -49,7 +52,7 @@ const columns = [
 ]
 
 const reqData = async () => {
-  const res: any = await reqSearchExport()
+  const res: any = await reqSearch()
   if (res.code == 0) {
     return {
       data: res.data,
@@ -59,7 +62,7 @@ const reqData = async () => {
 }
 
 const handleDownload = (row: any) => {
-  reqDownload(row.file)
+  linkDownload(baseUrl + '/duanjufile/xiazaidingdang/' + row.file)
 }
 </script>
 
