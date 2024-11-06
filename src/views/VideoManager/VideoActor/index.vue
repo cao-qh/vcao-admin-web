@@ -20,7 +20,10 @@
         </a-button>
       </template>
       <template #bodyCell="{ column, row }">
-        <template v-if="column.dataIndex === 'qijinyong'">
+        <template v-if="column.dataIndex === 'zhaopian'">
+          <a-image :width="50" :src="baseUrl + row.zhaopian" />
+        </template>
+        <template v-if="column.dataIndex === 'zhuangtai'">
           <a-popconfirm
             v-if="userStore.hasPermission('Btn.VideoActor.Enable')"
             title="确定要修改吗？"
@@ -28,7 +31,7 @@
             cancel-text="否"
             @confirm="handelQijinyong(row)"
           >
-            <a-switch :checked="row.qijinyong === 1" />
+            <a-switch :checked="row.zhuangtai === 1" />
           </a-popconfirm>
           <span v-else>
             {{ qijinyong.find((item) => item.value === row.qijinyong)?.label }}
@@ -55,7 +58,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
-import { reqSearch, reqQijinyong } from '@/api/table/search/index'
+import { reqSearch, reqEnable } from '@/api/VideoManager/VideoActor'
 import { STable } from '@/components/STable'
 import { message } from 'ant-design-vue'
 import Add from './modules/Add.vue'
@@ -63,6 +66,7 @@ import Edit from './modules/Edit.vue'
 import useUserStore from '@/store/modules/user'
 
 const userStore = useUserStore()
+const baseUrl = import.meta.env.VITE_SERVE
 
 const role = [
   {
@@ -94,14 +98,14 @@ const formItems = reactive([
   {
     type: 'input',
     label: '名字',
-    field: 'mingcheng',
+    field: 'mingzi',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'select',
     label: '角色',
-    field: 'role',
+    field: 'juese',
     value: '',
     placeholder: '请输入',
     options: role,
@@ -113,7 +117,7 @@ const formItems = reactive([
   {
     type: 'select',
     label: '启禁用',
-    field: 'qijinyong',
+    field: 'zhuangtai',
     value: '',
     placeholder: '请输入',
     options: qijinyong,
@@ -127,32 +131,36 @@ const formItems = reactive([
 const columns = [
   {
     title: '编码',
-    dataIndex: 'bm',
-    align: 'center',
-  },
-  {
-    title: '名字',
-    dataIndex: 'mc',
-    align: 'center',
-  },
-  {
-    title: '角色',
-    dataIndex: 'role',
+    dataIndex: 'bianma',
     align: 'center',
   },
   {
     title: '照片',
-    dataIndex: 'zp',
+    dataIndex: 'zhaopian',
+    align: 'center',
+  },
+  {
+    title: '名字',
+    dataIndex: 'mingzi',
+    align: 'center',
+  },
+  {
+    title: '角色',
+    dataIndex: 'juese',
+    align: 'center',
+    customRender: ({ text }: any) => {
+      const item = role.find((item: any) => item.value == text)
+      return item && item.label
+    },
+  },
+  {
+    title: '信息',
+    dataIndex: 'xinxi',
     align: 'center',
   },
   {
     title: '状态',
-    dataIndex: 'zt',
-    align: 'center',
-  },
-  {
-    title: '启禁用',
-    dataIndex: 'qijinyong',
+    dataIndex: 'zhuangtai',
     align: 'center',
   },
   {
@@ -186,9 +194,10 @@ const reqData = async (currentPage: number, pageSize: number) => {
 
 // 启禁用
 const handelQijinyong = async (row: any) => {
-  const result = await reqQijinyong({
+  const result = await reqEnable({
     id: row.id,
-    qijinyong: row.qijinyong === 1 ? 2 : 1,
+    bianma: row.bianma,
+    zhuangtai: row.zhuangtai === 1 ? 2 : 1,
   })
   if (result.code == 0) {
     message.success(result.msg)

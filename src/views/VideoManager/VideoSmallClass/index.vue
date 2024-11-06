@@ -42,20 +42,31 @@
       </template>
     </STable>
 
-    <Add ref="add" :qijinyong="qijinyong" @success="table.refresh()" />
-    <Edit ref="edit" @success="table.refresh()" />
+    <Add
+      ref="add"
+      :qijinyong="qijinyong"
+      :largeClassList="largeClassList"
+      @success="table.refresh()"
+    />
+
+    <Edit
+      ref="edit"
+      :largeClassList="largeClassList"
+      @success="table.refresh()"
+    />
   </PageWrapper>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
-import { reqSearch, reqQijinyong } from '@/api/table/search/index'
+import { reqSearch, reqEnable } from '@/api/VideoManager/VideoSmallClass'
 import { STable } from '@/components/STable'
 import { message } from 'ant-design-vue'
 import Add from './modules/Add.vue'
 import Edit from './modules/Edit.vue'
 import useUserStore from '@/store/modules/user'
+import { reqLargeClass } from '@/api/common'
 
 const userStore = useUserStore()
 
@@ -70,10 +81,13 @@ const qijinyong = [
   },
 ]
 
+// 视频大类列表
+const largeClassList = ref([])
+
 const formItems = reactive([
   {
     type: 'input',
-    label: '名字',
+    label: '名称',
     field: 'mingcheng',
     value: '',
     placeholder: '请输入',
@@ -93,10 +107,17 @@ const formItems = reactive([
   {
     type: 'select',
     label: '大类',
-    field: 'dl',
+    field: 'shangjiBianma',
     value: '',
     placeholder: '请输入',
-    options: [],
+    options: async () => {
+      const res = await reqLargeClass()
+      largeClassList.value = res.data.map((item: any) => ({
+        value: item.bm,
+        label: item.mc,
+      }))
+      return largeClassList.value
+    },
     defaultOption: {
       value: '',
       label: '全部',
@@ -107,22 +128,27 @@ const formItems = reactive([
 const columns = [
   {
     title: '编码',
-    dataIndex: 'bm',
+    dataIndex: 'bianma',
     align: 'center',
   },
   {
     title: '名称',
-    dataIndex: 'mc',
+    dataIndex: 'mingcheng',
     align: 'center',
   },
   {
-    title: '权重',
-    dataIndex: 'qz',
+    title: '权重(%)',
+    dataIndex: 'quanzhong',
     align: 'center',
   },
   {
-    title: '大类名',
-    dataIndex: 'dlm',
+    title: '上级编码',
+    dataIndex: 'shangjiBianma',
+    align: 'center',
+  },
+  {
+    title: '上级名称',
+    dataIndex: 'shangjiBianmaMC',
     align: 'center',
   },
   {
@@ -161,8 +187,9 @@ const reqData = async (currentPage: number, pageSize: number) => {
 
 // 启禁用
 const handelQijinyong = async (row: any) => {
-  const result = await reqQijinyong({
+  const result = await reqEnable({
     id: row.id,
+    bianma: row.bianma,
     qijinyong: row.qijinyong === 1 ? 2 : 1,
   })
   if (result.code == 0) {

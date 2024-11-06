@@ -11,6 +11,8 @@ enum API {
   adUrl = '/common/selectByGuangGao',
   // 会员
   memberUrl = '/common/selectHuiYuanMingChengAndBianMa',
+  // 合集大类
+  largeClassUrl = '/common/selectByShiPinHeJiDaLei',
 }
 
 // 视频合集
@@ -25,3 +27,6 @@ export const reqAd = () => request.post<any, any>(API.adUrl)
 
 // 会员
 export const reqMember = () => request.post<any, any>(API.memberUrl)
+
+// 合集大类
+export const reqLargeClass = () => request.post<any, any>(API.largeClassUrl)

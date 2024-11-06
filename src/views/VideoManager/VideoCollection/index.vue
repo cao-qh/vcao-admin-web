@@ -9,7 +9,7 @@
         :columns="columns"
         :data="reqData"
         :showPagination="true"
-        :scroll="{ y: 'calc(100vh - 408px)' }"
+        :scroll="{ y: 'calc(100vh - 520px)' }"
       >
         <template #toolbar>
           <a-button
@@ -106,7 +106,7 @@ import VideoChapter from './components/VideoChapter/index.vue'
 const userStore = useUserStore()
 
 // 是否再视频章节
-const isVideoChapter = ref(true)
+const isVideoChapter = ref(false)
 
 // 上下架
 const shangxiajia = [

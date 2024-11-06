@@ -1,23 +1,20 @@
 <template>
   <a-modal title="添加" :open="open" @ok="submit" @cancel="open = false">
-    <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
-      <a-form-item label="编码" name="bm">
-        <a-input v-model:value.trim="formState.bm" placeholder="请输入" />
-      </a-form-item>
-      <a-form-item label="名称" name="mc">
-        <a-input-password
-          v-model:value.trim="formState.mc"
+    <a-form ref="formRef" :model="formState" v-bind="layout">
+      <a-form-item label="名称" name="mingcheng">
+        <a-input
+          v-model:value.trim="formState.mingcheng"
           placeholder="请输入"
         />
       </a-form-item>
-      <a-form-item label="权重" name="qz">
-        <a-input-password
-          v-model:value.trim="formState.qz"
+      <a-form-item label="权重" name="quanzhong">
+        <a-input
+          v-model:value.trim="formState.quanzhong"
           placeholder="请输入"
         />
       </a-form-item>
-      <a-form-item label="启禁用" name="qjy">
-        <a-radio-group v-model:value="formState.qjy">
+      <a-form-item label="启禁用" name="qijinyong">
+        <a-radio-group v-model:value="formState.qijinyong">
           <a-radio-button
             v-for="item in qijinyong"
             :key="item.value"
@@ -33,7 +30,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqAdd } from '@/api/table/search/index'
+import { reqAdd } from '@/api/VideoManager/VideoLargeClass'
 
 defineOptions({ name: 'Add' })
 
@@ -64,20 +61,12 @@ const layout = {
 const formRef = ref()
 const formState = reactive<any>({})
 
-const rules = {
-  bm: [{ required: true, message: '请输入' }],
-  mc: [{ required: true, message: '请输入' }],
-  qz: [{ required: true, message: '请选择' }],
-  qjy: [{ required: true, message: '请选择' }],
-}
-
 const show = () => {
   open.value = true
   Object.assign(formState, {
-    bm: '',
-    mc: '',
-    qz: '',
-    qjy: '',
+    mingcheng: '',
+    quanzhong: '',
+    qijinyong: 1,
   })
   formRef.value?.clearValidate()
 }

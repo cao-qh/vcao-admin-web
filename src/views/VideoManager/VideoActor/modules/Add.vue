@@ -1,17 +1,11 @@
 <template>
   <a-modal title="添加" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
-      <a-form-item label="编码" name="bm">
-        <a-input v-model:value.trim="formState.bm" placeholder="请输入" />
+      <a-form-item label="名称" name="mingzi">
+        <a-input v-model:value.trim="formState.mingzi" placeholder="请输入" />
       </a-form-item>
-      <a-form-item label="名称" name="mc">
-        <a-input-password
-          v-model:value.trim="formState.mc"
-          placeholder="请输入"
-        />
-      </a-form-item>
-      <a-form-item label="角色" name="js">
-        <a-select v-model:value="formState.js" placeholder="请选择">
+      <a-form-item label="角色" name="juese">
+        <a-select v-model:value="formState.juese" placeholder="请选择">
           <a-select-option
             v-for="item in role"
             :key="item.value"
@@ -21,8 +15,8 @@
           </a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item label="启禁用" name="qjy">
-        <a-radio-group v-model:value="formState.qjy">
+      <a-form-item label="启禁用" name="zhuangtai">
+        <a-radio-group v-model:value="formState.zhuangtai">
           <a-radio-button
             v-for="item in qijinyong"
             :key="item.value"
@@ -32,8 +26,11 @@
           </a-radio-button>
         </a-radio-group>
       </a-form-item>
-      <a-form-item label="照片" name="zp">
-        <UploadImage v-model:value="formState.zp" />
+      <a-form-item label="照片" name="fileTX">
+        <UploadImage v-model:value="formState.fileTX" />
+      </a-form-item>
+      <a-form-item label="信息" name="xinxi">
+        <a-textarea v-model:value.trim="formState.xinxi"></a-textarea>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -41,7 +38,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqAdd } from '@/api/table/search/index'
+import { reqAdd } from '@/api/VideoManager/VideoActor'
 import UploadImage from '@/components/UploadImage/index.vue'
 
 defineOptions({ name: 'Add' })
@@ -78,20 +75,21 @@ const formRef = ref()
 const formState = reactive<any>({})
 
 const rules = {
-  bm: [{ required: true, message: '请输入' }],
-  mc: [{ required: true, message: '请输入' }],
-  js: [{ required: true, message: '请选择' }],
-  qjy: [{ required: true, message: '请选择' }],
-  zp: [{ required: true, message: '请选择' }],
+  mingzi: [{ required: true, message: '请输入' }],
+  juese: [{ required: true, message: '请选择' }],
+  zhuangtai: [{ required: true, message: '请选择' }],
+  fileTX: [{ required: true, message: '请选择' }],
+  xinxi: [{ required: true, message: '请输入' }],
 }
 
 const show = () => {
   open.value = true
   Object.assign(formState, {
-    bm: '',
-    mc: '',
-    qz: '',
-    qjy: '',
+    mingzi: '',
+    juese: '',
+    zhuangtai: 1,
+    fileTX: null,
+    xinxi: '',
   })
   formRef.value?.clearValidate()
 }
@@ -100,7 +98,13 @@ const submit = async () => {
   try {
     await formRef.value.validate()
     console.log('formState :>> ', formState)
-    const res = await reqAdd(formState)
+    const formData = new FormData()
+    formData.append('mingzi', formState.mingzi)
+    formData.append('juese', formState.juese)
+    formData.append('zhuangtai', formState.zhuangtai)
+    formData.append('fileTX', formState.fileTX)
+    formData.append('xinxi', formState.xinxi)
+    const res = await reqAdd(formData)
     if (res.code == 0) {
       $emit('success')
       open.value = false

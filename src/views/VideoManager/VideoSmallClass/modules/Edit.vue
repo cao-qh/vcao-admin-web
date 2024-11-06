@@ -1,17 +1,33 @@
 <template>
   <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" v-bind="layout">
-      <a-form-item label="名称" name="mc">
-        <a-input v-model:value.trim="formState.mc" placeholder="请输入" />
+      <a-form-item label="编码" name="bianma">
+        <a-input
+          v-model:value.trim="formState.bianma"
+          placeholder="请输入"
+          disabled
+        />
       </a-form-item>
-      <a-form-item label="大类" name="dl">
-        <a-select v-model:value="formState.dl" placeholder="请选择">
-          <a-select-option value="1">大类1</a-select-option>
+      <a-form-item label="名称" name="mingcheng">
+        <a-input
+          v-model:value.trim="formState.mingcheng"
+          placeholder="请输入"
+        />
+      </a-form-item>
+      <a-form-item label="大类" name="shangjiBianma">
+        <a-select v-model:value="formState.shangjiBianma" placeholder="请选择">
+          <a-select-option
+            v-for="item in largeClassList"
+            :value="item.value"
+            :key="item.value"
+          >
+            {{ item.label }}
+          </a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item label="权重" name="qz">
-        <a-input-password
-          v-model:value.trim="formState.qz"
+      <a-form-item label="权重(%)" name="quanzhong">
+        <a-input
+          v-model:value.trim="formState.quanzhong"
           placeholder="请输入"
         />
       </a-form-item>
@@ -21,12 +37,12 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqEdit } from '@/api/table/search/index'
+import { reqEdit } from '@/api/VideoManager/VideoSmallClass'
 
 defineOptions({ name: 'Edit' })
 
 defineProps({
-  role: {
+  largeClassList: {
     type: Array<any>,
     default: () => [],
   },
@@ -54,9 +70,11 @@ const formState = reactive<any>({})
 
 const show = async (row: any) => {
   open.value = true
-  formState.mc = row.mc
-  formState.dl = row.dl
-  formState.qz = row.qz
+  formState.id = row.id
+  formState.bianma = row.bianma
+  formState.mingcheng = row.mingcheng
+  formState.shangjiBianma = row.shangjiBianma
+  formState.quanzhong = row.quanzhong
 }
 
 const submit = async () => {
