@@ -124,8 +124,13 @@
               placeholder="请选择"
               mode="multiple"
             >
-              <a-select-option :value="1">周星驰</a-select-option>
-              <a-select-option :value="2">朱茵</a-select-option>
+              <a-select-option
+                v-for="item in actorRoleList"
+                :key="item.bm"
+                :value="item.bm"
+              >
+                {{ item.mc }}
+              </a-select-option>
             </a-select>
           </a-form-item>
         </a-col>
@@ -136,8 +141,13 @@
               placeholder="请选择"
               mode="multiple"
             >
-              <a-select-option :value="1">大类1</a-select-option>
-              <a-select-option :value="2">大类2</a-select-option>
+              <a-select-option
+                v-for="item in smallClassList"
+                :key="item.value"
+                :value="item.value"
+              >
+                {{ item.label }}
+              </a-select-option>
             </a-select>
           </a-form-item>
         </a-col>
@@ -182,7 +192,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqAdd } from '@/api/table/search/index'
+import { reqAdd } from '@/api/VideoManager/VideoCollection'
 import UploadImage from '@/components/UploadImage/index.vue'
 
 defineOptions({ name: 'Add' })
@@ -197,6 +207,14 @@ defineProps({
     default: () => [],
   },
   recommend: {
+    type: Array<any>,
+    default: () => [],
+  },
+  actorRoleList: {
+    type: Array<any>,
+    default: () => [],
+  },
+  smallClassList: {
     type: Array<any>,
     default: () => [],
   },
@@ -248,7 +266,7 @@ const show = () => {
     fileSLT: '',
     pujia: null,
     huiyuanjia: '',
-    tuijian: 1,
+    tuijian: null,
     jianjie: '',
     juqingjieshao: '',
     shangxiajia: 1,
@@ -267,8 +285,26 @@ const show = () => {
 const submit = async () => {
   try {
     await formRef.value.validate()
-    console.log('formState :>> ', formState)
-    const res = await reqAdd(formState)
+
+    const formData = new FormData()
+    formData.append('mingcheng', formState.mingcheng)
+    formData.append('fileSLT', formState.fileSLT)
+    formData.append('pujia', formState.pujia)
+    formData.append('huiyuanjia', formState.huiyuanjia)
+    formData.append('tuijian', formState.tuijian)
+    formData.append('jianjie', formState.jianjie)
+    formData.append('juqingjieshao', formState.juqingjieshao)
+    formData.append('shangxiajia', formState.shangxiajia)
+    formData.append('dianzan', formState.dianzan)
+    formData.append('zhuanfa', formState.zhuanfa)
+    formData.append('liulanshu', formState.liulanshu)
+    formData.append('quanzhong', formState.quanzhong)
+    formData.append('zongjishu', formState.zongjishu)
+    formData.append('gengxinzhuangtai', formState.gengxinzhuangtai)
+    formData.append('yanyuan', formState.yanyuan)
+    formData.append('xiaolei', formState.xiaolei)
+
+    const res = await reqAdd(formData)
     if (res.code == 0) {
       $emit('success')
       open.value = false

@@ -15,24 +15,30 @@
       :scroll="{ y: 'calc(100vh - 408px)' }"
     >
       <template #toolbar>
-        <a-button type="primary" @click="() => add.show()">添加</a-button>
+        <a-button type="primary" @click="() => add.show(bianma)">添加</a-button>
         <a-button type="primary" @click="() => batchImport.show()">
           批量添加
         </a-button>
       </template>
       <template #bodyCell="{ column, row }">
-        <template v-if="column.dataIndex === 'sxj'">
+        <template v-if="column.dataIndex === 'suoluetu'">
+          <a-image
+            :width="50"
+            :src="baseUrl + row.suoluetu + `?time=${dayjs().format('x')}`"
+          />
+        </template>
+        <template v-if="column.dataIndex === 'shangxiajia'">
           <a-popconfirm
             title="确定要修改吗？"
             ok-text="是"
             cancel-text="否"
-            @confirm="handelQijinyong(row)"
+            @confirm="handleUpDown(row)"
           >
-            <a-switch :checked="row.qijinyong === 1" />
+            <a-switch :checked="row.shangxiajia === 1" />
           </a-popconfirm>
         </template>
         <template v-if="column.dataIndex === 'action'">
-          <a @click="() => edit.show(row)">修改</a>
+          <a @click="() => edit.show(bianma, row)">修改</a>
 
           <span>
             <a-divider type="vertical" />
@@ -40,7 +46,7 @@
               title="确定删除吗？"
               ok-text="是"
               cancel-text="否"
-              @confirm="handleSubmit(row.dingdanhao)"
+              @confirm="handleDelete(row)"
             >
               <a>删除</a>
             </a-popconfirm>
@@ -51,7 +57,7 @@
 
     <Add ref="add" :shangxiajia="shangxiajia" @success="table.refresh()" />
 
-    <Edit ref="edit" @success="table.refresh()" />
+    <Edit ref="edit" :shangxiajia="shangxiajia" @success="table.refresh()" />
 
     <BatchImport ref="batchImport" @success="table.refresh()" />
   </div>
@@ -61,11 +67,16 @@
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import { STable } from '@/components/STable'
-import { reqSearch, reqQijinyong, reqSubmit } from '@/api/table/search/index'
+import {
+  reqSearchChapter,
+  reqUpDownChapter,
+  reqDeleteChapter,
+} from '@/api/VideoManager/VideoCollection'
 import { message } from 'ant-design-vue'
 import Add from './modules/Add.vue'
 import Edit from './modules/Edit.vue'
 import BatchImport from './modules/BatchImport.vue'
+import dayjs from 'dayjs'
 
 defineEmits(['back'])
 
@@ -74,20 +85,17 @@ const props = defineProps({
     type: Array<any>,
     default: () => [],
   },
+  bianma: {
+    type: String,
+    default: '',
+  },
 })
 
 const formItems = reactive([
   {
     type: 'input',
-    label: '合集编码',
-    field: 'hjbm',
-    value: '',
-    placeholder: '请输入',
-  },
-  {
-    type: 'input',
     label: '章节名称',
-    field: 'zjmc',
+    field: 'mingcheng',
     value: '',
     placeholder: '请输入',
   },
@@ -108,47 +116,72 @@ const formItems = reactive([
 const columns = [
   {
     title: '编码',
-    dataIndex: 'bm',
+    dataIndex: 'bianma',
     align: 'center',
   },
   {
     title: '视频章节名称',
-    dataIndex: 'spzjmc',
+    dataIndex: 'mingcheng',
     align: 'center',
   },
   {
     title: '缩略图',
-    dataIndex: 'slt',
+    dataIndex: 'suoluetu',
     align: 'center',
   },
   {
     title: '视频链接',
-    dataIndex: 'spls',
+    dataIndex: 'shipinlianjie',
     align: 'center',
   },
   {
     title: '普通价格',
-    dataIndex: 'ptjg',
+    dataIndex: 'pujia',
     align: 'center',
   },
   {
     title: '会员价格',
-    dataIndex: 'hyjg',
+    dataIndex: 'huiyuanjia',
     align: 'center',
   },
   {
     title: '权重',
-    dataIndex: 'qz',
+    dataIndex: 'quanzhong',
+    align: 'center',
+  },
+  {
+    title: '内容',
+    dataIndex: 'neirong',
     align: 'center',
   },
   {
     title: '创建时间',
-    dataIndex: 'cjsj',
+    dataIndex: 'chuangjianshijian',
+    align: 'center',
+  },
+  {
+    title: '更新时间',
+    dataIndex: 'gengxinshijian',
+    align: 'center',
+  },
+  {
+    title: 'PID',
+    dataIndex: 'pid',
+    align: 'center',
+  },
+  {
+    title: '云播服务文件ID',
+    dataIndex: 'wenjianId',
+    align: 'center',
+  },
+  {
+    title: '云点播ID',
+    dataIndex: 'yundianboId',
     align: 'center',
   },
   {
     title: '上下架',
-    dataIndex: 'sxj',
+    dataIndex: 'shangxiajia',
     align: 'center',
   },
   {
@@ -160,11 +193,14 @@ const columns = [
   },
 ]
 
+const baseUrl = import.meta.env.VITE_SERVE
+
 const table = ref()
 const reqData = async (currentPage: number, pageSize: number) => {
   const data: any = {
     currentPage,
     pageSize,
+    shipinhejibianma: props.bianma,
   }
   formItems.forEach((item) => {
     if (item.value) {
@@ -172,7 +208,7 @@ const reqData = async (currentPage: number, pageSize: number) => {
     }
   })
 
-  const res: any = await reqSearch(data)
+  const res: any = await reqSearchChapter(data)
   if (res.code == 0) {
     return {
       data: res.data.list,
@@ -182,10 +218,11 @@ const reqData = async (currentPage: number, pageSize: number) => {
 }
 
 // 启禁用
-const handelQijinyong = async (row: any) => {
-  const result = await reqQijinyong({
+const handleUpDown = async (row: any) => {
+  const result = await reqUpDownChapter({
     id: row.id,
-    qijinyong: row.qijinyong === 1 ? 2 : 1,
+    bianma: row.bianma,
+    shangxiajia: row.shangxiajia === 1 ? 2 : 1,
   })
   if (result.code == 0) {
     message.success(result.msg)
@@ -196,10 +233,16 @@ const handelQijinyong = async (row: any) => {
 }
 
 // 提单
-const handleSubmit = async (dingdanhao: string) => {
-  const res = await reqSubmit(dingdanhao)
+const handleDelete = async (row: any) => {
+  const data = {
+    id: row.id,
+    bianma: row.bianma,
+    shipinhejibianma: props.bianma,
+  }
+  const res = await reqDeleteChapter(data)
   if (res.code == 0) {
     message.success(res.msg)
+    table.value.refresh()
   } else {
     message.error(res.msg)
   }

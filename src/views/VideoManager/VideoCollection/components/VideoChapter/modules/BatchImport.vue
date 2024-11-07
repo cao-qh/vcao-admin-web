@@ -1,89 +1,81 @@
 <template>
-  <a-modal title="批量导入" :open="open" @cancel="close">
-    <div style="padding: 20px 10px">
-      <a-upload
-        v-if="resultInfo == null"
-        v-model:file-list="fileList"
-        :before-upload="beforeUpload"
-        :maxCount="1"
-        accept=".xls,.xlsx"
-      >
-        <a-button>
-          <upload-outlined></upload-outlined>
-          请选择文件
-        </a-button>
-      </a-upload>
-      <div v-else>
-        <p>成功数：{{ resultInfo.success }}</p>
-        <p>失败数：{{ resultInfo.error }}</p>
-      </div>
-    </div>
-    <template #footer>
-      <a-button key="back" @click="close">
-        {{ resultInfo == null ? '取消' : '知道了' }}
-      </a-button>
-      <a-button
-        v-if="resultInfo == null"
-        key="submit"
-        type="primary"
-        @click="submit"
-      >
-        确定
-      </a-button>
-    </template>
+  <a-modal
+    title="批量导入"
+    :open="open"
+    @ok="submit"
+    @cancel="open = false"
+    :body-style="{ maxHeight: '580px', overflow: 'auto' }"
+  >
+    <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
+      <a-form-item label="缩略图" name="fileSLTs">
+        <UploadImage v-model:value="formState.fileSLTs" />
+      </a-form-item>
+      <a-form-item label="参数" name="jsonStr">
+        <a-textarea v-model:value="formState.jsonStr" />
+      </a-form-item>
+    </a-form>
   </a-modal>
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqAddBatch } from '@/api/table/search/index'
-import type { UploadProps } from 'ant-design-vue'
+import { reqUploadChapter } from '@/api/VideoManager/VideoCollection'
+import UploadImage from '@/components/UploadImage/index.vue'
 
 defineOptions({ name: 'BatchImport' })
+
 // 定义方法
 const $emit = defineEmits(['success'])
 
 const open = ref<boolean>(false)
 
-const fileList = ref<any[]>([])
+// 表单布局
+const layout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 7 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 13 },
+  },
+}
 
-const resultInfo = ref<null | { success: number; error: number }>(null)
+const formRef = ref()
+const formState = reactive<any>({})
 
-const show = () => {
+const rules = {
+  fileSLTs: [{ required: true, message: '请选择' }],
+  jsonStr: [{ required: true, message: '请输入' }],
+}
+
+const show = async () => {
   open.value = true
-  fileList.value = []
+  formState.fileSLTs = null
+  formState.jsonStr = ''
 }
 
 const submit = async () => {
-  if (fileList.value.length == 0) {
-    message.error('请选择文件')
-    return
-  }
-
   try {
+    await formRef.value.validate()
+
+    console.log('formState :>> ', formState)
+
     const formData = new FormData()
-    formData.append('file', fileList.value[0].originFileObj)
-    const res = await reqAddBatch(formData)
+    formData.append('fileSLTs', formState.fileSLTs)
+    formData.append('jsonStr', formState.jsonStr)
+
+    const res = await reqUploadChapter(formData)
     if (res.code == 0) {
       $emit('success')
+      open.value = false
       message.success(res.msg)
-      resultInfo.value = res.data
     } else {
       message.error(res.msg)
     }
   } catch (error) {
     console.log('error :>> ', error)
   }
-}
-
-const close = () => {
-  resultInfo.value = null
-  open.value = false
-}
-
-const beforeUpload: UploadProps['beforeUpload'] = (file) => {
-  fileList.value = [...(fileList.value || []), file]
-  return false
 }
 
 defineExpose({

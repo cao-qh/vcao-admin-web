@@ -15,6 +15,8 @@ enum API {
   largeClassUrl = '/common/selectByShiPinHeJiDaLei',
   // 合集小类
   smallClassUrl = '/common/selectByShiPinHeJiXiaoLei',
+  // 演员角色
+  actorRoleUrl = '/common/selectByShiPinYanYuanJueSe',
 }
 
 // 视频合集
@@ -35,3 +37,6 @@ export const reqLargeClass = () => request.post<any, any>(API.largeClassUrl)
 
 // 合集小类
 export const reqSmallClass = () => request.post<any, any>(API.smallClassUrl)
+
+// 演员角色
+export const reqActorRole = () => request.post<any, any>(API.actorRoleUrl)

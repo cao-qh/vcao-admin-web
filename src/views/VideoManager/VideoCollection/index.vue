@@ -1,6 +1,6 @@
 <template>
   <PageWrapper>
-    <template v-if="!isVideoChapter">
+    <template v-if="!chapter.open">
       <SearchForm
         ref="searchForm"
         :formItems="formItems"
@@ -26,7 +26,28 @@
         </template>
         <template #bodyCell="{ column, row }">
           <template v-if="column.dataIndex === 'suoluetu'">
-            <a-image :width="50" :src="baseUrl + row.suoluetu" />
+            <a-image
+              :width="50"
+              :src="baseUrl + row.suoluetu + `?time=${dayjs().format('x')}`"
+            />
+          </template>
+          <template v-if="column.dataIndex === 'jianjie'">
+            <a-popover>
+              <template #content>
+                <p>{{ row.jianjie }}</p>
+              </template>
+              <span
+                style="
+                  display: inline-block;
+                  width: 100%;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+              >
+                {{ row.jianjie }}
+              </span>
+            </a-popover>
           </template>
           <template v-if="column.dataIndex === 'juqingjieshao'">
             <a-popover>
@@ -70,25 +91,21 @@
             >
               修改
             </a>
-            <span v-has="'Btn.VideoCollection.Detail'">
-              <a-divider type="vertical" />
-              <a @click="() => detail.show(row)">详情</a>
-            </span>
             <span v-has="'Btn.VideoCollection.ConfigActor'">
               <a-divider type="vertical" />
-              <a @click="() => detail.show(row)">演员配置</a>
+              <a @click="() => configActor.show(row)">演员配置</a>
             </span>
-            <span v-has="'Btn.VideoCollection.ConfigClass'">
+            <span v-has="'Btn.VideoCollection.ConfigSmallClass'">
               <a-divider type="vertical" />
-              <a @click="() => detail.show(row)">类别配置</a>
+              <a @click="() => configSmallClass.show(row)">小类配置</a>
             </span>
             <span v-has="'Btn.VideoCollection.Chapter'">
               <a-divider type="vertical" />
-              <a @click="isVideoChapter = true">视频章节</a>
+              <a @click="handleChapter(row.bianma)">视频章节</a>
             </span>
-            <span v-has="'Btn.VideoCollection.Classify'">
+            <span v-has="'Btn.VideoCollection.ConfigShowClass'">
               <a-divider type="vertical" />
-              <a @click="() => detail.show(row)">分类配置</a>
+              <a @click="() => configShowClass.show(row)">展示类别配置</a>
             </span>
           </template>
         </template>
@@ -99,27 +116,35 @@
         :shangxiajia="shangxiajia"
         :updateStatus="updateStatus"
         :recommend="recommend"
+        :actorRoleList="actorRoleList"
+        :smallClassList="smallClassList"
         @success="table.refresh()"
       />
 
       <Edit
         ref="edit"
         :updateStatus="updateStatus"
+        :recommend="recommend"
         @success="table.refresh()"
       />
 
-      <Detail ref="detail" />
+      <ConfigActor ref="configActor" @success="table.refresh()" />
+
+      <ConfigSmallClass ref="configSmallClass" @success="table.refresh()" />
+
+      <ConfigShowClass ref="configShowClass" @success="table.refresh()" />
     </template>
     <VideoChapter
       v-else
-      @back="isVideoChapter = false"
+      @back="chapter.open = false"
       :shangxiajia="shangxiajia"
+      :bianma="chapter.bianma"
     />
   </PageWrapper>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import { reqSearch, reqUpDown } from '@/api/VideoManager/VideoCollection'
 import { STable } from '@/components/STable'
@@ -127,14 +152,20 @@ import { message } from 'ant-design-vue'
 import Add from './modules/Add.vue'
 import Edit from './modules/Edit.vue'
 import useUserStore from '@/store/modules/user'
-import Detail from './modules/Detail.vue'
 import VideoChapter from './components/VideoChapter/index.vue'
-import { reqSmallClass } from '@/api/common'
+import { reqSmallClass, reqActorRole } from '@/api/common'
+import dayjs from 'dayjs'
+import ConfigActor from './modules/ConfigActor.vue'
+import ConfigSmallClass from './modules/ConfigSmallClass.vue'
+import ConfigShowClass from './modules/ConfigShowClass.vue'
 
 const userStore = useUserStore()
 
 // 是否再视频章节
-const isVideoChapter = ref(false)
+const chapter = reactive({
+  open: false,
+  bianma: '',
+})
 const baseUrl = import.meta.env.VITE_SERVE
 
 // 上下架
@@ -215,12 +246,12 @@ const formItems = reactive([
     options: async () => {
       const res = await reqSmallClass()
       if (res.code == 0) {
-        return res.data.map((item: any) => ({
+        smallClassList.value = res.data.map((item: any) => ({
           value: item.bm,
           label: item.mc,
         }))
       }
-      return []
+      return smallClassList.value
     },
     defaultOption: {
       value: '',
@@ -281,6 +312,10 @@ const columns = [
     title: '推荐',
     dataIndex: 'tuijian',
     align: 'center',
+    customRender: ({ text }: any) => {
+      const item = recommend.find((item: any) => item.value == text)
+      return item && item.label
+    },
   },
   {
     title: '创建时间',
@@ -321,6 +356,10 @@ const columns = [
     title: '更新状态',
     dataIndex: 'gengxinzhuangtai',
     align: 'center',
+    customRender: ({ text }: any) => {
+      const item = updateStatus.find((item: any) => item.value == text)
+      return item && item.label
+    },
   },
   {
     title: '上下架',
@@ -338,6 +377,15 @@ const columns = [
 
 const searchForm = ref()
 const table = ref()
+const actorRoleList = ref([])
+const smallClassList = ref([])
+
+onMounted(async () => {
+  const res = await reqActorRole()
+  if (res.code == 0) {
+    actorRoleList.value = res.data
+  }
+})
 
 const reqData = async (currentPage: number, pageSize: number) => {
   const data: any = {
@@ -370,9 +418,16 @@ const handelUpDown = async (row: any) => {
   }
 }
 
+const handleChapter = (bianma: string) => {
+  chapter.bianma = bianma
+  chapter.open = true
+}
+
 const add = ref()
 const edit = ref()
-const detail = ref()
+const configActor = ref()
+const configSmallClass = ref()
+const configShowClass = ref()
 </script>
 
 <style></style>

@@ -16,7 +16,7 @@
 import { reactive, ref } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import STable from '@/components/STable/index.vue'
-import { reqSearch } from '@/api/table/search/index'
+import { reqSearchUserLog } from '@/api/LogManager'
 import dayjs from 'dayjs'
 
 defineOptions({
@@ -107,7 +107,7 @@ const formItems = reactive([
   {
     type: 'select',
     label: '状态',
-    field: 'status',
+    field: 'zhuangtai',
     value: '',
     placeholder: '请选择',
     defaultOption: {
@@ -119,14 +119,14 @@ const formItems = reactive([
   {
     type: 'input',
     label: '用户账户',
-    field: 'zhanghu',
+    field: 'shoujihao',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'select',
     label: '模块',
-    field: 'module',
+    field: 'leixing',
     value: '',
     placeholder: '请选择',
     defaultOption: {
@@ -139,13 +139,18 @@ const formItems = reactive([
 
 const columns = [
   {
-    title: '账户',
-    dataIndex: 'zhanghu',
+    title: '用户账户',
+    dataIndex: 'shoujihao',
     align: 'center',
   },
   {
-    title: '状态',
-    dataIndex: 'status',
+    title: '用户姓名',
+    dataIndex: 'xingming',
+    align: 'center',
+  },
+  {
+    title: '操作状态',
+    dataIndex: 'zhuangtai',
     align: 'center',
     customRender: ({ text }: { text: string }) => {
       const item = status.find((item: any) => item.value == text)
@@ -153,8 +158,8 @@ const columns = [
     },
   },
   {
-    title: '模块',
-    dataIndex: 'module',
+    title: '模块类型',
+    dataIndex: 'leixing',
     align: 'center',
     customRender: ({ text }: { text: string }) => {
       const item = module.find((item: any) => item.value == text)
@@ -162,12 +167,12 @@ const columns = [
     },
   },
   {
-    title: '详情',
+    title: '操作详情',
     dataIndex: 'xiangqing',
     align: 'center',
   },
   {
-    title: 'IP',
+    title: '操作ip',
     dataIndex: 'ipS',
     align: 'center',
   },
@@ -189,7 +194,7 @@ const getData = async (currentPage: number, pageSize: number) => {
     data[item.field] = item.value
   })
 
-  const res: any = await reqSearch(data)
+  const res: any = await reqSearchUserLog(data)
   if (res.code == 0) {
     return {
       data: res.data.list,
