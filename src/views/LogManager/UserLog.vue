@@ -8,7 +8,30 @@
       :data="getData"
       :scroll="{ y: 'calc(100vh - 420px)' }"
       :showPagination="true"
-    ></STable>
+    >
+      <template #bodyCell="{ column, row }">
+        <template v-if="column.dataIndex === 'xiangqing'">
+          <a-popover>
+            <template #content>
+              <p style="word-break: break-all">
+                {{ row.xiangqing }}
+              </p>
+            </template>
+            <span
+              style="
+                display: inline-block;
+                width: 100%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              "
+            >
+              {{ row.xiangqing }}
+            </span>
+          </a-popover>
+        </template>
+      </template>
+    </STable>
   </PageWrapper>
 </template>
 
@@ -18,6 +41,7 @@ import SearchForm from '@/components/SearchForm/index.vue'
 import STable from '@/components/STable/index.vue'
 import { reqSearchUserLog } from '@/api/LogManager'
 import dayjs from 'dayjs'
+import { reqUser } from '@/api/common'
 
 defineOptions({
   name: 'UserLog',
@@ -106,7 +130,7 @@ const formItems = reactive([
   },
   {
     type: 'select',
-    label: '状态',
+    label: '操作状态',
     field: 'zhuangtai',
     value: '',
     placeholder: '请选择',
@@ -117,15 +141,31 @@ const formItems = reactive([
     options: status,
   },
   {
-    type: 'input',
+    type: 'select',
     label: '用户账户',
     field: 'shoujihao',
     value: '',
-    placeholder: '请输入',
+    placeholder: '请选择',
+    defaultOption: {
+      value: '',
+      label: '全部',
+    },
+    options: async () => {
+      const res = await reqUser()
+      if (res.code == 0) {
+        return res.data.map((item: any) => {
+          return {
+            label: `${item.shoujihao}-${item.xingming}`,
+            value: item.shoujihao,
+          }
+        })
+      }
+      return []
+    },
   },
   {
     type: 'select',
-    label: '模块',
+    label: '模块类型',
     field: 'leixing',
     value: '',
     placeholder: '请选择',

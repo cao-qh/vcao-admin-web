@@ -4,23 +4,39 @@
     :open="open"
     @ok="submit"
     @cancel="open = false"
+    :width="700"
     :body-style="{ maxHeight: '580px', overflow: 'auto' }"
   >
-    <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
+    <a-form ref="formRef" :model="formState" v-bind="layout">
       <a-form-item label="缩略图" name="fileSLTs">
-        <UploadImage v-model:value="formState.fileSLTs" />
+        <a-upload
+          v-model:file-list="formState.fileList"
+          :before-upload="beforeUpload"
+          list-type="picture-card"
+          @preview="handlePreview"
+        >
+          <div>
+            <plus-outlined />
+            <div style="margin-top: 8px">选择文件</div>
+          </div>
+        </a-upload>
       </a-form-item>
       <a-form-item label="参数" name="jsonStr">
-        <a-textarea v-model:value="formState.jsonStr" />
+        <a-textarea :rows="10" v-model:value="formState.jsonStr" />
       </a-form-item>
     </a-form>
   </a-modal>
+
+  <ImageViewer ref="imageViewer" />
 </template>
+
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { reqUploadChapter } from '@/api/VideoManager/VideoCollection'
-import UploadImage from '@/components/UploadImage/index.vue'
+import type { UploadProps } from 'ant-design-vue'
+import ImageViewer from '@/components/ImageViewer/index.vue'
+import file2base64 from '@/utils/file2base64'
 
 defineOptions({ name: 'BatchImport' })
 
@@ -33,26 +49,36 @@ const open = ref<boolean>(false)
 const layout = {
   labelCol: {
     xs: { span: 24 },
-    sm: { span: 7 },
+    sm: { span: 4 },
   },
   wrapperCol: {
     xs: { span: 24 },
-    sm: { span: 13 },
+    sm: { span: 18 },
   },
 }
 
 const formRef = ref()
-const formState = reactive<any>({})
+const formState = reactive<any>({
+  fileList: [],
+  jsonStr: '',
+})
 
-const rules = {
-  fileSLTs: [{ required: true, message: '请选择' }],
-  jsonStr: [{ required: true, message: '请输入' }],
-}
+const imageViewer = ref()
 
 const show = async () => {
   open.value = true
-  formState.fileSLTs = null
+  formState.fileList = []
   formState.jsonStr = ''
+}
+
+const beforeUpload: UploadProps['beforeUpload'] = (file) => {
+  formState.fileList.value = [...(formState.fileList.value || []), file]
+  return false
+}
+
+const handlePreview = async (file: any) => {
+  const url = (await file2base64(file.originFileObj)) as string
+  imageViewer.value.show(file.name, url)
 }
 
 const submit = async () => {
@@ -62,7 +88,9 @@ const submit = async () => {
     console.log('formState :>> ', formState)
 
     const formData = new FormData()
-    formData.append('fileSLTs', formState.fileSLTs)
+    formState.fileList.forEach((item: any) => {
+      formData.append('fileSLTs', item.originFileObj)
+    })
     formData.append('jsonStr', formState.jsonStr)
 
     const res = await reqUploadChapter(formData)

@@ -16,63 +16,174 @@
 import { reactive, ref } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import STable from '@/components/STable/index.vue'
-import { reqSearch } from '@/api/table/search/index'
+import { reqSearchMemberViewingRecord } from '@/api/LogManager'
+import dayjs from 'dayjs'
+import { reqMember, reqVideoCollection, reqVideoChapter } from '@/api/common'
 
 defineOptions({
-  name: 'MemberBuyRecord',
+  name: 'MemberViewingRecord',
 })
+
+// 点赞
+const dianzan = [
+  {
+    label: '未点',
+    value: 0,
+  },
+  {
+    label: '已点',
+    value: 1,
+  },
+]
 
 const formItems = reactive([
   {
+    type: 'datePicker',
+    label: '开始时间',
+    field: 'startTime',
+    value: dayjs().subtract(15, 'day').format('YYYY-MM-DD HH:mm:ss'),
+    showTime: true,
+    valueFormat: 'YYYY-MM-DD HH:mm:ss',
+  },
+  {
+    type: 'datePicker',
+    label: '结束时间',
+    field: 'endTime',
+    value: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+    showTime: true,
+    valueFormat: 'YYYY-MM-DD HH:mm:ss',
+  },
+  {
     type: 'select',
-    label: '视频合集编码',
-    field: 'sphjbm',
+    label: '点赞',
+    field: 'dianzan',
     value: '',
     placeholder: '请选择',
     defaultOption: {
       value: '',
       label: '全部',
     },
-    options: [],
+    options: dianzan,
   },
   {
-    type: 'input',
-    label: '会员名称',
-    field: 'hymc',
+    type: 'select',
+    label: '会员编码',
+    field: 'huiyuanBianma',
     value: '',
     placeholder: '请输入',
+    options: async () => {
+      const res = await reqMember()
+      if (res.code == 0) {
+        return res.data.map((item: any) => {
+          return {
+            label: `${item.bm}-${item.mc}`,
+            value: item.bm,
+          }
+        })
+      }
+      return []
+    },
+    defaultOption: {
+      value: '',
+      label: '全部',
+    },
+  },
+  {
+    type: 'select',
+    label: '视频合集编码',
+    field: 'shipinhejiBianma',
+    value: '',
+    placeholder: '请选择',
+    defaultOption: {
+      value: '',
+      label: '全部',
+    },
+    options: async () => {
+      const res = await reqVideoCollection()
+      if (res.code == 0) {
+        return res.data.map((item: any) => {
+          return {
+            label: `${item.bm}-${item.mc}`,
+            value: item.bm,
+          }
+        })
+      }
+      return []
+    },
+  },
+  {
+    type: 'select',
+    label: '视频章节编码',
+    field: 'shipinzhangjieBianma',
+    value: '',
+    placeholder: '请选择',
+    defaultOption: {
+      value: '',
+      label: '全部',
+    },
+    options: async () => {
+      const res = await reqVideoChapter()
+      if (res.code == 0) {
+        return res.data.map((item: any) => {
+          return {
+            label: `${item.bianma}-${item.mingcheng}`,
+            value: item.bianma,
+          }
+        })
+      }
+      return []
+    },
   },
 ])
 
 const columns = [
   {
+    title: '会员编码',
+    dataIndex: 'huiyuanBianma',
+    align: 'center',
+  },
+  {
     title: '会员名称',
-    dataIndex: 'hymc',
+    dataIndex: 'huiYuanMingCheng',
     align: 'center',
   },
   {
-    title: '视频合集名',
-    dataIndex: 'sphjm',
+    title: '视频合集编码',
+    dataIndex: 'shipinhejiBianma',
     align: 'center',
   },
   {
-    title: '视频章节名',
-    dataIndex: 'spzjm',
+    title: '视频合集名称',
+    dataIndex: 'shiPinHejiMingCheng',
     align: 'center',
   },
   {
-    title: '购剧时间',
-    dataIndex: 'gjsj',
+    title: '视频章节名称',
+    dataIndex: 'shiPinZhangJieMingCheng',
+    align: 'center',
+  },
+  {
+    title: '点赞',
+    dataIndex: 'dianzan',
+    align: 'center',
+    customRender: ({ text }: { text: string }) => {
+      const item = dianzan.find((item: any) => item.value == text)
+      return item && item.label
+    },
+  },
+  {
+    title: '观看时长',
+    dataIndex: 'guankanshijian',
     align: 'center',
   },
   {
     title: '更新时间',
-    dataIndex: 'gxsj',
+    dataIndex: 'gengxinshiajin',
     align: 'center',
   },
   {
-    title: '观看时长',
-    dataIndex: 'gksc',
+    title: '创建时间',
+    dataIndex: 'chuangjianshiajin',
     align: 'center',
   },
 ]
@@ -88,7 +199,7 @@ const getData = async (currentPage: number, pageSize: number) => {
     data[item.field] = item.value
   })
 
-  const res: any = await reqSearch(data)
+  const res: any = await reqSearchMemberViewingRecord(data)
   if (res.code == 0) {
     return {
       data: res.data.list,

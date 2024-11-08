@@ -16,7 +16,8 @@
 import { reactive, ref } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import STable from '@/components/STable/index.vue'
-import { reqSearch } from '@/api/table/search/index'
+import { reqSearchMemberBalanceChangeRecord } from '@/api/LogManager'
+import { reqMember } from '@/api/common'
 import dayjs from 'dayjs'
 
 defineOptions({
@@ -58,8 +59,38 @@ const formItems = reactive([
   },
   {
     type: 'select',
+    label: '会员编码',
+    field: 'huiyuanBianma',
+    value: '',
+    placeholder: '请输入',
+    options: async () => {
+      const res = await reqMember()
+      if (res.code == 0) {
+        return res.data.map((item: any) => {
+          return {
+            label: `${item.bm}-${item.mc}`,
+            value: item.bm,
+          }
+        })
+      }
+      return []
+    },
+    defaultOption: {
+      value: '',
+      label: '全部',
+    },
+  },
+  {
+    type: 'input',
+    label: '金额',
+    field: 'jine',
+    value: '',
+    placeholder: '请输入',
+  },
+  {
+    type: 'select',
     label: '类型',
-    field: 'type',
+    field: 'leixing',
     value: '',
     placeholder: '请选择',
     defaultOption: {
@@ -70,15 +101,22 @@ const formItems = reactive([
   },
   {
     type: 'input',
-    label: '会员名称',
-    field: 'hymc',
+    label: '备注',
+    field: 'beizhu',
+    value: '',
+    placeholder: '请输入',
+  },
+  {
+    type: 'input',
+    label: '订单号',
+    field: 'dingdanhao',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'input',
     label: '购剧订单号',
-    field: 'gjddh',
+    field: 'goujudingdanhao',
     value: '',
     placeholder: '请输入',
   },
@@ -86,28 +124,33 @@ const formItems = reactive([
 
 const columns = [
   {
+    title: '会员编码',
+    dataIndex: 'huiyuanBianma',
+    align: 'center',
+  },
+  {
     title: '会员名称',
-    dataIndex: 'name',
+    dataIndex: 'huiYuanMingCheng',
     align: 'center',
   },
   {
     title: '金额',
-    dataIndex: 'je',
+    dataIndex: 'jine',
     align: 'center',
   },
   {
     title: '变动前',
-    dataIndex: 'bdq',
+    dataIndex: 'biandongqian',
     align: 'center',
   },
   {
     title: '变动后',
-    dataIndex: 'bdh',
+    dataIndex: 'biandonghou',
     align: 'center',
   },
   {
     title: '类型',
-    dataIndex: 'type',
+    dataIndex: 'leixing',
     align: 'center',
     customRender: ({ text }: { text: string }) => {
       const item = type.find((item: any) => item.value == text)
@@ -116,22 +159,22 @@ const columns = [
   },
   {
     title: '备注',
-    dataIndex: 'bz',
+    dataIndex: 'beizhu',
     align: 'center',
   },
   {
     title: '订单号',
-    dataIndex: 'ddh',
+    dataIndex: 'dingdanhao',
     align: 'center',
   },
   {
     title: '购剧订单号',
-    dataIndex: 'gjddh',
+    dataIndex: 'goujudingdanhao',
     align: 'center',
   },
   {
     title: '变动时间',
-    dataIndex: 'bdshijian',
+    dataIndex: 'chuangjianshiajin',
     align: 'center',
   },
 ]
@@ -147,7 +190,7 @@ const getData = async (currentPage: number, pageSize: number) => {
     data[item.field] = item.value
   })
 
-  const res: any = await reqSearch(data)
+  const res: any = await reqSearchMemberBalanceChangeRecord(data)
   if (res.code == 0) {
     return {
       data: res.data.list,

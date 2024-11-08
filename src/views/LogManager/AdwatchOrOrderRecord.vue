@@ -16,12 +16,37 @@
 import { reactive, ref } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
 import STable from '@/components/STable/index.vue'
-import { reqSearch } from '@/api/table/search/index'
+import { reqSearchAdwatchOrOrderRecord } from '@/api/LogManager'
+import { reqMember, reqAd } from '@/api/common'
 import dayjs from 'dayjs'
 
 defineOptions({
   name: 'AdwatchOrOrderRecord',
 })
+
+// 上级落地页返回状态
+const luodiyefanhui = [
+  {
+    value: 1,
+    label: '下单成功',
+  },
+  {
+    value: 2,
+    label: '订购成功',
+  },
+]
+
+// 有效数据
+const youxaoshuju = [
+  {
+    value: 1,
+    label: '无效',
+  },
+  {
+    value: 2,
+    label: '有效',
+  },
+]
 
 const formItems = reactive([
   {
@@ -43,82 +68,139 @@ const formItems = reactive([
   {
     type: 'input',
     label: '订单号',
-    field: 'ddh',
+    field: 'dingdanhao',
     value: '',
     placeholder: '请输入',
   },
   {
     type: 'select',
-    label: '会员名称',
-    field: 'hymc',
+    label: '上级落地页返回状态',
+    field: 'luodiyefanhui',
     value: '',
     placeholder: '请选择',
     defaultOption: {
       value: '',
       label: '全部',
     },
-    options: [],
+    options: luodiyefanhui,
   },
   {
-    type: 'input',
+    type: 'select',
+    label: '广告编码',
+    field: 'guanggaobianma',
+    value: '',
+    placeholder: '请选择',
+    defaultOption: {
+      value: '',
+      label: '全部',
+    },
+    options: async () => {
+      const res = await reqAd()
+      if (res.code === 0) {
+        return res.data.map((item: any) => {
+          return {
+            label: item.mingcheng,
+            value: item.bianma,
+          }
+        })
+      }
+      return []
+    },
+  },
+  {
+    type: 'select',
+    label: '会员编码',
+    field: 'huiyuanbianma',
+    value: '',
+    placeholder: '请选择',
+    defaultOption: {
+      value: '',
+      label: '全部',
+    },
+    options: async () => {
+      const res = await reqMember()
+      if (res.code === 0) {
+        return res.data.map((item: any) => {
+          return {
+            label: item.mc,
+            value: item.bm,
+          }
+        })
+      }
+      return []
+    },
+  },
+  {
+    type: 'select',
     label: '有效数据',
-    field: 'yxsj',
-    value: '',
-    placeholder: '请输入',
-  },
-  {
-    type: 'select',
-    label: '广告名称',
-    field: 'ggmc',
+    field: 'youxaoshuju',
     value: '',
     placeholder: '请选择',
     defaultOption: {
       value: '',
       label: '全部',
     },
-    options: [],
+    options: youxaoshuju,
   },
 ])
 
 const columns = [
   {
-    title: '会员名称',
-    dataIndex: 'hymc',
-    align: 'center',
-  },
-  {
-    title: '广告名称',
-    dataIndex: 'ggmc',
-    align: 'center',
-  },
-  {
     title: '订单号',
-    dataIndex: 'ddh',
+    dataIndex: 'dingdanhao',
     align: 'center',
   },
   {
     title: '上级落地页返回状态',
-    dataIndex: 'sldlyfhzt',
+    dataIndex: 'luodiyefanhui',
+    align: 'center',
+    customRender: ({ text }: { text: string }) => {
+      const item = luodiyefanhui.find((item: any) => item.value == text)
+      return item && item.label
+    },
+  },
+  {
+    title: '广告编码',
+    dataIndex: 'guanggaobianma',
     align: 'center',
   },
   {
-    title: '创建时间',
-    dataIndex: 'cjsj',
-    align: 'center',
-  },
-  {
-    title: '结束时间',
-    dataIndex: 'jssj',
-    align: 'center',
-  },
-  {
-    title: '有效数据',
-    dataIndex: 'yxsj',
+    title: '广告名称',
+    dataIndex: 'guangGaoMingCheng',
     align: 'center',
   },
   {
     title: '观看时长',
-    dataIndex: 'gksc',
+    dataIndex: 'guankanhang',
+    align: 'center',
+  },
+  {
+    title: '会员编码',
+    dataIndex: 'huiyuanbianma',
+    align: 'center',
+  },
+  {
+    title: '会员名称',
+    dataIndex: 'huiYuanMingCheng',
+    align: 'center',
+  },
+  {
+    title: '有效数据',
+    dataIndex: 'youxaoshuju',
+    align: 'center',
+    customRender: ({ text }: { text: string }) => {
+      const item = youxaoshuju.find((item: any) => item.value == text)
+      return item && item.label
+    },
+  },
+  {
+    title: '结束时间',
+    dataIndex: 'jieshushiajin',
+    align: 'center',
+  },
+  {
+    title: '创建时间',
+    dataIndex: 'chuangjianshijian',
     align: 'center',
   },
 ]
@@ -134,7 +216,7 @@ const getData = async (currentPage: number, pageSize: number) => {
     data[item.field] = item.value
   })
 
-  const res: any = await reqSearch(data)
+  const res: any = await reqSearchAdwatchOrOrderRecord(data)
   if (res.code == 0) {
     return {
       data: res.data.list,
