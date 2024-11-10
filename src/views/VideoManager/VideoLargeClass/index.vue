@@ -22,7 +22,7 @@
       <template #bodyCell="{ column, row }">
         <template v-if="column.dataIndex === 'qijinyong'">
           <a-popconfirm
-            v-if="userStore.hasPermission('Swh.VideoLargeClass.Enable')"
+            v-if="userStore.hasButton('Swh.VideoLargeClass.Enable')"
             title="确定要修改吗？"
             ok-text="是"
             cancel-text="否"

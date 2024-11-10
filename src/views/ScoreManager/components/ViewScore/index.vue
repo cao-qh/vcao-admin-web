@@ -1,11 +1,17 @@
 <template>
-  <PageWrapper>
-    <div v-if="data">
-      <div>积分：{{ data.jifen }}</div>
-      <div>最低分：{{ data.zuidijifen }}</div>
-      <div>最高分：{{ data.zuigaojifen }}</div>
+  <div>
+    <div v-if="data" style="margin-bottom: 10px">
+      <div v-if="data.jifenleixing == 1">积分：{{ data.jifen }}</div>
+      <template v-if="data.jifenleixing == 2">
+        <div>最低分：{{ data.zuidijifen }}</div>
+        <div>最高分：{{ data.zuigaojifen }}</div>
+      </template>
       <div>时长：{{ data.shichang }}</div>
-      <div>积分类型：{{ data.jifenleixing }}</div>
+      <div>
+        积分类型：{{
+          jifenleixing.find((item) => item.value === data.jifenleixing)?.label
+        }}
+      </div>
     </div>
     <a-space>
       <a-button
@@ -37,7 +43,7 @@
     <Add ref="add" :jifenleixing="jifenleixing" @success="gatData()" />
 
     <Edit ref="edit" :jifenleixing="jifenleixing" @success="gatData()" />
-  </PageWrapper>
+  </div>
 </template>
 
 <script setup lang="ts">

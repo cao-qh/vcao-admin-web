@@ -25,7 +25,7 @@
         </template>
         <template v-if="column.dataIndex === 'zhuangtai'">
           <a-popconfirm
-            v-if="userStore.hasPermission('Btn.VideoActor.Enable')"
+            v-if="userStore.hasButton('Btn.VideoActor.Enable')"
             title="确定要修改吗？"
             ok-text="是"
             cancel-text="否"

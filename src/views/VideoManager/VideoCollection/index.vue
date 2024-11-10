@@ -69,7 +69,7 @@
           </template>
           <template v-if="column.dataIndex === 'shangxiajia'">
             <a-popconfirm
-              v-if="userStore.hasPermission('Btn.VideoCollection.UpDown')"
+              v-if="userStore.hasButton('Btn.VideoCollection.UpDown')"
               title="确定要修改吗？"
               ok-text="是"
               cancel-text="否"

@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper>
+  <div>
     <STable
       ref="table"
       rowKey="id"
@@ -52,7 +52,7 @@
       :jifenleixing="jifenleixing"
       @success="table.refresh()"
     />
-  </PageWrapper>
+  </div>
 </template>
 
 <script setup lang="ts">

@@ -22,7 +22,7 @@
       <template #bodyCell="{ column, row }">
         <template v-if="column.dataIndex === 'shangxiajia'">
           <a-popconfirm
-            v-if="userStore.hasPermission('Swh.AdSetting.UpDown')"
+            v-if="userStore.hasButton('Swh.AdSetting.UpDown')"
             title="确定要修改吗？"
             ok-text="是"
             cancel-text="否"

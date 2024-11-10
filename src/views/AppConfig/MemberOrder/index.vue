@@ -25,7 +25,7 @@
         </template>
         <template v-if="column.dataIndex === 'shangxiajia'">
           <a-popconfirm
-            v-if="userStore.hasPermission('Swh.MemberOrder.UpDown')"
+            v-if="userStore.hasButton('Swh.MemberOrder.UpDown')"
             title="确定要修改吗？"
             ok-text="是"
             cancel-text="否"

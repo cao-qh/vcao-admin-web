@@ -1,16 +1,8 @@
 <template>
-  <PageWrapper>
-    <a-space size="large">
-      <span v-if="data">金额：{{ data.jine }}</span>
-      <a-button
-        v-has="'Btn.ScoreExchange.Add'"
-        type="primary"
-        v-if="!data"
-        @click="() => add.show()"
-      >
-        添加
-      </a-button>
-      <template v-else>
+  <div>
+    <template v-if="data">
+      <div style="margin-bottom: 10px">金额：{{ data.jine }}</div>
+      <a-space>
         <a-button
           v-has="'Btn.ScoreExchange.Update'"
           type="primary"
@@ -25,13 +17,28 @@
         >
           删除
         </a-button>
-      </template>
-    </a-space>
+      </a-space>
+    </template>
+
+    <div v-else>
+      <a-empty>
+        <template #description>
+          <span>未配置积分兑换</span>
+        </template>
+        <a-button
+          v-has="'Btn.ScoreExchange.Add'"
+          type="primary"
+          @click="add.show()"
+        >
+          现在添加
+        </a-button>
+      </a-empty>
+    </div>
 
     <Add ref="add" @success="gatData()" />
 
     <Edit ref="edit" @success="gatData()" />
-  </PageWrapper>
+  </div>
 </template>
 
 <script setup lang="ts">

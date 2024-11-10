@@ -1,13 +1,20 @@
 <template>
-  <PageWrapper>
-    <div v-if="data">
+  <div>
+    <div v-if="data" style="margin-bottom: 10px">
       <div>广告编码：{{ data.guanggaobianma }}</div>
-      <div>积分：{{ data.jifen }}</div>
-      <div>最低积分：{{ data.zuidijifen }}</div>
-      <div>最高积分：{{ data.zuigaojifen }}</div>
-      <div>积分类型：{{ data.jifenleixing }}</div>
+      <div v-if="data.jifenleixing == 1">积分：{{ data.jifen }}</div>
+      <template v-if="data.jifenleixing == 2">
+        <div>最低积分：{{ data.zuidijifen }}</div>
+        <div>最高积分：{{ data.zuigaojifen }}</div>
+      </template>
+      <div>
+        积分类型：{{
+          jifenleixing.find((item) => item.value === data.jifenleixing)?.label
+        }}
+      </div>
       <div>广告名称：{{ data.guanggaomingcheng }}</div>
     </div>
+
     <a-space>
       <a-button
         v-has="'Btn.AdScore.Add'"
@@ -48,7 +55,7 @@
       :adList="adList"
       @success="gatData()"
     />
-  </PageWrapper>
+  </div>
 </template>
 
 <script setup lang="ts">

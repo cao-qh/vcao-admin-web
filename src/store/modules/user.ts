@@ -33,6 +33,7 @@ const useUserStore: any = defineStore('user', () => {
   const menuRoutes = ref<RouteRecordRaw[]>([])
   const username = ref('')
   const buttons = ref<string[]>([])
+  const routes = ref<string[]>([])
   // 动态添加的路由返回删除
   const delMenuRoutes = ref<any>([])
 
@@ -81,6 +82,7 @@ const useUserStore: any = defineStore('user', () => {
     if (result.code == 0) {
       username.value = result.data.username
       buttons.value = result.data.buttons
+      routes.value = result.data.routes
       // 深拷贝asyncRoute
       const cloneAsyncRoute = deepCopy(asyncRoute)
 
@@ -102,8 +104,13 @@ const useUserStore: any = defineStore('user', () => {
   }
 
   // 是否包含用户按钮
-  const hasPermission = (button: string) => {
+  const hasButton = (button: string) => {
     return buttons.value.includes(button)
+  }
+
+  // 是否包含用户菜单
+  const hasMenu = (menu: string) => {
+    return routes.value.includes(menu)
   }
 
   // 退出登录
@@ -137,7 +144,8 @@ const useUserStore: any = defineStore('user', () => {
     phoneLogin,
     userInfo,
     userLogout,
-    hasPermission,
+    hasButton,
+    hasMenu,
   }
 })
 

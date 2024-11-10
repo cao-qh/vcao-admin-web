@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper>
+  <div>
     <STable
       ref="table"
       rowKey="id"
@@ -38,7 +38,7 @@
     <Add ref="add" @success="table.refresh()" />
 
     <Edit ref="edit" @success="table.refresh()" />
-  </PageWrapper>
+  </div>
 </template>
 
 <script setup lang="ts">
