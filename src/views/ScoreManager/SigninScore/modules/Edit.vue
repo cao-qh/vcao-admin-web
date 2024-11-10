@@ -1,34 +1,34 @@
 <template>
   <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
-      <a-form-item label="第几天" name="djt">
+      <a-form-item label="第几天" name="dijitian">
         <a-input-number
           :min="0"
-          v-model:value.trim="formState.djt"
+          v-model:value.trim="formState.dijitian"
           placeholder="请输入"
           style="width: 100%"
         />
       </a-form-item>
-      <a-form-item label="第几天积分" name="djtjf">
+      <a-form-item label="第几天积分" name="dijitainjifen">
         <a-input-number
           :min="0"
-          v-model:value.trim="formState.djtjf"
+          v-model:value.trim="formState.dijitainjifen"
           placeholder="请输入"
           style="width: 100%"
         />
       </a-form-item>
-      <a-form-item label="连续签到天数" name="lxqdts">
+      <a-form-item label="连续签到天数" name="lainxuqiandaotianshu">
         <a-input-number
           :min="0"
-          v-model:value.trim="formState.lxqdts"
+          v-model:value.trim="formState.lainxuqiandaotianshu"
           placeholder="请输入"
           style="width: 100%"
         />
       </a-form-item>
-      <a-form-item label="连续签到递增积分" name="lxqdzjjf">
+      <a-form-item label="连续签到递增积分" name="lianxuqiaodaodizengjifen">
         <a-input-number
           :min="0"
-          v-model:value.trim="formState.lxqdzjjf"
+          v-model:value.trim="formState.lianxuqiaodaodizengjifen"
           placeholder="请输入"
           style="width: 100%"
         />
@@ -39,7 +39,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqEdit } from '@/api/table/search/index'
+import { reqEdit } from '@/api/ScoreManager/SigninScore'
 
 defineOptions({ name: 'Edit' })
 
@@ -64,18 +64,19 @@ const formRef = ref()
 const formState = reactive<any>({})
 
 const rules = {
-  djt: [{ required: true, message: '请输入' }],
-  djtjf: [{ required: true, message: '请输入' }],
-  lxqdts: [{ required: true, message: '请输入' }],
-  lxqdzjjf: [{ required: true, message: '请输入' }],
+  dijitian: [{ required: true, message: '请输入' }],
+  dijitainjifen: [{ required: true, message: '请输入' }],
+  lainxuqiandaotianshu: [{ required: true, message: '请输入' }],
+  lianxuqiaodaodizengjifen: [{ required: true, message: '请输入' }],
 }
 
 const show = async (row: any) => {
   open.value = true
-  formState.djt = row.djt
-  formState.djtjf = row.djtjf
-  formState.lxqdts = row.lxqdts
-  formState.lxqdzjjf = row.lxqdzjjf
+  formState.id = row.id
+  formState.dijitian = row.dijitian
+  formState.dijitainjifen = row.dijitainjifen
+  formState.lainxuqiandaotianshu = row.lainxuqiandaotianshu
+  formState.lianxuqiaodaodizengjifen = row.lianxuqiaodaodizengjifen
 }
 
 const submit = async () => {

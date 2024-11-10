@@ -2,12 +2,29 @@
   <PageWrapper>
     <a-space size="large">
       <span v-if="data">金额：{{ data.jine }}</span>
-      <a-button type="primary" v-if="!data" @click="() => add.show()">
+      <a-button
+        v-has="'Btn.ScoreExchange.Add'"
+        type="primary"
+        v-if="!data"
+        @click="() => add.show()"
+      >
         添加
       </a-button>
       <template v-else>
-        <a-button type="primary" @click="() => edit.show(data)">修改</a-button>
-        <a-button type="primary" @click="handleDelete">删除</a-button>
+        <a-button
+          v-has="'Btn.ScoreExchange.Update'"
+          type="primary"
+          @click="() => edit.show(data)"
+        >
+          修改
+        </a-button>
+        <a-button
+          v-has="'Btn.ScoreExchange.Delete'"
+          type="primary"
+          @click="handleDelete"
+        >
+          删除
+        </a-button>
       </template>
     </a-space>
 

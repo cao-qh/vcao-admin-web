@@ -6,11 +6,11 @@
       :columns="columns"
       :data="reqData"
       :showPagination="true"
-      :scroll="{ y: 'calc(100vh - 450px)' }"
+      :scroll="{ y: 'calc(100vh - 340px)' }"
     >
       <template #toolbar>
         <a-button
-          v-has="'Btn.HomeSetting.Add'"
+          v-has="'Btn.SigninScore.Add'"
           type="primary"
           @click="() => add.show()"
         >
@@ -19,7 +19,7 @@
       </template>
       <template #bodyCell="{ column, row }">
         <template v-if="column.dataIndex === 'action'">
-          <a v-has="'Btn.HomeSetting.Update'" @click="() => edit.show(row)">
+          <a v-has="'Btn.SigninScore.Update'" @click="() => edit.show(row)">
             修改
           </a>
           <a-divider type="vertical"></a-divider>
@@ -29,7 +29,7 @@
             cancel-text="否"
             @confirm="handleDelete(row)"
           >
-            <a v-has="'Btn.HomeSetting.Delete'">删除</a>
+            <a v-has="'Btn.SigninScore.Delete'">删除</a>
           </a-popconfirm>
         </template>
       </template>
@@ -44,30 +44,35 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { STable } from '@/components/STable'
-import { reqSearch, reqSubmit } from '@/api/table/search/index'
+import { reqSearch, reqDelete } from '@/api/ScoreManager/SigninScore'
 import Add from './modules/Add.vue'
 import Edit from './modules/Edit.vue'
 import { message } from 'ant-design-vue'
 
 const columns = [
   {
+    title: 'ID',
+    dataIndex: 'id',
+    align: 'center',
+  },
+  {
     title: '第几天',
-    dataIndex: 'djt',
+    dataIndex: 'dijitian',
     align: 'center',
   },
   {
     title: '第几天积分',
-    dataIndex: 'djtjf',
+    dataIndex: 'dijitainjifen',
     align: 'center',
   },
   {
     title: '连续签到天数',
-    dataIndex: 'lxqdts',
+    dataIndex: 'lainxuqiandaotianshu',
     align: 'center',
   },
   {
     title: '连续签到递增积分',
-    dataIndex: 'lxqdzjjf',
+    dataIndex: 'lianxuqiaodaodizengjifen',
     align: 'center',
   },
   {
@@ -88,15 +93,16 @@ const reqData = async (currentPage: number, pageSize: number) => {
   if (res.code == 0) {
     return {
       data: res.data.list,
-      total: res.data.total,
+      total: res.data.totalSize,
     }
   }
 }
 
 const handleDelete = async (row: any) => {
-  const res = await reqSubmit(row.id)
+  const res = await reqDelete(row.id)
   if (res.code == 0) {
     message.success(res.msg)
+    table.value.refresh()
   } else {
     message.error(res.msg)
   }
