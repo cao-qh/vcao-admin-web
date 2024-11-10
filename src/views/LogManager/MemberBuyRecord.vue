@@ -127,19 +127,33 @@ const columns = [
     title: '视频合集编码',
     dataIndex: 'shipinhejiBianma',
     align: 'center',
-    customCell: (record: any, rowIndex: any, column: any) => {
-      console.log('record :>> ', record)
-      console.log('rowIndex :>> ', rowIndex)
-      console.log('column :>> ', column)
-      // return {
-      //   rowSpan: 2,
-      // }
+    customCell: (record: any) => {
+      if (record.count) {
+        return {
+          rowSpan: record.count,
+        }
+      } else {
+        return {
+          rowSpan: 0,
+        }
+      }
     },
   },
   {
     title: '视频合集名称',
     dataIndex: 'shiPinHejiMingCheng',
     align: 'center',
+    customCell: (record: any) => {
+      if (record.count) {
+        return {
+          rowSpan: record.count,
+        }
+      } else {
+        return {
+          rowSpan: 0,
+        }
+      }
+    },
   },
   {
     title: '视频章节编码',
@@ -181,6 +195,22 @@ const getData = async (currentPage: number, pageSize: number) => {
 
   const res: any = await reqSearchMemberBuyRecord(data)
   if (res.code == 0) {
+    // 统计相邻的相同数量
+    if (res.data.list && res.data.list.length > 0) {
+      let i = 0
+      let tempRow = res.data.list[i]
+      tempRow.count = 0
+      for (; i < res.data.list.length; i++) {
+        const row = res.data.list[i]
+        if (tempRow.shipinhejiBianma === row.shipinhejiBianma) {
+          tempRow.count++
+        } else {
+          tempRow = row
+          tempRow.count = 1
+        }
+      }
+    }
+
     return {
       data: res.data.list,
       total: res.data.totalSize,
