@@ -1,10 +1,16 @@
 <template>
-  <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
+  <a-modal
+    title="修改"
+    :open="open"
+    @ok="submit"
+    @cancel="open = false"
+    :body-style="{ maxHeight: '580px', overflow: 'auto' }"
+  >
     <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
-      <a-form-item label="积分类型" name="jflx">
-        <a-select v-model:value="formState.jflx" placeholder="请选择">
+      <a-form-item label="积分类型" name="jifenleixing">
+        <a-select v-model:value="formState.jifenleixing" placeholder="请选择">
           <a-select-option
-            v-for="item in scoreType"
+            v-for="item in jifenleixing"
             :key="item.value"
             :value="item.value"
           >
@@ -12,40 +18,43 @@
           </a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item label="积分" name="jf">
+      <a-form-item label="时长" name="shichang">
         <a-input-number
           :min="0"
-          v-model:value.trim="formState.jf"
+          v-model:value.trim="formState.shichang"
           placeholder="请输入"
           style="width: 100%"
         />
       </a-form-item>
-      <a-form-item label="最低积分" name="zdjf">
+      <template v-if="formState.jifenleixing === 2">
+        <a-form-item label="最低积分" name="zuidijifen">
+          <a-input-number
+            :min="0"
+            v-model:value.trim="formState.zuidijifen"
+            placeholder="请输入"
+            style="width: 100%"
+          />
+        </a-form-item>
+        <a-form-item label="最高积分" name="zuigaojifen">
+          <a-input-number
+            :min="0"
+            v-model:value.trim="formState.zuigaojifen"
+            placeholder="请输入"
+            style="width: 100%"
+          />
+        </a-form-item>
+      </template>
+      <a-form-item
+        v-if="formState.jifenleixing === 1"
+        label="积分"
+        name="jifen"
+      >
         <a-input-number
           :min="0"
-          v-model:value.trim="formState.zdjf"
+          v-model:value.trim="formState.jifen"
           placeholder="请输入"
           style="width: 100%"
         />
-      </a-form-item>
-      <a-form-item label="最高积分" name="zgjf">
-        <a-input-number
-          :min="0"
-          v-model:value.trim="formState.zgjf"
-          placeholder="请输入"
-          style="width: 100%"
-        />
-      </a-form-item>
-      <a-form-item label="广告" name="gg">
-        <a-select v-model:value="formState.gg" placeholder="请选择">
-          <a-select-option
-            v-for="item in scoreType"
-            :key="item.value"
-            :value="item.value"
-          >
-            {{ item.label }}
-          </a-select-option>
-        </a-select>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -53,12 +62,13 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqEdit } from '@/api/table/search/index'
+import { reqEdit } from '@/api/ScoreManager/ViewScore'
 
 defineOptions({ name: 'Edit' })
 
+// 属性
 defineProps({
-  scoreType: {
+  jifenleixing: {
     type: Array<any>,
     default: () => [],
   },
@@ -85,20 +95,20 @@ const formRef = ref()
 const formState = reactive<any>({})
 
 const rules = {
-  jflx: [{ required: true, message: '请选择' }],
-  jf: [{ required: true, message: '请输入' }],
-  zdjf: [{ required: true, message: '请输入' }],
-  zgjf: [{ required: true, message: '请输入' }],
-  gg: [{ required: true, message: '请选择' }],
+  jifen: [{ required: true, message: '请输入' }],
+  shichang: [{ required: true, message: '请输入' }],
+  zuidijifen: [{ required: true, message: '请输入' }],
+  zuigaojifen: [{ required: true, message: '请输入' }],
+  jifenleixing: [{ required: true, message: '请选择' }],
 }
 
 const show = async (row: any) => {
   open.value = true
-  formState.jflx = row.jflx
-  formState.jf = row.jf
-  formState.zdjf = row.zdjf
-  formState.zgjf = row.zgjf
-  formState.gg = row.gg
+  formState.jifen = row.jifen
+  formState.shichang = row.shichang
+  formState.zuidijifen = row.zuidijifen
+  formState.zuigaojifen = row.zuigaojifen
+  formState.jifenleixing = row.jifenleixing
 }
 
 const submit = async () => {
