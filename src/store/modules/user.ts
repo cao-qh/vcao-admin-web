@@ -14,7 +14,7 @@ import useLayoutSettingStore from '@/store/modules/setting'
 // 用于过滤当前用户需要展示的异步路由
 function filterAsyncRoute(asyncRoute: any, routes: string[]) {
   return asyncRoute.filter((item: any) => {
-    if (routes.includes(item.name)) {
+    if (routes.includes(item.name) || item.name === 'Default') {
       if (item.children && item.children.length > 0) {
         item.children = filterAsyncRoute(item.children, routes)
       }
