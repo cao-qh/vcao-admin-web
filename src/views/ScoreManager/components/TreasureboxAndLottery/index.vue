@@ -149,6 +149,10 @@ const reqData = async () => {
       data: res.data,
       total: res.data.length,
     }
+  } else {
+    return {
+      data: [],
+    }
   }
 }
 

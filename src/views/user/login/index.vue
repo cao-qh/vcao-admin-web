@@ -230,39 +230,32 @@ const accountLogin = async () => {
     }
     layoutSettingStore.updateLocal()
   }
-  // if (isRemembermima.value) {
-  //   localStorage.setItem(
-  //     'REMEMBER_PASSWORD',
-  //     JSON.stringify({
-  //       status: true,
-  //       shoujihao: loginForm.shoujihao,
-  //       mima: loginForm.mima,
-  //     }),
-  //   )
-  // }
 }
 
 // 手机号登录
 const phoneLogin = async () => {
   try {
     await formRef.value.validate(['shoujihao', 'yanZhengMa'])
-    // 手机验证码登录
-    const data = {
-      shoujihao: loginForm.shoujihao,
-      yanZhengMa: loginForm.yanZhengMa,
-    }
-    try {
-      // 保证登录成功
-      await useStore.phoneLogin(data)
-    } catch (error: any) {
-      // 登录失败提示信息
-      notification.error({
-        message: loginForm.shoujihao,
-        description: error.message,
-      })
-    }
   } catch (error: any) {
-    console.log('error :>> ', error)
+    console.log('表单校验失败：', error)
+    throw new Error('表单校验失败')
+  }
+
+  // 手机验证码登录
+  const data = {
+    shoujihao: loginForm.shoujihao,
+    yanZhengMa: loginForm.yanZhengMa,
+  }
+  try {
+    // 保证登录成功
+    await useStore.phoneLogin(data)
+  } catch (error: any) {
+    // 登录失败提示信息
+    notification.error({
+      message: loginForm.shoujihao,
+      description: `登录失败，${error.message}`,
+    })
+    throw new Error('登录失败')
   }
 }
 

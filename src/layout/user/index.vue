@@ -13,7 +13,7 @@
 
     <div class="footer">
       <a-typography-text style="opacity: 0.6">
-        © All Rights Reserved
+        © 焦作市云启航网络科技有限公司
       </a-typography-text>
     </div>
   </div>
