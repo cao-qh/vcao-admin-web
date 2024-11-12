@@ -1,10 +1,10 @@
 <template>
   <a-modal title="添加" :open="open" @ok="submit" @cancel="open = false">
-    <a-form ref="formRef" :model="formState" v-bind="layout">
+    <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
       <a-form-item label="图片" name="tuPianFile">
         <UploadImage
           v-model:value.trim="formState.tuPianFile"
-          placeholder="请输入"
+          placeholder="请选择"
         ></UploadImage>
       </a-form-item>
       <a-form-item label="权重" name="quanzhong">
@@ -136,6 +136,16 @@ const layout = {
   },
 }
 
+const rules = {
+  tuPianFile: [{ required: true, message: '请选择' }],
+  quanzhong: [{ required: true, message: '请输入' }],
+  weizhi: [{ required: true, message: '请选择' }],
+  tiaozhuanleixing: [{ required: true, message: '请选择' }],
+  shipinhejibianma: [{ required: true, message: '请选择' }],
+  shipinzhangjiebianma: [{ required: true, message: '请选择' }],
+  guanggaobianma: [{ required: true, message: '请选择' }],
+}
+
 const formRef = ref()
 const formState = reactive<any>({})
 
@@ -143,7 +153,7 @@ const show = () => {
   open.value = true
   Object.assign(formState, {
     tuPianFile: null,
-    quanzhong: '',
+    quanzhong: 0,
     weizhi: null,
     tiaozhuanleixing: null,
     shipinhejibianma: null,

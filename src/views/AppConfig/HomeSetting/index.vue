@@ -127,6 +127,20 @@ const formItems = reactive([
 
 const columns = [
   {
+    title: '位置',
+    dataIndex: 'weizhi',
+    align: 'center',
+    customRender: ({ text }: any) => {
+      const item = position.find((item: any) => item.value == text)
+      return item && item.label
+    },
+  },
+  {
+    title: '广告编码',
+    dataIndex: 'guanggaobianma',
+    align: 'center',
+  },
+  {
     title: '图片',
     dataIndex: 'tupian',
     align: 'center',
@@ -154,20 +168,6 @@ const columns = [
     title: '视频章节编码',
     dataIndex: 'shipinzhangjiebianma',
     align: 'center',
-  },
-  {
-    title: '广告编码',
-    dataIndex: 'guanggaobianma',
-    align: 'center',
-  },
-  {
-    title: '位置',
-    dataIndex: 'weizhi',
-    align: 'center',
-    customRender: ({ text }: any) => {
-      const item = position.find((item: any) => item.value == text)
-      return item && item.label
-    },
   },
   {
     title: '操作',

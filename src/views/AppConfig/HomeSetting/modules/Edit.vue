@@ -1,6 +1,6 @@
 <template>
   <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
-    <a-form ref="formRef" :model="formState" v-bind="layout">
+    <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
       <a-form-item label="图片" name="tuPianFile">
         <UploadImage
           v-model:value.trim="formState.tuPianFile"
@@ -134,6 +134,16 @@ const layout = {
     xs: { span: 24 },
     sm: { span: 13 },
   },
+}
+
+const rules = {
+  tuPianFile: [{ required: true, message: '请选择' }],
+  quanzhong: [{ required: true, message: '请输入' }],
+  weizhi: [{ required: true, message: '请选择' }],
+  tiaozhuanleixing: [{ required: true, message: '请选择' }],
+  shipinhejibianma: [{ required: true, message: '请选择' }],
+  shipinzhangjiebianma: [{ required: true, message: '请选择' }],
+  guanggaobianma: [{ required: true, message: '请选择' }],
 }
 
 const formRef = ref()

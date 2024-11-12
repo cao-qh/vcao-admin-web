@@ -21,7 +21,10 @@
       </template>
       <template #bodyCell="{ column, row }">
         <template v-if="column.dataIndex === 'zhaopian'">
-          <a-image :width="50" :src="baseUrl + row.zhaopian" />
+          <a-image
+            :width="50"
+            :src="baseUrl + row.zhaopian + `?=${dayjs().format('x')}`"
+          />
         </template>
         <template v-if="column.dataIndex === 'zhuangtai'">
           <a-popconfirm
@@ -64,6 +67,7 @@ import { message } from 'ant-design-vue'
 import Add from './modules/Add.vue'
 import Edit from './modules/Edit.vue'
 import useUserStore from '@/store/modules/user'
+import dayjs from 'dayjs'
 
 const userStore = useUserStore()
 const baseUrl = import.meta.env.VITE_SERVE

@@ -94,15 +94,6 @@ export const asyncRoute = [
     },
     redirect: '/AppConfig/Protocol',
     children: [
-      // 用户协议
-      {
-        path: '/AppConfig/Protocol',
-        component: () => import('@/views/AppConfig/Protocol/index.vue'),
-        name: 'Protocol',
-        meta: {
-          title: '用户协议',
-        },
-      },
       // 首页设置
       {
         path: '/AppConfig/HomeSetting',
@@ -157,15 +148,24 @@ export const asyncRoute = [
           title: '支付',
         },
       },
-      // 服务
+      // 客服
       {
         path: '/AppConfig/Service',
         component: () => import('@/views/AppConfig/Service/index.vue'),
         name: 'Service',
         meta: {
-          title: '服务',
+          title: '客服',
         },
       },
+			// 用户协议
+			{
+			  path: '/AppConfig/Protocol',
+			  component: () => import('@/views/AppConfig/Protocol/index.vue'),
+			  name: 'Protocol',
+			  meta: {
+			    title: '用户协议',
+			  },
+			},
     ],
   },
   // 人员管理
