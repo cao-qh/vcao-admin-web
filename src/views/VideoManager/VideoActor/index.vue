@@ -101,7 +101,7 @@ const qijinyong = [
 const formItems = reactive([
   {
     type: 'input',
-    label: '名字',
+    label: '姓名',
     field: 'mingzi',
     value: '',
     placeholder: '请输入',
@@ -155,7 +155,7 @@ const columns = [
     align: 'center',
   },
   {
-    title: '状态',
+    title: '启禁用',
     dataIndex: 'zhuangtai',
     align: 'center',
   },

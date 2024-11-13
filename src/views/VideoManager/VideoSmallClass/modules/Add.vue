@@ -8,7 +8,8 @@
         />
       </a-form-item>
       <a-form-item label="权重(%)" name="quanzhong">
-        <a-input
+        <a-input-number
+          :min="0"
           v-model:value.trim="formState.quanzhong"
           placeholder="请输入"
         />
@@ -87,7 +88,7 @@ const show = () => {
   open.value = true
   Object.assign(formState, {
     mingcheng: '',
-    quanzhong: '',
+    quanzhong: 0,
     shangjiBianma: null,
     qijinyong: 1,
   })

@@ -1,36 +1,30 @@
 <template>
   <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
-      <a-form-item label="编码" name="bianma">
+      <a-form-item label="账户/手机号" name="shoujihao">
         <a-input
-          v-model:value.trim="formState.bianma"
+          v-model:value.trim="formState.shoujihao"
           placeholder="请输入"
           disabled
         />
       </a-form-item>
-      <a-form-item label="名称" name="mingcheng">
-        <a-input
-          v-model:value.trim="formState.mingcheng"
+      <a-form-item label="密码" name="mima">
+        <a-input-password
+          v-model:value.trim="formState.mima"
           placeholder="请输入"
         />
       </a-form-item>
-      <a-form-item label="大类" name="shangjiBianma">
-        <a-select v-model:value="formState.shangjiBianma" placeholder="请选择">
-          <a-select-option
-            v-for="item in largeClassList"
-            :value="item.value"
-            :key="item.value"
-          >
-            {{ item.label }}
-          </a-select-option>
-        </a-select>
+      <a-form-item label="姓名" name="xingming">
+        <a-input v-model:value.trim="formState.xingming" placeholder="请输入" />
       </a-form-item>
-      <a-form-item label="权重(%)" name="quanzhong">
-        <a-input-number
-          :min="0"
-          v-model:value.trim="formState.quanzhong"
+      <a-form-item label="邮箱" name="youxiang">
+        <a-input v-model:value.trim="formState.youxiang" placeholder="请输入" />
+      </a-form-item>
+      <a-form-item label="登录IP" name="ip">
+        <a-textarea
+          v-model:value.trim="formState.ip"
           placeholder="请输入"
-        />
+        ></a-textarea>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -38,16 +32,10 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { reqEdit } from '@/api/VideoManager/VideoSmallClass'
+import { reqEdit } from '@/api/PeopleManager/UserManager'
+import { phone, ips } from '@/utils/regexp'
 
 defineOptions({ name: 'Edit' })
-
-defineProps({
-  largeClassList: {
-    type: Array<any>,
-    default: () => [],
-  },
-})
 
 // 定义方法
 const $emit = defineEmits(['success'])
@@ -66,23 +54,23 @@ const layout = {
   },
 }
 
-const rules = {
-  bianma: [{ required: true, message: '请输入' }],
-  mingcheng: [{ required: true, message: '请输入' }],
-  quanzhong: [{ required: true, message: '请选择' }],
-  shangjiBianma: [{ required: true, message: '请选择' }],
-}
-
 const formRef = ref()
 const formState = reactive<any>({})
 
+const rules = {
+  shoujihao: [
+    { required: true, pattern: phone, message: '请输入正确的手机号' },
+  ],
+  ip: [{ pattern: ips, message: '请输入正确的IP地址' }],
+}
+
 const show = async (row: any) => {
   open.value = true
-  formState.id = row.id
-  formState.bianma = row.bianma
-  formState.mingcheng = row.mingcheng
-  formState.shangjiBianma = row.shangjiBianma
-  formState.quanzhong = row.quanzhong || 0
+  formState.shoujihao = row.shoujihao
+  formState.mima = row.mima
+  formState.xingming = row.xingming
+  formState.youxiang = row.youxiang
+  formState.ip = row.ip
 }
 
 const submit = async () => {

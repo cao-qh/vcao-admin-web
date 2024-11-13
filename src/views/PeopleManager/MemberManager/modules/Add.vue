@@ -58,7 +58,7 @@ import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { reqAdd } from '@/api/PeopleManager/MemberManager'
 import UploadImage from '@/components/UploadImage/index.vue'
-import { phone } from '@/utils/regexp'
+import { phone, ips } from '@/utils/regexp'
 
 defineOptions({ name: 'Add' })
 
@@ -103,7 +103,7 @@ const rules = {
   mingcheng: [{ required: true, message: '请选择' }],
   huiyuandengji: [{ required: true, message: '请输入' }],
   qijinyong: [{ required: true, message: '请选择' }],
-  dengluip: [{ required: true, message: '请输入' }],
+  dengluip: [{ required: true, pattern: ips, message: '请输入正确格式IP地址' }],
 }
 
 const show = () => {

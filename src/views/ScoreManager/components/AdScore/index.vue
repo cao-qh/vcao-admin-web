@@ -1,105 +1,140 @@
 <template>
-	<div>
-		<template v-if="data">
-			<div style="margin-bottom: 10px">
-				<div>广告编码：{{ data.guanggaobianma }}</div>
-				<div v-if="data.jifenleixing == 1">积分：{{ data.jifen }}</div>
-				<template v-if="data.jifenleixing == 2">
-					<div>最低积分：{{ data.zuidijifen }}</div>
-					<div>最高积分：{{ data.zuigaojifen }}</div>
-				</template>
-				<div>
-					积分类型：{{
-          jifenleixing.find((item) => item.value === data.jifenleixing)?.label
-        }}
-				</div>
-				<div>广告名称：{{ data.guanggaomingcheng }}</div>
-			</div>
-
-			<a-space>
-				<a-button v-has="'Btn.AdScore.Update'" type="primary" @click="() => edit.show(data)">
-					修改
-				</a-button>
-				<a-button v-has="'Btn.AdScore.Delete'" type="primary" @click="handleDelete">
-					删除
-				</a-button>
-
-			</a-space>
-		</template>
-
-		<div v-else>
-			<a-empty>
-				<template #description>
-					<span>未配置广告积分</span>
-				</template>
-				<a-button v-has="'Btn.AdScore.Add'" type="primary" @click="add.show()">
-					现在添加
-				</a-button>
-			</a-empty>
-		</div>
-
-
-		<Add ref="add" :jifenleixing="jifenleixing" :adList="adList" @success="gatData()" />
-
-		<Edit ref="edit" :jifenleixing="jifenleixing" :adList="adList" @success="gatData()" />
-	</div>
+  <div style="margin-bottom: 10px">
+    <a-form v-bind="layout" ref="formRef" :model="formState" :rules="rules">
+      <a-form-item label="广告编码" name="guanggaobianma">
+        <a-select v-model:value="formState.guanggaobianma" placeholder="请选择">
+          <a-select-option
+            v-for="item in adList"
+            :key="item.value"
+            :value="item.value"
+          >
+            {{ item.label }}
+          </a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item label="积分类型" name="jifenleixing">
+        <a-select v-model:value="formState.jifenleixing" placeholder="请选择">
+          <a-select-option
+            v-for="item in jifenleixing"
+            :key="item.value"
+            :value="item.value"
+          >
+            {{ item.label }}
+          </a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item v-if="formState.jifenleixing == 1" label="积分" name="jifen">
+        <a-input-number
+          :min="0"
+          v-model:value.trim="formState.jifen"
+          placeholder="请输入"
+        />
+      </a-form-item>
+      <template v-if="formState.jifenleixing == 2">
+        <a-form-item label="最低积分" name="zuidijifen">
+          <a-input-number
+            :min="0"
+            v-model:value.trim="formState.zuidijifen"
+            placeholder="请输入"
+          />
+        </a-form-item>
+        <a-form-item label="最高积分" name="zuigaojifen">
+          <a-input-number
+            :min="0"
+            v-model:value.trim="formState.zuigaojifen"
+            placeholder="请输入"
+          />
+        </a-form-item>
+      </template>
+      <a-form-item :wrapper-col="{ span: 14, offset: 2 }">
+        <a-button type="primary" @click="submit">提交修改</a-button>
+      </a-form-item>
+    </a-form>
+  </div>
 </template>
 
 <script setup lang="ts">
-	import { ref, onMounted } from 'vue'
-	import { reqSearch, reqDelete } from '@/api/ScoreManager/AdScore'
-	import Add from './modules/Add.vue'
-	import Edit from './modules/Edit.vue'
-	import { message } from 'ant-design-vue'
-	import { reqAd } from '@/api/common'
+import { ref, onMounted, reactive } from 'vue'
+import { reqSearch, reqEdit } from '@/api/ScoreManager/AdScore'
+import { message } from 'ant-design-vue'
+import { reqAd } from '@/api/common'
 
-	const data = ref<any>(null)
-	const add = ref()
-	const edit = ref()
-	const adList = ref([])
+const adList = ref<any>([])
+const formState = reactive<any>({})
+const formRef = ref()
 
-	const jifenleixing = [
-		{
-			value: 1,
-			label: '固定',
-		},
-		{
-			value: 2,
-			label: '区间',
-		},
-	]
+const jifenleixing = [
+  {
+    value: 1,
+    label: '固定',
+  },
+  {
+    value: 2,
+    label: '区间',
+  },
+]
 
-	onMounted(() => {
-		gatData()
-		reqAd().then((res) => {
-			if (res.code == 0) {
-				adList.value = res.data.map((item : any) => {
-					return {
-						label: item.mingcheng,
-						value: item.bianma,
-					}
-				})
-			}
-		})
-	})
+// 表单布局
+const layout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 2 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 4 },
+  },
+}
 
-	const gatData = async () => {
-		const res = await reqSearch()
-		if (res.code == 0) {
-			data.value = res.data
-		} else {
-			data.value = null
-		}
-	}
+const rules = {
+  guanggaobianma: [{ required: true, message: '请选择' }],
+  jifenleixing: [{ required: true, message: '请选择' }],
+  jifen: [{ required: true, message: '请输入' }],
+  zuidijifen: [{ required: true, message: '请输入' }],
+  zuigaojifen: [{ required: true, message: '请输入' }],
+}
 
-	// 删除
-	const handleDelete = async () => {
-		const res = await reqDelete()
-		if (res.code == 0) {
-			message.success(res.msg)
-			gatData()
-		} else {
-			message.error(res.msg)
-		}
-	}
+onMounted(() => {
+  gatData()
+  reqAd().then((res) => {
+    if (res.code == 0) {
+      adList.value = res.data.map((item: any) => {
+        return {
+          label: item.mingcheng,
+          value: item.bianma,
+        }
+      })
+    }
+  })
+})
+
+const gatData = async () => {
+  const res = await reqSearch()
+  if (res.code == 0) {
+    formState.guanggaobianma = res.data.guanggaobianma
+    formState.jifenleixing = res.data.jifenleixing
+    formState.jifen = res.data.jifen
+    formState.zuidijifen = res.data.zuidijifen
+    formState.zuigaojifen = res.data.zuigaojifen
+  } else {
+    message.error(res.msg)
+  }
+}
+
+const submit = async () => {
+  try {
+    await formRef.value.validate()
+    console.log('formState :>> ', formState)
+
+    const res = await reqEdit(formState)
+    if (res.code == 0) {
+      message.success(res.msg)
+      gatData()
+    } else {
+      message.error(res.msg)
+    }
+  } catch (error) {
+    console.log('error :>> ', error)
+  }
+}
 </script>

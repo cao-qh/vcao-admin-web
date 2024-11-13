@@ -29,9 +29,22 @@ const formItems = reactive([
     type: 'datePicker',
     label: '开始时间',
     field: 'startTime',
-    value: dayjs().subtract(15, 'day').format('YYYY-MM-DD HH:mm:ss'),
+    value: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     showTime: true,
     valueFormat: 'YYYY-MM-DD HH:mm:ss',
+    disabledDate: (val: any) => {
+      const endTime: any = formItems.find((item) => item.field === 'endTime')
+
+      // 大于结束之间不可选
+      if (val.valueOf() > dayjs(endTime.value).valueOf()) {
+        return true
+      }
+      // 小于接收时间31天内的都可以选择
+      if (val.valueOf() < dayjs(endTime.value).subtract(31, 'day').valueOf()) {
+        return true
+      }
+      return false
+    },
   },
   {
     type: 'datePicker',
@@ -40,6 +53,13 @@ const formItems = reactive([
     value: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     showTime: true,
     valueFormat: 'YYYY-MM-DD HH:mm:ss',
+    disabledDate: (val: any) => {
+      // 不可大于今天
+      if (val.valueOf() > dayjs().valueOf()) {
+        return true
+      }
+      return false
+    },
   },
   {
     type: 'input',

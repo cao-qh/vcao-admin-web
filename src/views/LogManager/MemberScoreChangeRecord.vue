@@ -8,7 +8,19 @@
       :data="getData"
       :scroll="{ y: 'calc(100vh - 420px)' }"
       :showPagination="true"
-    ></STable>
+    >
+      <template #bodyCell="{ column, row }">
+        <template v-if="column.dataIndex === 'leixing'">
+          <span
+            :style="{
+              color: getType(row.leixing).color,
+            }"
+          >
+            {{ getType(row.leixing).label }}
+          </span>
+        </template>
+      </template>
+    </STable>
   </PageWrapper>
 </template>
 
@@ -29,10 +41,12 @@ const type = [
   {
     value: 1,
     label: '添加',
+    color: 'green',
   },
   {
     value: 2,
     label: '兑换',
+    color: 'blue',
   },
 ]
 
@@ -69,9 +83,22 @@ const formItems = reactive([
     type: 'datePicker',
     label: '开始时间',
     field: 'startTime',
-    value: dayjs().subtract(15, 'day').format('YYYY-MM-DD HH:mm:ss'),
+    value: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     showTime: true,
     valueFormat: 'YYYY-MM-DD HH:mm:ss',
+    disabledDate: (val: any) => {
+      const endTime: any = formItems.find((item) => item.field === 'endTime')
+
+      // 大于结束之间不可选
+      if (val.valueOf() > dayjs(endTime.value).valueOf()) {
+        return true
+      }
+      // 小于接收时间31天内的都可以选择
+      if (val.valueOf() < dayjs(endTime.value).subtract(31, 'day').valueOf()) {
+        return true
+      }
+      return false
+    },
   },
   {
     type: 'datePicker',
@@ -80,6 +107,13 @@ const formItems = reactive([
     value: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     showTime: true,
     valueFormat: 'YYYY-MM-DD HH:mm:ss',
+    disabledDate: (val: any) => {
+      // 不可大于今天
+      if (val.valueOf() > dayjs().valueOf()) {
+        return true
+      }
+      return false
+    },
   },
   {
     type: 'select',
@@ -168,10 +202,6 @@ const columns = [
     title: '类型',
     dataIndex: 'leixing',
     align: 'center',
-    customRender: ({ text }: { text: string }) => {
-      const item = type.find((item: any) => item.value == text)
-      return item && item.label
-    },
   },
   {
     title: '备注',
@@ -218,6 +248,12 @@ const getData = async (currentPage: number, pageSize: number) => {
       total: res.data.totalSize,
     }
   }
+}
+
+// 获取类型
+const getType = (value: number) => {
+  const item: any = type.find((item: any) => item.value === value)
+  return item
 }
 </script>
 

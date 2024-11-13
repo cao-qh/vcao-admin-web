@@ -79,35 +79,27 @@ const status = [
 const module = [
   {
     value: 1,
-    label: '用户',
+    label: '应用配置',
   },
   {
     value: 2,
-    label: '支付',
+    label: '人员管理',
   },
   {
     value: 3,
-    label: '会员',
+    label: '订单管理',
   },
   {
     value: 4,
-    label: '积分',
+    label: '影片管理',
   },
   {
     value: 5,
-    label: '视频',
+    label: '积分管理',
   },
   {
     value: 6,
-    label: '用户协议',
-  },
-  {
-    value: 7,
-    label: '个人信息',
-  },
-  {
-    value: 8,
-    label: '设置',
+    label: '个人管理',
   },
 ]
 
@@ -116,9 +108,22 @@ const formItems = reactive([
     type: 'datePicker',
     label: '开始时间',
     field: 'startTime',
-    value: dayjs().subtract(15, 'day').format('YYYY-MM-DD HH:mm:ss'),
+    value: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     showTime: true,
     valueFormat: 'YYYY-MM-DD HH:mm:ss',
+    disabledDate: (val: any) => {
+      const endTime: any = formItems.find((item) => item.field === 'endTime')
+
+      // 大于结束之间不可选
+      if (val.valueOf() > dayjs(endTime.value).valueOf()) {
+        return true
+      }
+      // 小于接收时间31天内的都可以选择
+      if (val.valueOf() < dayjs(endTime.value).subtract(31, 'day').valueOf()) {
+        return true
+      }
+      return false
+    },
   },
   {
     type: 'datePicker',
@@ -127,6 +132,13 @@ const formItems = reactive([
     value: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     showTime: true,
     valueFormat: 'YYYY-MM-DD HH:mm:ss',
+    disabledDate: (val: any) => {
+      // 不可大于今天
+      if (val.valueOf() > dayjs().valueOf()) {
+        return true
+      }
+      return false
+    },
   },
   {
     type: 'select',

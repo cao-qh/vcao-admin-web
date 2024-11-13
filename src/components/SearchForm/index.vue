@@ -42,13 +42,30 @@
                 </a-select-option>
               </template>
               <template v-else>
-                <a-select-option
+                <template
                   v-for="option in promiseOptionsResult[item.field]"
                   :key="option.value"
-                  :label="option.label"
                 >
-                  <span class="ant-select-option-item">{{ option.label }}</span>
-                </a-select-option>
+                  <a-select-option v-if="option.value" :label="option.label">
+                    <span class="ant-select-option-item">
+                      {{ option.label }}
+                    </span>
+                  </a-select-option>
+                  <a-select-opt-group
+                    v-else-if="option.options"
+                    :label="option.label"
+                  >
+                    <a-select-option
+                      v-for="option2 in option.options"
+                      :key="option2.value"
+                      :label="option2.label"
+                    >
+                      <span class="ant-select-option-item">
+                        {{ option2.label }}
+                      </span>
+                    </a-select-option>
+                  </a-select-opt-group>
+                </template>
               </template>
             </a-select>
             <a-date-picker

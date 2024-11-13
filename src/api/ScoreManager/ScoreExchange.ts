@@ -9,20 +9,11 @@ enum API {
   addUrl = '/pc/jiFenGuanLi/tJifenDuihuan/insert',
   // 修改
   editUrl = '/pc/jiFenGuanLi/tJifenDuihuan/update',
-  // 删除
-  deleteUrl = '/pc/jiFenGuanLi/tJifenDuihuan/delete',
 }
 
 // 查询
 export const reqSearch = () => request.post<any, any>(API.searchUrl)
 
-// 添加
-export const reqAdd = (data: any) =>
-  request.post<any, any>(API.addUrl, obj2Query(data))
-
 // 修改
 export const reqEdit = (data: any) =>
   request.post<any, any>(API.editUrl, obj2Query(data))
-
-// 删除
-export const reqDelete = () => request.post<any, any>(API.deleteUrl)

@@ -21,6 +21,18 @@
       }"
     >
       <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'heji'">
+          <MultipartTableCell>
+            <template #label>
+              <div>合集编码：</div>
+              <div>合集名称：</div>
+            </template>
+            <template #value>
+              <div>{{ record.hejibianma }}</div>
+              <div>{{ record.hejibianmaMC }}</div>
+            </template>
+          </MultipartTableCell>
+        </template>
         <template v-if="column.dataIndex === 'qijinyong'">
           <a-switch
             :checked="record.qijinyong === 1"
@@ -38,6 +50,7 @@
 import { ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { reqConfigSearch, reqConfig } from '@/api/VideoManager/VideoShowClass'
+import { MultipartTableCell } from '@/components/STable'
 
 defineOptions({ name: 'Config' })
 
@@ -52,13 +65,8 @@ const selectedRows = ref<any>([])
 
 const columns = [
   {
-    title: '合集编码',
-    dataIndex: 'hejibianma',
-    align: 'center',
-  },
-  {
-    title: '合集名称',
-    dataIndex: 'hejibianmaMC',
+    title: '合集',
+    dataIndex: 'heji',
     align: 'center',
   },
   {

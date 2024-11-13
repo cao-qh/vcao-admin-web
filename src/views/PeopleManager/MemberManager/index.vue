@@ -24,6 +24,18 @@
         </a-button>
       </template>
       <template #bodyCell="{ column, row }">
+        <template v-if="column.dataIndex === 'openid'">
+          <MultipartTableCell>
+            <template #label>
+              <div>抖音：</div>
+              <div>微信：</div>
+            </template>
+            <template #value>
+              <div>{{ row.dyopenid }}</div>
+              <div>{{ row.wxopenid }}</div>
+            </template>
+          </MultipartTableCell>
+        </template>
         <template v-if="column.dataIndex === 'touxiang'">
           <a-image :width="50" :src="baseUrl + row.touxiang" />
         </template>
@@ -72,7 +84,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
-import { STable } from '@/components/STable'
+import { STable, MultipartTableCell } from '@/components/STable'
 import { reqSearch, reqEnable } from '@/api/PeopleManager/MemberManager'
 import Add from './modules/Add.vue'
 import Edit from './modules/Edit.vue'
@@ -122,26 +134,6 @@ const formItems = reactive([
 
 const columns = [
   {
-    title: '头像',
-    dataIndex: 'touxiang',
-    align: 'center',
-  },
-  {
-    title: '抖音OpenID',
-    dataIndex: 'dyopenid',
-    align: 'center',
-  },
-  {
-    title: '微信OpenID',
-    dataIndex: 'wxopenid',
-    align: 'center',
-  },
-  {
-    title: '会员等级',
-    dataIndex: 'huiyuandengji',
-    align: 'center',
-  },
-  {
     title: '账户/手机号',
     dataIndex: 'zhanghu',
     align: 'center',
@@ -154,6 +146,21 @@ const columns = [
   {
     title: '编码',
     dataIndex: 'bianma',
+    align: 'center',
+  },
+  {
+    title: '头像',
+    dataIndex: 'touxiang',
+    align: 'center',
+  },
+  {
+    title: 'OpenID',
+    dataIndex: 'openid',
+    align: 'center',
+  },
+  {
+    title: '会员等级',
+    dataIndex: 'huiyuandengji',
     align: 'center',
   },
   {

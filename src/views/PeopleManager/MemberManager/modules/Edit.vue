@@ -41,6 +41,7 @@
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { reqEdit } from '@/api/PeopleManager/MemberManager'
+import { ips } from '@/utils/regexp'
 
 defineOptions({ name: 'Edit' })
 
@@ -72,9 +73,7 @@ const rules = {
       message: '请输入6位以上密码',
     },
   ],
-  mingcheng: [{ required: true, message: '请输入' }],
-  huiyuandengji: [{ required: true, message: '请输入' }],
-  dengluip: [{ required: true, message: '请输入' }],
+  dengluip: [{ pattern: ips, message: '请输入正确格式IP地址' }],
 }
 
 const show = async (row: any) => {

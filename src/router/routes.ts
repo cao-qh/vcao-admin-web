@@ -81,11 +81,35 @@ export const constantRoute = [
   },
 ]
 
+// 管理员个人管理路由（单独添加，不参与权限筛选）
+// 个人管理
+export const adminPersonalRoute = {
+  path: '/',
+  component: BaseLayout,
+  name: 'Personal',
+  meta: {
+    title: '个人管理',
+    icon: 'UserOutlined',
+  },
+  redirect: '/Personal/Info',
+  children: [
+    // 个人信息
+    {
+      path: '/Personal/Info',
+      component: () => import('@/views/Personal/Info/index.vue'),
+      name: 'PersonalInfo',
+      meta: {
+        title: '个人信息',
+      },
+    },
+  ],
+}
+
 // 异步路由
 export const asyncRoute = [
   // 应用配置
   {
-    path: '/',
+    path: '/AppConfig',
     component: BaseLayout,
     name: 'AppConfig',
     meta: {
@@ -157,15 +181,15 @@ export const asyncRoute = [
           title: '客服',
         },
       },
-			// 用户协议
-			{
-			  path: '/AppConfig/Protocol',
-			  component: () => import('@/views/AppConfig/Protocol/index.vue'),
-			  name: 'Protocol',
-			  meta: {
-			    title: '用户协议',
-			  },
-			},
+      // 用户协议
+      {
+        path: '/AppConfig/Protocol',
+        component: () => import('@/views/AppConfig/Protocol/index.vue'),
+        name: 'Protocol',
+        meta: {
+          title: '用户协议',
+        },
+      },
     ],
   },
   // 人员管理

@@ -14,6 +14,7 @@
         :data="reqData"
         :showPagination="true"
         :scroll="{ x: 1500, y: 'calc(100vh - 480px)' }"
+        :pageSizeOptions="['30', '50', '100']"
       >
         <template #toolbar>
           <a-button
@@ -25,6 +26,24 @@
           </a-button>
         </template>
         <template #bodyCell="{ column, row }">
+          <template v-if="column.dataIndex === 'tuijian'">
+            <span
+              :style="{
+                color: getRecommend(row.tuijian).color,
+              }"
+            >
+              {{ getRecommend(row.tuijian).label }}
+            </span>
+          </template>
+          <template v-if="column.dataIndex === 'gengxinzhuangtai'">
+            <span
+              :style="{
+                color: getGengxinZhuangtai(row.gengxinzhuangtai).color,
+              }"
+            >
+              {{ getGengxinZhuangtai(row.gengxinzhuangtai).label }}
+            </span>
+          </template>
           <template v-if="column.dataIndex === 'suoluetu'">
             <a-image
               :width="50"
@@ -146,14 +165,18 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import SearchForm from '@/components/SearchForm/index.vue'
-import { reqSearch, reqUpDown } from '@/api/VideoManager/VideoCollection'
+import {
+  reqSearch,
+  reqUpDown,
+  reqSearchSmallClass,
+} from '@/api/VideoManager/VideoCollection'
 import { STable } from '@/components/STable'
 import { message } from 'ant-design-vue'
 import Add from './modules/Add.vue'
 import Edit from './modules/Edit.vue'
 import useUserStore from '@/store/modules/user'
 import VideoChapter from './components/VideoChapter/index.vue'
-import { reqSmallClass, reqActorRole } from '@/api/common'
+import { reqActorRole } from '@/api/common'
 import dayjs from 'dayjs'
 import ConfigActor from './modules/ConfigActor.vue'
 import ConfigSmallClass from './modules/ConfigSmallClass.vue'
@@ -185,10 +208,12 @@ const recommend = [
   {
     value: 1,
     label: '推荐',
+    color: 'green',
   },
   {
     value: 2,
     label: '不推荐',
+    color: 'red',
   },
 ]
 
@@ -197,10 +222,12 @@ const updateStatus = [
   {
     value: 1,
     label: '更新',
+    color: 'red',
   },
   {
     value: 2,
     label: '完结',
+    color: 'green',
   },
 ]
 
@@ -232,17 +259,28 @@ const formItems = reactive([
     type: 'select',
     label: '视频合集小类',
     field: 'xiaoleis',
-    mode: 'multiple',
     value: [],
     placeholder: '请输入',
     options: async () => {
-      const res = await reqSmallClass()
+      const res = await reqSearchSmallClass('')
+      if (res.code == 0) {
+        smallClassList.value = res.data.map((item: any) => ({
+          label: item.mingcheng,
+          options: item.tshipinHejiXiaoleiBeans.map((item2: any) => ({
+            label: item2.mingcheng,
+            value: item2.bianma,
+          })),
+        }))
+      }
+      /* const res = await reqSmallClass()
       if (res.code == 0) {
         smallClassList.value = res.data.map((item: any) => ({
           value: item.bm,
           label: item.mc,
         }))
       }
+        */
+      console.log('smallClassList :>> ', smallClassList.value)
       return smallClassList.value
     },
   },
@@ -296,10 +334,6 @@ const columns = [
     title: '推荐',
     dataIndex: 'tuijian',
     align: 'center',
-    customRender: ({ text }: any) => {
-      const item = recommend.find((item: any) => item.value == text)
-      return item && item.label
-    },
   },
   {
     title: '创建时间',
@@ -325,6 +359,7 @@ const columns = [
     title: '权重',
     dataIndex: 'quanzhong',
     align: 'center',
+    sorter: (a: any, b: any) => a.quanzhong - b.quanzhong,
   },
   {
     title: '更新时间',
@@ -340,10 +375,6 @@ const columns = [
     title: '更新状态',
     dataIndex: 'gengxinzhuangtai',
     align: 'center',
-    customRender: ({ text }: any) => {
-      const item = updateStatus.find((item: any) => item.value == text)
-      return item && item.label
-    },
   },
   {
     title: '上下架',
@@ -405,6 +436,18 @@ const handelUpDown = async (row: any) => {
 const handleChapter = (bianma: string) => {
   chapter.bianma = bianma
   chapter.open = true
+}
+
+// 获取推荐
+const getRecommend = (value: number) => {
+  const item: any = recommend.find((item: any) => item.value === value)
+  return item
+}
+
+// 获取更新状态
+const getGengxinZhuangtai = (value: number) => {
+  const item: any = updateStatus.find((item: any) => item.value === value)
+  return item
 }
 
 const add = ref()

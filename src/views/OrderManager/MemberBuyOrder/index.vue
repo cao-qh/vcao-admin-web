@@ -23,6 +23,17 @@
           导出
         </a-button>
       </template>
+      <template #bodyCell="{ column, row }">
+        <template v-if="column.dataIndex === 'zhifuleixing'">
+          <span
+            :style="{
+              color: getPayType(row.zhifuleixing).color,
+            }"
+          >
+            {{ getPayType(row.zhifuleixing).label }}
+          </span>
+        </template>
+      </template>
     </STable>
   </PageWrapper>
 </template>
@@ -102,9 +113,22 @@ const formItems = reactive([
     type: 'datePicker',
     label: '开始时间',
     field: 'startTime',
-    value: dayjs().subtract(15, 'day').format('YYYY-MM-DD'),
+    value: dayjs().format('YYYY-MM-DD'),
     valueFormat: 'YYYY-MM-DD',
     allowClear: false,
+    disabledDate: (val: any) => {
+      const endTime: any = formItems.find((item) => item.field === 'endTime')
+
+      // 大于结束之间不可选
+      if (val.valueOf() > dayjs(endTime.value).valueOf()) {
+        return true
+      }
+      // 小于接收时间31天内的都可以选择
+      if (val.valueOf() < dayjs(endTime.value).subtract(31, 'day').valueOf()) {
+        return true
+      }
+      return false
+    },
   },
   {
     type: 'datePicker',
@@ -113,6 +137,13 @@ const formItems = reactive([
     value: dayjs().format('YYYY-MM-DD'),
     valueFormat: 'YYYY-MM-DD',
     allowClear: false,
+    disabledDate: (val: any) => {
+      // 不可大于今天
+      if (val.valueOf() > dayjs().valueOf()) {
+        return true
+      }
+      return false
+    },
   },
   {
     type: 'input',
@@ -199,10 +230,6 @@ const columns = [
     title: '支付类型',
     dataIndex: 'zhifuleixing',
     align: 'center',
-    customRender: ({ text }: any) => {
-      const item: any = payType.find((item: any) => item.value == text)
-      return item && item.label
-    },
   },
   {
     title: '购买类型',
@@ -283,5 +310,11 @@ const handleExport = async () => {
   } else {
     message.error(res.msg)
   }
+}
+
+// 获取支付类型
+const getPayType = (value: number) => {
+  const item: any = payType.find((item: any) => item.value === value)
+  return item
 }
 </script>
