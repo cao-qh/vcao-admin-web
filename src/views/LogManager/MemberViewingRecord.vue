@@ -57,19 +57,15 @@ const formItems = reactive([
     type: 'select',
     label: '点赞',
     field: 'dianzan',
-    value: '',
+    value: null,
     placeholder: '请选择',
-    defaultOption: {
-      value: '',
-      label: '全部',
-    },
     options: dianzan,
   },
   {
     type: 'select',
     label: '会员编码',
     field: 'huiyuanBianma',
-    value: '',
+    value: null,
     placeholder: '请输入',
     options: async () => {
       const res = await reqMember()
@@ -83,21 +79,13 @@ const formItems = reactive([
       }
       return []
     },
-    defaultOption: {
-      value: '',
-      label: '全部',
-    },
   },
   {
     type: 'select',
     label: '视频合集编码',
     field: 'shipinhejiBianma',
-    value: '',
+    value: null,
     placeholder: '请选择',
-    defaultOption: {
-      value: '',
-      label: '全部',
-    },
     options: async () => {
       const res = await reqVideoCollection()
       if (res.code == 0) {
@@ -115,12 +103,8 @@ const formItems = reactive([
     type: 'select',
     label: '视频章节编码',
     field: 'shipinzhangjieBianma',
-    value: '',
+    value: null,
     placeholder: '请选择',
-    defaultOption: {
-      value: '',
-      label: '全部',
-    },
     options: async () => {
       const res = await reqVideoChapter()
       if (res.code == 0) {

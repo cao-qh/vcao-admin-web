@@ -113,13 +113,9 @@ const formItems = reactive([
     type: 'select',
     label: '广告类型',
     field: 'guanggaoleixing',
-    value: '',
+    value: null,
     placeholder: '请选择',
     options: adType,
-    defaultOption: {
-      label: '全部',
-      value: '',
-    },
   },
 ])
 

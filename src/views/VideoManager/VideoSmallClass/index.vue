@@ -96,19 +96,15 @@ const formItems = reactive([
     type: 'select',
     label: '启禁用',
     field: 'qijinyong',
-    value: '',
+    value: 1,
     placeholder: '请输入',
     options: qijinyong,
-    defaultOption: {
-      value: '',
-      label: '全部',
-    },
   },
   {
     type: 'select',
     label: '大类',
     field: 'shangjiBianma',
-    value: '',
+    value: null,
     placeholder: '请输入',
     options: async () => {
       const res = await reqLargeClass()
@@ -117,10 +113,6 @@ const formItems = reactive([
         label: item.mc,
       }))
       return largeClassList.value
-    },
-    defaultOption: {
-      value: '',
-      label: '全部',
     },
   },
 ])

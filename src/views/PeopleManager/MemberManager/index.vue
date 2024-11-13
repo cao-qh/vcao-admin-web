@@ -41,17 +41,17 @@
           <a v-has="'Btn.MemberManager.Update'" @click="() => edit.show(row)">
             修改
           </a>
-          <div v-has="'Btn.MemberManager.Order'">
+          <!-- <div v-has="'Btn.MemberManager.Order'">
             <a-divider type="vertical" />
             <a @click="order.show(row)">订购</a>
-          </div>
+          </div> -->
           <div v-has="'Btn.MemberManager.Balance'">
             <a-divider type="vertical" />
-            <a @click="balance.show(row)">修改余额</a>
+            <a @click="balance.show(row)">充值余额</a>
           </div>
           <div v-has="'Btn.MemberManager.Score'">
             <a-divider type="vertical" />
-            <a @click="score.show(row)">修改积分</a>
+            <a @click="score.show(row)">新增积分</a>
           </div>
         </template>
       </template>
@@ -114,13 +114,9 @@ const formItems = reactive([
     type: 'select',
     label: '启禁用',
     field: 'qijinyong',
-    value: '',
+    value: 1,
     placeholder: '请选择',
     options: qijinyong,
-    defaultOption: {
-      label: '全部',
-      value: '',
-    },
   },
 ])
 
@@ -133,6 +129,11 @@ const columns = [
   {
     title: '抖音OpenID',
     dataIndex: 'dyopenid',
+    align: 'center',
+  },
+  {
+    title: '微信OpenID',
+    dataIndex: 'wxopenid',
     align: 'center',
   },
   {
@@ -156,13 +157,13 @@ const columns = [
     align: 'center',
   },
   {
-    title: '微信OpenID',
-    dataIndex: 'wxopenid',
+    title: '余额',
+    dataIndex: 'yue',
     align: 'center',
   },
   {
-    title: '登录IP',
-    dataIndex: 'dengluip',
+    title: '积分',
+    dataIndex: 'jifen',
     align: 'center',
   },
   {
@@ -178,6 +179,11 @@ const columns = [
   {
     title: '更新时间',
     dataIndex: 'gengxinshijian',
+    align: 'center',
+  },
+  {
+    title: '登录IP',
+    dataIndex: 'dengluip',
     align: 'center',
   },
   {

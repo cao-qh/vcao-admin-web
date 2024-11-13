@@ -1,7 +1,7 @@
 <template>
   <a-modal title="添加" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" :rules="rules" v-bind="layout">
-      <a-form-item label="名称" name="mingzi">
+      <a-form-item label="姓名" name="mingzi">
         <a-input v-model:value.trim="formState.mingzi" placeholder="请输入" />
       </a-form-item>
       <a-form-item label="角色" name="juese">

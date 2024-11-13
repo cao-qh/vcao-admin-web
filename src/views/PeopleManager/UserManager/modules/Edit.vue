@@ -61,14 +61,6 @@ const rules = {
   shoujihao: [
     { required: true, pattern: phone, message: '请输入正确的手机号' },
   ],
-  mima: [
-    {
-      required: true,
-      min: 6,
-      message: '请输入6位以上密码',
-    },
-  ],
-  xingming: [{ required: true, message: '请输入' }],
 }
 
 const show = async (row: any) => {

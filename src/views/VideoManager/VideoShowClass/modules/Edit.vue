@@ -48,6 +48,8 @@ const layout = {
 }
 
 const rules = {
+  bianma: [{ required: true, message: '请输入' }],
+  mingcheng: [{ required: true, message: '请输入' }],
   quanzhong: [{ required: true, message: '请选择' }],
 }
 

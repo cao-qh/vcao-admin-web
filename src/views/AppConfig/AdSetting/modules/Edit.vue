@@ -1,6 +1,6 @@
 <template>
   <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
-    <a-form ref="formRef" :model="formState" v-bind="layout">
+    <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
       <a-form-item label="编码" name="bianma">
         <a-input
           v-model:value.trim="formState.bianma"
@@ -89,6 +89,15 @@ const layout = {
     xs: { span: 24 },
     sm: { span: 13 },
   },
+}
+
+const rules = {
+  bianma: [{ required: true, message: '请输入' }],
+  mingcheng: [{ required: true, message: '请输入' }],
+  guanggaoleixing: [{ required: true, message: '请选择' }],
+  youxiaoshichang: [{ required: true, message: '请输入' }],
+  guanggaolianjie: [{ required: true, message: '请输入' }],
+  luodiyefanhui: [{ required: true, message: '请选择' }],
 }
 
 const formRef = ref()

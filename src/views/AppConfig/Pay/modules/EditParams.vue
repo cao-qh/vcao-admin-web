@@ -1,6 +1,6 @@
 <template>
   <a-modal title="修改参数" :open="open" @ok="submit" @cancel="open = false">
-    <a-form ref="formRef" :model="formState" v-bind="layout">
+    <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
       <a-form-item label="支付方式" name="zhifenfangshi">
         <a-select v-model:value="formState.zhifenfangshi" placeholder="请选择">
           <a-select-option
@@ -25,6 +25,7 @@
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { reqEdit } from '@/api/AppConfig/Pay'
+import { validateJSON } from '@/utils/validateJSON'
 
 defineOptions({ name: 'Edit' })
 
@@ -51,6 +52,30 @@ const layout = {
     xs: { span: 24 },
     sm: { span: 13 },
   },
+}
+
+const rules = {
+  zhifenfangshi: [{ required: true, message: '请选择' }],
+  zhifucanshu: [
+    {
+      required: true,
+      validator: async (rule: any, value: any) => {
+        if (value === '') {
+          return Promise.reject('请输入参数')
+        } else if (!validateJSON(value)) {
+          return Promise.reject('参数格式错误')
+        } else if (validateJSON(value)) {
+          const jdata = JSON.parse(value)
+          if (typeof jdata === 'object' || Array.isArray(jdata)) {
+            return Promise.resolve()
+          }
+          return Promise.reject('参数格式错误')
+        } else {
+          return Promise.resolve()
+        }
+      },
+    },
+  ],
 }
 
 const formRef = ref()

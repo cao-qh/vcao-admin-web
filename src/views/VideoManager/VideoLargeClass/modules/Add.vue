@@ -1,6 +1,6 @@
 <template>
   <a-modal title="添加" :open="open" @ok="submit" @cancel="open = false">
-    <a-form ref="formRef" :model="formState" v-bind="layout">
+    <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
       <a-form-item label="名称" name="mingcheng">
         <a-input
           v-model:value.trim="formState.mingcheng"
@@ -56,6 +56,12 @@ const layout = {
     xs: { span: 24 },
     sm: { span: 13 },
   },
+}
+
+const rules = {
+  qijinyong: [{ required: true, message: '请输入' }],
+  mingcheng: [{ required: true, message: '请输入' }],
+  quanzhong: [{ required: true, message: '请输入' }],
 }
 
 const formRef = ref()

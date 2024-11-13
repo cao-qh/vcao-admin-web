@@ -132,24 +132,16 @@ const formItems = reactive([
     type: 'select',
     label: '操作状态',
     field: 'zhuangtai',
-    value: '',
+    value: null,
     placeholder: '请选择',
-    defaultOption: {
-      value: '',
-      label: '全部',
-    },
     options: status,
   },
   {
     type: 'select',
     label: '用户账户',
     field: 'shoujihao',
-    value: '',
+    value: null,
     placeholder: '请选择',
-    defaultOption: {
-      value: '',
-      label: '全部',
-    },
     options: async () => {
       const res = await reqUser()
       if (res.code == 0) {
@@ -167,12 +159,8 @@ const formItems = reactive([
     type: 'select',
     label: '模块类型',
     field: 'leixing',
-    value: '',
+    value: null,
     placeholder: '请选择',
-    defaultOption: {
-      value: '',
-      label: '全部',
-    },
     options: module,
   },
 ])

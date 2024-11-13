@@ -82,13 +82,9 @@ const formItems = reactive([
     type: 'select',
     label: '启禁用',
     field: 'qijinyong',
-    value: '',
+    value: 1,
     placeholder: '请输入',
     options: qijinyong,
-    defaultOption: {
-      value: '',
-      label: '全部',
-    },
   },
 ])
 

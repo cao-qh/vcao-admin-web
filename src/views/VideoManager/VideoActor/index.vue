@@ -110,25 +110,17 @@ const formItems = reactive([
     type: 'select',
     label: '角色',
     field: 'juese',
-    value: '',
+    value: null,
     placeholder: '请输入',
     options: role,
-    defaultOption: {
-      value: '',
-      label: '全部',
-    },
   },
   {
     type: 'select',
     label: '启禁用',
     field: 'zhuangtai',
-    value: '',
+    value: 1,
     placeholder: '请输入',
     options: qijinyong,
-    defaultOption: {
-      value: '',
-      label: '全部',
-    },
   },
 ])
 
@@ -144,7 +136,7 @@ const columns = [
     align: 'center',
   },
   {
-    title: '名字',
+    title: '姓名',
     dataIndex: 'mingzi',
     align: 'center',
   },

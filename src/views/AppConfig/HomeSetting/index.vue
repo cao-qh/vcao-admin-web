@@ -103,25 +103,17 @@ const formItems = reactive([
     type: 'select',
     label: '位置',
     field: 'weizhi',
-    value: '',
+    value: null,
     placeholder: '请输入',
     options: position,
-    defaultOption: {
-      label: '全部',
-      value: '',
-    },
   },
   {
     type: 'select',
     label: '跳转类型',
     field: 'tiaozhuanleixing',
-    value: '',
+    value: null,
     placeholder: '请选择',
     options: jumpType,
-    defaultOption: {
-      label: '全部',
-      value: '',
-    },
   },
 ])
 

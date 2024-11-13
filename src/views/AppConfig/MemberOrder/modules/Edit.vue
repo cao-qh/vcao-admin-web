@@ -9,6 +9,8 @@
           :min="0"
           v-model:value.trim="formState.shichang"
           placeholder="请输入"
+          :precision="2"
+          addon-after="小时"
         />
       </a-form-item>
       <a-form-item label="原价" name="yuanjia">
@@ -17,6 +19,7 @@
           :precision="2"
           v-model:value.trim="formState.yuanjia"
           placeholder="请输入"
+          addon-after="元"
         />
       </a-form-item>
       <a-form-item label="优惠价" name="youhuijia">
@@ -25,6 +28,7 @@
           :precision="2"
           v-model:value.trim="formState.youhuijia"
           placeholder="请输入"
+          addon-after="元"
         />
       </a-form-item>
     </a-form>

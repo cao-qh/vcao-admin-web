@@ -89,7 +89,7 @@ const formItems = reactive([
     type: 'select',
     label: '解锁方式',
     field: 'jiesuofangshi',
-    value: '',
+    value: null,
     placeholder: '请选择',
     allowClear: false,
     options: lockType,
@@ -97,16 +97,12 @@ const formItems = reactive([
       const item = searchForm.value.getFormItem('guanggaobianma')
       item.hidden = !(value == 2)
     },
-    defaultOption: {
-      label: '全部',
-      value: '',
-    },
   },
   {
     type: 'select',
     label: '广告编码',
     field: 'guanggaobianma',
-    value: '',
+    value: null,
     hidden: true,
     placeholder: '请选择',
     options: async () => {
@@ -121,16 +117,12 @@ const formItems = reactive([
         return adList.value
       }
     },
-    defaultOption: {
-      label: '全部',
-      value: '',
-    },
   },
   {
     type: 'select',
     label: '视频合集',
     field: 'hejibianma',
-    value: '',
+    value: null,
     placeholder: '请选择',
     options: async () => {
       const res: any = await reqVideoCollection()
@@ -143,10 +135,6 @@ const formItems = reactive([
         })
         return videoCollectionList.value
       }
-    },
-    defaultOption: {
-      label: '全部',
-      value: '',
     },
   },
 ])

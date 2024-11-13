@@ -8,7 +8,7 @@
           disabled
         />
       </a-form-item>
-      <a-form-item label="名称" name="mingzi">
+      <a-form-item label="姓名" name="mingzi">
         <a-input v-model:value.trim="formState.mingzi" placeholder="请输入" />
       </a-form-item>
       <a-form-item label="角色" name="juese">
@@ -68,6 +68,8 @@ const rules = {
   bianma: [{ required: true, message: '请输入' }],
   mingzi: [{ required: true, message: '请输入' }],
   juese: [{ required: true, message: '请选择' }],
+  fileTX: [{ required: true, message: '请选择' }],
+  xinxi: [{ required: true, message: '请选择' }],
 }
 
 const formRef = ref()

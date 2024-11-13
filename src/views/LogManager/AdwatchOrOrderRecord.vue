@@ -76,24 +76,16 @@ const formItems = reactive([
     type: 'select',
     label: '上级落地页返回状态',
     field: 'luodiyefanhui',
-    value: '',
+    value: null,
     placeholder: '请选择',
-    defaultOption: {
-      value: '',
-      label: '全部',
-    },
     options: luodiyefanhui,
   },
   {
     type: 'select',
     label: '广告编码',
     field: 'guanggaobianma',
-    value: '',
+    value: null,
     placeholder: '请选择',
-    defaultOption: {
-      value: '',
-      label: '全部',
-    },
     options: async () => {
       const res = await reqAd()
       if (res.code === 0) {
@@ -111,12 +103,8 @@ const formItems = reactive([
     type: 'select',
     label: '会员编码',
     field: 'huiyuanbianma',
-    value: '',
+    value: null,
     placeholder: '请选择',
-    defaultOption: {
-      value: '',
-      label: '全部',
-    },
     options: async () => {
       const res = await reqMember()
       if (res.code === 0) {
@@ -134,12 +122,8 @@ const formItems = reactive([
     type: 'select',
     label: '有效数据',
     field: 'youxaoshuju',
-    value: '',
+    value: null,
     placeholder: '请选择',
-    defaultOption: {
-      value: '',
-      label: '全部',
-    },
     options: youxaoshuju,
   },
 ])

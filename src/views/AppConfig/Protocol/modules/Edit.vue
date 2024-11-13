@@ -1,6 +1,6 @@
 <template>
   <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
-    <a-form ref="formRef" :model="formState" v-bind="layout">
+    <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
       <a-form-item label="用户协议" name="yonghuxieyi">
         <a-textarea
           v-model:value.trim="formState.yonghuxieyi"
@@ -38,6 +38,11 @@ const layout = {
     xs: { span: 24 },
     sm: { span: 13 },
   },
+}
+
+const rules = {
+  yonghuxieyi: [{ required: true, message: '请输入' }],
+  yinsizhengce: [{ required: true, message: '请输入' }],
 }
 
 const formRef = ref()

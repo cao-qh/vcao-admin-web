@@ -216,25 +216,17 @@ const formItems = reactive([
     type: 'select',
     label: '上下架',
     field: 'shangxiajia',
-    value: 0,
+    value: 1,
     placeholder: '请输入',
     options: shangxiajia,
-    defaultOption: {
-      value: 0,
-      label: '全部',
-    },
   },
   {
     type: 'select',
     label: '推荐',
     field: 'tuijian',
-    value: 0,
+    value: null,
     placeholder: '请输入',
     options: recommend,
-    defaultOption: {
-      value: 0,
-      label: '全部',
-    },
   },
   {
     type: 'select',
@@ -253,22 +245,14 @@ const formItems = reactive([
       }
       return smallClassList.value
     },
-    defaultOption: {
-      value: '',
-      label: '全部',
-    },
   },
   {
     type: 'select',
     label: '更新状态',
     field: 'gengxinzhuangtai',
-    value: 0,
+    value: null,
     placeholder: '请输入',
     options: updateStatus,
-    defaultOption: {
-      value: 0,
-      label: '全部',
-    },
   },
 ])
 

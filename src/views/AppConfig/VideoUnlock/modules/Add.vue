@@ -1,6 +1,6 @@
 <template>
   <a-modal title="添加" :open="open" @ok="submit" @cancel="open = false">
-    <a-form ref="formRef" :model="formState" v-bind="layout">
+    <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
       <a-form-item label="锁方式" name="jiesuofangshi">
         <a-select v-model:value="formState.jiesuofangshi" placeholder="请选择">
           <a-select-option
@@ -85,6 +85,13 @@ const layout = {
     xs: { span: 24 },
     sm: { span: 13 },
   },
+}
+
+const rules = {
+  jiesuofangshi: [{ required: true, message: '请选择' }],
+  guanggaobianma: [{ required: true, message: '请选择' }],
+  hejibianma: [{ required: true, message: '请选择' }],
+  quanzhong: [{ required: true, message: '请输入' }],
 }
 
 const formRef = ref()

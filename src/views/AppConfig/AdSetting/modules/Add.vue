@@ -1,6 +1,6 @@
 <template>
   <a-modal title="添加" :open="open" @ok="submit" @cancel="open = false">
-    <a-form ref="formRef" :model="formState" v-bind="layout">
+    <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
       <a-form-item label="广告名称" name="mingcheng">
         <a-input
           v-model:value.trim="formState.mingcheng"
@@ -97,6 +97,15 @@ const layout = {
   },
 }
 
+const rules = {
+  mingcheng: [{ required: true, message: '请输入' }],
+  guanggaoleixing: [{ required: true, message: '请选择' }],
+  youxiaoshichang: [{ required: true, message: '请输入' }],
+  guanggaolianjie: [{ required: true, message: '请输入' }],
+  luodiyefanhui: [{ required: true, message: '请选择' }],
+  shangxiajia: [{ required: true, message: '请选择' }],
+}
+
 const formRef = ref()
 const formState = reactive<any>({})
 
@@ -106,7 +115,7 @@ const show = () => {
     mingcheng: '',
     guanggaoleixing: undefined,
     youxiaoshichang: '',
-    luodiyefanhui: '',
+    luodiyefanhui: null,
     guanggaolianjie: '',
     shangxiajia: 1,
   })

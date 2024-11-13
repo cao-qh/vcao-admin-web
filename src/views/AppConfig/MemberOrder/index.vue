@@ -88,13 +88,9 @@ const formItems = reactive([
     type: 'select',
     label: '上下架',
     field: 'shangxiajia',
-    value: '',
+    value: 1,
     placeholder: '请选择',
     options: upDown,
-    defaultOption: {
-      label: '全部',
-      value: '',
-    },
   },
 ])
 

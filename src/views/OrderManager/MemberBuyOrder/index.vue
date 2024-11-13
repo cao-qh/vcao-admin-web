@@ -125,12 +125,8 @@ const formItems = reactive([
     type: 'select',
     label: '会员',
     field: 'huiyuanBianma',
-    value: '',
+    value: null,
     placeholder: '请选择',
-    defaultOption: {
-      label: '全部',
-      value: '',
-    },
     options: async () => {
       const res = await reqMember()
       if (res.code == 0) {
@@ -147,24 +143,16 @@ const formItems = reactive([
     type: 'select',
     label: '支付类型',
     field: 'zhifuleixing',
-    value: '',
+    value: null,
     placeholder: '请选择',
-    defaultOption: {
-      label: '全部',
-      value: '',
-    },
     options: payType,
   },
   {
     type: 'select',
     label: '购买类型',
     field: 'maileiixng',
-    value: '',
+    value: null,
     placeholder: '请选择',
-    defaultOption: {
-      label: '全部',
-      value: '',
-    },
     options: buyType,
   },
 ])
