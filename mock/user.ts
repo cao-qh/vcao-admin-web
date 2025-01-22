@@ -104,7 +104,7 @@ function createUserList() {
 export default [
   // 管理员登录接口
   {
-    url: '/api/login', //请求地址
+    url: '/api/account/login', //请求地址
     method: 'post', //请求方式
     response: ({ body }) => {
       //获取请求体携带过来的用户名与密码

@@ -4,7 +4,7 @@ import request, { obj2Query } from '@/utils/request'
 // 统一管理接口
 enum API {
   // 登录
-  loginUrl = '/pc/tYonghu/login',
+  loginUrl = '/account/login',
   // 手机验证码登录
   phoneLoginUrl = '/pc/yonghu/loginPhone',
   // 手机登录获取验证码

@@ -5,10 +5,10 @@
     <a-form ref="formRef" :model="loginForm" :rules="rules" class="login-form">
       <a-tabs v-model:activeKey="activeKey" centered>
         <a-tab-pane key="1" tab="账户密码登录">
-          <a-form-item name="shoujihao">
+          <a-form-item name="username">
             <a-input
               size="large"
-              v-model:value="loginForm.shoujihao"
+              v-model:value="loginForm.username"
               placeholder="用户名"
             >
               <template #prefix>
@@ -16,11 +16,11 @@
               </template>
             </a-input>
           </a-form-item>
-          <a-form-item name="mima">
+          <a-form-item name="password">
             <a-input-password
               size="large"
-              v-model:value="loginForm.mima"
-              type="mima"
+              v-model:value="loginForm.password"
+              type="password"
               placeholder="密码"
             >
               <template #prefix>
@@ -136,7 +136,16 @@ const isWaitCode = ref(false)
 
 // 表单验证
 const rules = {
-  mima: [
+  username: [
+    {
+      required: true,
+      min: 5,
+      max: 15,
+      message: '用户名长度为5-15位',
+      trigger: 'change',
+    },
+  ],
+  password: [
     {
       required: true,
       min: 5,
@@ -199,7 +208,7 @@ const login = async () => {
 // 账户密码登录
 const accountLogin = async () => {
   try {
-    await formRef.value.validate(['shoujihao', 'mima'])
+    await formRef.value.validate(['username', 'password'])
   } catch (error: any) {
     console.log('表单校验失败：', error)
     throw new Error('表单校验失败')
@@ -207,8 +216,8 @@ const accountLogin = async () => {
 
   // 账号密码登录
   const data = {
-    shoujihao: loginForm.shoujihao,
-    mima: loginForm.mima,
+    username: loginForm.username,
+    password: loginForm.password,
   }
   try {
     // 保证登录成功
@@ -216,8 +225,8 @@ const accountLogin = async () => {
   } catch (error: any) {
     // 登录失败提示信息
     notification.error({
-      message: loginForm.shoujihao,
-      description: `登录失败，${error.message}`,
+      message: '登录失败',
+      description: error.message,
     })
     throw new Error('登录失败')
   }
