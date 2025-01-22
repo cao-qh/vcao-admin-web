@@ -10,7 +10,7 @@ enum API {
   // 手机登录获取验证码
   phoneCodeUrl = '/pc/yonghu/getYanZhengMa',
   // 用户信息
-  infoUrl = '/pc/yonghu/selectYiPeiZhiQuanXian',
+  infoUrl = '/info',
 }
 
 // 登录接口方法

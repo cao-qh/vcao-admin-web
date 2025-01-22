@@ -1,5 +1,5 @@
 <template>
-  <div id="tsparticles" class="login-container">
+  <div class="login-container">
     <ParticleBackground />
 
     <div class="header">
@@ -9,12 +9,18 @@
 
     <div class="main">
       <RouterView />
-    </div>
 
-    <div class="footer">
-      <a-typography-text style="opacity: 0.6">
-        © 焦作市云启航网络科技有限公司
-      </a-typography-text>
+      <div class="copyright">
+        <a-typography-text>
+          © 郑州兴投信息技术有限公司 -2024
+          <a
+            href="https://beian.miit.gov.cn/#/Integrated/index"
+            target="_blank"
+          >
+            豫ICP备2024092740号
+          </a>
+        </a-typography-text>
+      </div>
     </div>
   </div>
 </template>
@@ -62,17 +68,10 @@ const bgColor = computed(() => {
     transform: translate(-50%, -50%);
   }
 
-  .footer {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    line-height: 30px;
-    padding: 20px;
+  .copyright {
     text-align: center;
-    box-sizing: border-box;
-    font-size: 14px;
-    z-index: 100;
+    width: 375px;
+    margin: 0 auto;
   }
 }
 </style>

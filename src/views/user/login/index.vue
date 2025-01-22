@@ -28,6 +28,29 @@
               </template>
             </a-input-password>
           </a-form-item>
+          <a-form-item name="vfcode">
+            <a-flex :gap="10">
+              <div style="flex: 2; width: 300px">
+                <a-input
+                  size="large"
+                  placeholder="验证码"
+                  v-model:value.trim="loginForm.vfcode"
+                >
+                  <template #prefix>
+                    <SafetyOutlined style="color: gray" />
+                  </template>
+                </a-input>
+              </div>
+
+              <canvas
+                ref="canvas"
+                width="95"
+                height="36"
+                style="border-radius: 3px"
+                @click="() => verifyCode.refresh()"
+              ></canvas>
+            </a-flex>
+          </a-form-item>
         </a-tab-pane>
 
         <a-tab-pane key="2" tab="手机号登录">
@@ -111,6 +134,7 @@ import { message, notification } from 'ant-design-vue'
 import { getTime } from '@/utils/time'
 import { phone } from '@/utils/regexp'
 import { reqPhoneCode } from '@/api/user'
+import verifyCode from '@/utils/verifyCode'
 import setting from '@/setting'
 import useLayoutSettingStore from '@/store/modules/setting'
 
@@ -154,6 +178,18 @@ const rules = {
       trigger: 'change',
     },
   ],
+  vfcode: [
+    {
+      validator: (rule: any, value: any) => {
+        if (!value) {
+          return Promise.reject('验证码不能为空')
+        } else if (loginForm.vfcode !== verifyCode.getCode()) {
+          return Promise.reject('验证码不正确')
+        }
+        return Promise.resolve()
+      },
+    },
+  ],
   shoujihao: [
     {
       required: true,
@@ -171,7 +207,12 @@ const rules = {
   ],
 }
 
+// 验证码画布
+const canvas = ref()
+
 onMounted(() => {
+  verifyCode.init(canvas.value)
+
   // 是否记住密码
   if (layoutSettingStore.rememberPassword) {
     loginForm.shoujihao = layoutSettingStore.accountPassword.shoujihao
@@ -208,7 +249,7 @@ const login = async () => {
 // 账户密码登录
 const accountLogin = async () => {
   try {
-    await formRef.value.validate(['username', 'password'])
+    await formRef.value.validate(['username', 'password', 'vfcode'])
   } catch (error: any) {
     console.log('表单校验失败：', error)
     throw new Error('表单校验失败')

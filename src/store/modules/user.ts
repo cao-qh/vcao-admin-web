@@ -5,7 +5,7 @@ import { ref } from 'vue'
 import { reqLogin, reqPhoneLogin, reqInfo } from '@/api/user'
 
 // 引入路由（常量路由）
-import { constantRoute, asyncRoute, adminPersonalRoute } from '@/router/routes'
+import { constantRoute, asyncRoute } from '@/router/routes'
 import router from '@/router'
 import { deepCopy } from '@/utils/deepCopy'
 import type { RouteRecordRaw } from 'vue-router'
@@ -91,17 +91,12 @@ const useUserStore: any = defineStore('user', () => {
         cloneAsyncRoute,
         result.data.routes,
       )
-      menuRoutes.value = [
-        ...constantRoute,
-        ...userAsyncRoute,
-        adminPersonalRoute,
-      ]
+      menuRoutes.value = [...constantRoute, ...userAsyncRoute]
       //目前路由器管理的只有常量路由:用户计算完毕异步路由、任意路由动态追加
       userAsyncRoute.forEach((route: any) => {
         const removeRoute = router.addRoute(route)
         delMenuRoutes.value.push(removeRoute)
       })
-      router.addRoute(adminPersonalRoute)
       return 'ok'
     } else {
       return Promise.reject(new Error(result.msg))

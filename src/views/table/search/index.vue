@@ -8,7 +8,7 @@
       :columns="columns"
       :data="reqData"
       :showPagination="true"
-      :scroll="{ y: 'calc(100vh - 450px)' }"
+      :scroll="{ x: 'max-content', y: 'calc(100vh - 450px)' }"
     >
       <template #toolbar>
         <a-button type="primary" @click="() => add.show()">添加记录</a-button>
@@ -232,6 +232,7 @@ const columns = [
     title: '序号',
     dataIndex: 'id',
     align: 'center',
+    width: '80px',
   },
   {
     title: '账户信息',
