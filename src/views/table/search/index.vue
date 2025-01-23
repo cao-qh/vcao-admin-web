@@ -18,16 +18,41 @@
       </template>
       <template #bodyCell="{ column, row }">
         <template v-if="column.dataIndex === 'zhanghuxinxi'">
-          <MultipartTableCell>
-            <template #label>
-              <div>手机号：</div>
-              <div>代理账户：</div>
-            </template>
-            <template #value>
-              <div>{{ row.phone }}</div>
-              <div>{{ row.agentname }}</div>
-            </template>
-          </MultipartTableCell>
+          <MultipartTableCell
+            :data-list="[
+              {
+                label: '手机号：',
+                value: row.phone,
+                labelStyle: {
+                  paddingLeft: '15px',
+                },
+              },
+              {
+                label: '代理账户：',
+                value: row.agentname,
+              },
+            ]"
+          />
+        </template>
+        <template v-if="column.dataIndex === 'dingdanxinxi'">
+          <MultipartTableCell
+            :data-list="[
+              {
+                label: '订单状态：',
+                value: getOrderStatus(row.zhuangtai).label,
+                valueStyle: {
+                  color: getOrderStatus(row.zhuangtai).color,
+                },
+              },
+              {
+                label: '订单号：',
+                value: row.dingdanhao,
+                labelStyle: {
+                  paddingLeft: '14px',
+                },
+              },
+            ]"
+          />
         </template>
         <template v-if="column.dataIndex === 'qijinyong'">
           <a-popconfirm
@@ -38,15 +63,6 @@
           >
             <a-switch :checked="row.qijinyong === 1" />
           </a-popconfirm>
-        </template>
-        <template v-if="column.dataIndex === 'zhuangtai'">
-          <span
-            :style="{
-              color: getOrderStatus(row.zhuangtai).color,
-            }"
-          >
-            {{ getOrderStatus(row.zhuangtai).label }}
-          </span>
         </template>
         <template v-if="column.dataIndex === 'action'">
           <template v-if="row.zhuangtai !== 2">
@@ -259,13 +275,8 @@ const columns = [
     },
   },
   {
-    title: '订单状态',
-    dataIndex: 'zhuangtai',
-    align: 'center',
-  },
-  {
-    title: '订单号',
-    dataIndex: 'dingdanhao',
+    title: '订单信息',
+    dataIndex: 'dingdanxinxi',
     align: 'center',
   },
   {

@@ -1,14 +1,31 @@
 <template>
-  <a-flex>
-    <div style="text-align: right; text-wrap: nowrap">
-      <slot name="label"></slot>
-    </div>
-    <a-flex style="text-align: left" vertical align="start">
-      <slot name="value"></slot>
+  <div>
+    <a-flex v-for="row in dataList" :key="row.label">
+      <span
+        style="width: max-content; text-align: right; text-wrap: nowrap"
+        :style="row.labelStyle || ''"
+      >
+        {{ row.label }}
+      </span>
+      <span
+        style="text-align: left; word-break: break-all"
+        :style="row.valueStyle || ''"
+      >
+        {{ row.value }}
+      </span>
     </a-flex>
-  </a-flex>
+  </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+defineProps<{
+  dataList: Array<{
+    label: string
+    value: string
+    labelStyle?: Record<string, any>
+    valueStyle?: Record<string, any>
+  }>
+}>()
+</script>
 
 <style></style>
