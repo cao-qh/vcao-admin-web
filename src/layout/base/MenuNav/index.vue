@@ -69,16 +69,15 @@ const generateItemList = (list: RouteRecordRaw[]) => {
     const iconComp = icon ? () => resolveIcon(icon as string) : null
 
     // 子路由
-    const children = item.children
+    const children = item.children?.filter((item) => !item.meta?.hidden)
     if (children && children.length > 1) {
       // 有子路由的情况
       items.push(
         getItem(title as string, path, iconComp, generateItemList(children)),
       )
     } else if (children && children.length === 1) {
-      // 只有一个子路由的情况
       const onlyChild = children[0]
-      items.push(getItem(title as string, onlyChild.path || path, iconComp))
+      items.push(getItem(title as string, onlyChild.path, iconComp))
     } else {
       // 没有子路由的情况
       // 生成菜单
@@ -130,7 +129,7 @@ const onOpenChange = (openKeys: string[]) => {
 }
 
 // 菜单点击跳转路由
-const goRoute: MenuProps['onClick'] = ({ key }: any) => {
+const goRoute: MenuProps['onClick'] = ({ key }: { key: any }) => {
   $router.push(key)
 }
 
