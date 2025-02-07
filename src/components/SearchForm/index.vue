@@ -46,7 +46,11 @@
                   v-for="option in promiseOptionsResult[item.field]"
                   :key="option.value"
                 >
-                  <a-select-option v-if="option.value" :label="option.label">
+                  <a-select-option
+                    v-if="option.value"
+                    :label="option.label"
+                    :value="option.value"
+                  >
                     <span class="ant-select-option-item">
                       {{ option.label }}
                     </span>
