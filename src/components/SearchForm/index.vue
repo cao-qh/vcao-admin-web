@@ -170,7 +170,12 @@ const getFormItem = (field: string) => {
 const getFormValues = () => {
   const values: any = {}
   props.formItems.forEach((item) => {
-    if (item.value !== '' && item.value !== undefined && item.value !== null) {
+    if (
+      item.value !== '' &&
+      item.value !== undefined &&
+      item.value !== null &&
+      !item.hidden
+    ) {
       values[item.field] = item.value
     }
   })
