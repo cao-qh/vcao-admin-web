@@ -1,11 +1,13 @@
 <template>
   <a-form style="margin-bottom: 10px">
     <a-row :gutter="32">
-      <template
-        v-for="(item, index) in formItems.filter((item) => !item.hidden)"
-        :key="item.field"
-      >
-        <a-col v-if="index < 3 || advanced" :xs="24" :md="8" :xl="6">
+      <template v-for="(item, index) in formItems" :key="item.field">
+        <a-col
+          v-if="(index < 3 || advanced) && !item.hidden"
+          :xs="24"
+          :md="8"
+          :xl="6"
+        >
           <a-form-item :label="item.label">
             <a-input
               v-if="item.type === 'input'"
@@ -89,7 +91,7 @@
           <a-button type="primary" @click="$emit('search')">查询</a-button>
           <a-button @click="handleReset">重置</a-button>
           <a
-            v-if="formItems.filter((item) => !item.hidden).length > 3"
+            v-if="formItems.length > 3"
             @click="toggleAdvanced"
             style="margin-left: 8px"
           >
