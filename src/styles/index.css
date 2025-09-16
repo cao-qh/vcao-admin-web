@@ -1,0 +1,15 @@
+/* 引入清楚默认样式 */
+@import url('./reset.css');
+
+:root {
+  /*定义项目主题颜色*/
+
+  /*左侧的菜单栏的颜色*/
+  --base-menu-color: #20222a;
+
+  /* 顶部导航的高度*/
+  --base-header-height: 50px;
+
+  /* logo的高度 */
+  --base-logo-height: 49px;
+}

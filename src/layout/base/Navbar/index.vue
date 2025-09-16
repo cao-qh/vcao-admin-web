@@ -132,11 +132,11 @@ watchEffect(() => {
 // }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .navbar {
   padding: 0 10px;
-  height: $base-header-height;
-  line-height: $base-header-height;
+  height: var(--base-header-height);
+  line-height: var(--base-header-height);
   background-color: v-bind('color.bgColor');
   color: v-bind('color.color');
 }

@@ -163,7 +163,7 @@ const closeRight = (tabItem: TabItem) => {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .multi-tab {
   background-color: #fff;
   border-top: 1px solid #ecf0f1;
@@ -177,7 +177,7 @@ const closeRight = (tabItem: TabItem) => {
     display: inline-block;
     height: 100%;
     width: 100%;
-    // background-color: red;
+    /* background-color: red; */
     padding: 7px 0 7px 15px;
   }
 }
@@ -188,7 +188,7 @@ const closeRight = (tabItem: TabItem) => {
 }
 </style>
 
-<style lang="scss">
+<style>
 .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab {
   padding: 0;
 }

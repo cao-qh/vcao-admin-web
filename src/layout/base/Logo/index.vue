@@ -26,10 +26,10 @@ const color = computed(() => {
 })
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .logo {
-  height: $base-logo-height;
-  line-height: calc($base-logo-height - 20px);
+  height: var(--base-logo-height);
+  line-height: calc(var(--base-logo-height) - 20px);
   padding: 5px 16px;
   display: flex;
   justify-content: center;
@@ -49,12 +49,12 @@ const color = computed(() => {
     line-height: 39px;
     color: v-bind(color);
   }
+}
 
-  &.fold {
-    height: 41px;
-    span {
-      display: none;
-    }
+.logo.fold {
+  height: 41px;
+  span {
+    display: none;
   }
 }
 </style>

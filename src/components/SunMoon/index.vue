@@ -85,7 +85,7 @@ const getSize = computed(() => {
 })
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .sun-moon {
   position: relative;
   display: inline-flex;

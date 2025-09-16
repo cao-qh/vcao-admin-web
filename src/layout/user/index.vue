@@ -43,7 +43,7 @@ const bgColor = computed(() => {
 })
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .login-container {
   position: relative;
   height: 100vh;

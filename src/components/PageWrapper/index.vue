@@ -8,11 +8,12 @@
 
 <script setup lang="ts"></script>
 
-<style scoped lang="scss">
+<style scoped>
 .page-wrapper {
   padding: 15px;
-  .content-card {
-    padding: 0;
-  }
+}
+
+.content-card {
+  padding: 0;
 }
 </style>

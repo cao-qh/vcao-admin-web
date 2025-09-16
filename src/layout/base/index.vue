@@ -64,7 +64,7 @@ watch(
 )
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .layout-container {
   height: 100vh;
   position: relative;
@@ -75,20 +75,20 @@ watch(
 
   .layout-content {
     overflow-y: auto;
+  }
 
-    &.mobile {
-      position: absolute;
-      top: v-bind(headerBarHeight);
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 1;
-    }
+  .layout-content.mobile {
+    position: absolute;
+    top: v-bind(headerBarHeight);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
   }
 
   .mask {
-    background-color: rgba($color: #000000, $alpha: 0.6);
-    height: calc(100vh - $base-header-height);
+    background-color: rgba(0, 0, 0, 0.6);
+    height: calc(100vh - var(--base-header-height));
     z-index: 2;
   }
 }

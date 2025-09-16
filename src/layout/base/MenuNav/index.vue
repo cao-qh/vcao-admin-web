@@ -141,9 +141,9 @@ watchEffect(() => {
 })
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .menu-container {
-  height: calc(100% - $base-header-height);
+  height: calc(100% - var(--base-header-height));
   overflow-y: scroll;
   user-select: none;
 }

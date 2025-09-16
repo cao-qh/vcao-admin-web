@@ -33,16 +33,6 @@ export default defineConfig(({ mode }) => {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
       },
     },
-    // scss全局变量一个配置
-    css: {
-      preprocessorOptions: {
-        scss: {
-          api: 'modern-compiler',
-          javascriptEnabled: true,
-          additionalData: '@import "@/styles/variable.scss";',
-        },
-      },
-    },
     // 构建
     build: {
       // outDir: env.VITE_APP_BASE_URL,

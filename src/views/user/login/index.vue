@@ -335,7 +335,7 @@ const getCode = async () => {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .login {
   width: 375px;
   margin: 0 auto;

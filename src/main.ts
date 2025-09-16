@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 // 引入模板的全局样式
-import './styles/index.scss'
+import './styles/index.css'
 // svg插件需要的配置代码
 import 'virtual:svg-icons-register'
 // 引入自定义组件对象：注册整个项目全局组件
