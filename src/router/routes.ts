@@ -19,7 +19,7 @@ export const constantRoute = [
       // 登录
       {
         path: '/user/login',
-        component: () => import('@/views/user/login/index.vue'),
+        component: () => import('@/views/User/login/index.vue'),
         name: 'Login',
         meta: {
           title: '管理员登录',
@@ -41,25 +41,55 @@ export const constantRoute = [
 
 export const asyncRoute = [
   // 测试
+  // {
+  //   path: '/',
+  //   component: BaseLayout,
+  //   name: 'Home',
+  //   meta: {
+  //     title: '测试',
+  //     icon: 'ExperimentOutlined',
+  //   },
+  //   redirect: '/test',
+  //   children: [
+  //     {
+  //       path: '/test',
+  //       component: () => import('@/views/test/index.vue'),
+  //       name: 'Test',
+  //       meta: {
+  //         title: '测试',
+  //       },
+  //     },
+  //   ],
+  // },
   {
     path: '/',
     component: BaseLayout,
     name: 'Home',
+    redirect: '/dashboard',
     meta: {
-      title: '测试',
-      icon: 'ExperimentOutlined',
+      title: '仪表盘',
+      icon: 'DashboardOutlined',
     },
-    redirect: '/test',
     children: [
       {
-        path: '/test',
-        component: () => import('@/views/test/index.vue'),
-        name: 'Test',
+        path: '/dashboard',
+        component: () => import('@/views/Dashboard/index.vue'),
+        name: 'Dashboard',
         meta: {
-          title: '测试',
+          title: '仪表盘',
         },
       },
     ],
+  },
+  // 数据大屏
+  {
+    path: '/screen',
+    component: () => import('@/views/Screen/index.vue'),
+    name: 'Screen',
+    meta: {
+      title: '数据大屏',
+      icon: 'FundProjectionScreenOutlined',
+    },
   },
   // 数据表格
   {
@@ -75,7 +105,7 @@ export const asyncRoute = [
       // 查询表格
       {
         path: '/table/search',
-        component: () => import('@/views/table/search/index.vue'),
+        component: () => import('@/views/Table/search/index.vue'),
         name: 'Search',
         meta: {
           title: '查询表格',
@@ -83,32 +113,30 @@ export const asyncRoute = [
       },
     ],
   },
+  {
+    path: '/personal',
+    component: BaseLayout,
+    name: 'Personal',
+    meta: {
+      title: '个人管理',
+      icon: 'UserOutlined',
+    },
+    redirect: '/Personal/Info',
+    children: [
+      // 个人信息
+      {
+        path: '/Personal/Info',
+        component: () => import('@/views/Personal/Info/index.vue'),
+        name: 'PersonalInfo',
+        meta: {
+          title: '个人信息',
+        },
+      },
+    ],
+  },
 ]
 
 /*
-// 管理员个人管理路由（单独添加，不参与权限筛选）
-// 个人管理
-export const adminPersonalRoute = {
-  path: '/',
-  component: BaseLayout,
-  name: 'Personal',
-  meta: {
-    title: '个人管理',
-    icon: 'UserOutlined',
-  },
-  redirect: '/Personal/Info',
-  children: [
-    // 个人信息
-    {
-      path: '/Personal/Info',
-      component: () => import('@/views/Personal/Info/index.vue'),
-      name: 'PersonalInfo',
-      meta: {
-        title: '个人信息',
-      },
-    },
-  ],
-}
 
 // 异步路由
 export const asyncRoute = [

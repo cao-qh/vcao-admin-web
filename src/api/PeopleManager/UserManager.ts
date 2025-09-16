@@ -14,7 +14,7 @@ enum API {
   // 添加
   addUrl = '/pc/yonghu/add',
   // 修改
-  editUrl = '/pc/yonghu/xiugai',
+  editUrl = '/updateinfo',
 }
 
 // 查询

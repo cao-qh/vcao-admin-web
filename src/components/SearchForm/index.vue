@@ -192,7 +192,7 @@ defineExpose({
 })
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .ant-select-option-item {
   white-space: normal;
   word-wrap: break-all;

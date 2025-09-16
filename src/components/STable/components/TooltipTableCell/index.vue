@@ -53,7 +53,7 @@ const copy = async () => {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .copy-btn {
   padding: 2px;
   color: #4dabf7;

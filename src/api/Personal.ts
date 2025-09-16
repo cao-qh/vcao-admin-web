@@ -3,7 +3,7 @@ import request, { obj2Query } from '@/utils/request'
 // 个人管理
 enum API {
   // 个人信息 查
-  selectUserInfo = '/pc/yonghu/selectZiJi',
+  selectUserInfo = '/info',
   // 个人信息 修改
   editUserInfo = '/pc/yonghu/xiugai',
 }

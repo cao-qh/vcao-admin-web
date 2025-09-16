@@ -5,6 +5,12 @@ function createUserList() {
       userId: 1,
       username: 'admin',
       password: 'admin',
+      tel: '12345678901',
+      email: '12345678901@163.com',
+      createTime: '2021-09-01 00:00:00',
+      updateTime: '2021-09-01 00:00:00',
+      status: 1,
+      ip: '127.0.0.1',
       desc: '平台管理员',
       // roles: ['平台管理员'],
       buttons: [
@@ -60,9 +66,14 @@ function createUserList() {
       ],
       routes: [
         'Home',
+        'Dashboard',
         'Test',
         'Table',
         'Search',
+        'Screen',
+        'ScreenDashboard',
+        'Personal',
+        'PersonalInfo',
         // 'AppConfig',
         // 'Protocol',
         // 'HomeSetting',
@@ -147,11 +158,18 @@ export default [
       //如果有返回成功信息
       return {
         code: 0,
-        data: {
-          username: checkUser.username,
-          routes: checkUser.routes,
-          buttons: checkUser.buttons,
-        },
+        data: checkUser,
+      }
+    },
+  },
+  // 更新用户星系
+  {
+    url: '/api/updateinfo',
+    method: 'post',
+    response: (request) => {
+      return {
+        code: 0,
+        msg: '更新用户信息成功',
       }
     },
   },

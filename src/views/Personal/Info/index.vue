@@ -2,25 +2,25 @@
   <PageWrapper>
     <a-descriptions title="个人信息" bordered>
       <a-descriptions-item label="姓名">
-        {{ userInfo.xingming }}
+        {{ userInfo.username }}
       </a-descriptions-item>
       <a-descriptions-item label="手机号">
-        {{ userInfo.shoujihao }}
+        {{ userInfo.tel }}
       </a-descriptions-item>
       <a-descriptions-item label="邮箱">
-        {{ userInfo.youxiang }}
+        {{ userInfo.email }}
       </a-descriptions-item>
       <a-descriptions-item label="启禁用">
-        {{ userInfo.qijinyong == 1 ? '启用' : '禁用' }}
+        {{ userInfo.status == 1 ? '启用' : '禁用' }}
       </a-descriptions-item>
       <a-descriptions-item label="IP">
         {{ userInfo.ip }}
       </a-descriptions-item>
       <a-descriptions-item label="创建时间">
-        {{ userInfo.chuangjianshijian }}
+        {{ userInfo.createTime }}
       </a-descriptions-item>
       <a-descriptions-item label="修改时间">
-        {{ userInfo.gengxinshijian }}
+        {{ userInfo.updateTime }}
       </a-descriptions-item>
     </a-descriptions>
     <div

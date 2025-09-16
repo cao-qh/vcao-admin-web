@@ -1,24 +1,24 @@
 <template>
   <a-modal title="修改" :open="open" @ok="submit" @cancel="open = false">
     <a-form ref="formRef" :model="formState" v-bind="layout" :rules="rules">
-      <a-form-item label="账户/手机号" name="shoujihao">
+      <a-form-item label="账户/手机号" name="tel">
         <a-input
-          v-model:value.trim="formState.shoujihao"
+          v-model:value.trim="formState.tel"
           placeholder="请输入"
           disabled
         />
       </a-form-item>
-      <a-form-item label="密码" name="mima">
+      <a-form-item label="密码" name="password">
         <a-input-password
-          v-model:value.trim="formState.mima"
+          v-model:value.trim="formState.password"
           placeholder="请输入"
         />
       </a-form-item>
-      <a-form-item label="姓名" name="xingming">
-        <a-input v-model:value.trim="formState.xingming" placeholder="请输入" />
+      <a-form-item label="姓名" name="username">
+        <a-input v-model:value.trim="formState.username" placeholder="请输入" />
       </a-form-item>
-      <a-form-item label="邮箱" name="youxiang">
-        <a-input v-model:value.trim="formState.youxiang" placeholder="请输入" />
+      <a-form-item label="邮箱" name="email">
+        <a-input v-model:value.trim="formState.email" placeholder="请输入" />
       </a-form-item>
       <a-form-item label="登录IP" name="ip">
         <a-textarea
@@ -29,6 +29,7 @@
     </a-form>
   </a-modal>
 </template>
+
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
@@ -58,18 +59,16 @@ const formRef = ref()
 const formState = reactive<any>({})
 
 const rules = {
-  shoujihao: [
-    { required: true, pattern: phone, message: '请输入正确的手机号' },
-  ],
+  tel: [{ required: true, pattern: phone, message: '请输入正确的手机号' }],
   ip: [{ pattern: ips, message: '请输入正确的IP地址' }],
 }
 
 const show = async (row: any) => {
   open.value = true
-  formState.shoujihao = row.shoujihao
-  formState.mima = row.mima
-  formState.xingming = row.xingming
-  formState.youxiang = row.youxiang
+  formState.tel = row.tel
+  formState.password = row.password
+  formState.username = row.username
+  formState.email = row.email
   formState.ip = row.ip
 }
 
