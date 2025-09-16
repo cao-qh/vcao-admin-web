@@ -91,6 +91,46 @@ export const asyncRoute = [
       icon: 'FundProjectionScreenOutlined',
     },
   },
+  // 权限管理
+  {
+    path: '/acl',
+    component: BaseLayout,
+    name: 'ACL',
+    meta: {
+      title: '权限管理',
+      icon: 'LockOutlined',
+    },
+    redirect: '/acl/user',
+    children: [
+      // 用户管理
+      {
+        path: '/acl/user',
+        component: () => import('@/views/ACL/user/index.vue'),
+        name: 'User',
+        meta: {
+          title: '用户管理',
+        },
+      },
+      // 角色管理
+      {
+        path: '/acl/role',
+        component: () => import('@/views/ACL/role/index.vue'),
+        name: 'Role',
+        meta: {
+          title: '角色管理',
+        },
+      },
+      // 菜单管理
+      {
+        path: '/acl/permission',
+        component: () => import('@/views/ACL/permission/index.vue'),
+        name: 'Permission',
+        meta: {
+          title: '菜单管理',
+        },
+      },
+    ],
+  },
   // 数据表格
   {
     path: '/table',
