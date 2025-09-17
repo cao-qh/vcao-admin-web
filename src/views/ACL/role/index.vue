@@ -80,7 +80,7 @@ import type { RequestParams } from '@/api/type'
 
 const formItems = reactive<FormItems>([
   {
-    filed: 'roleName',
+    field: 'roleName',
     label: '职位搜索',
     type: 'input',
     placeholder: '请输入职位名称',
@@ -125,7 +125,7 @@ const reqData = async (page: number, limit: number) => {
     limit,
   }
   formItems.forEach((item) => {
-    data[item.filed] = item.value
+    data[item.field] = item.value
   })
 
   searchLoading.value = true

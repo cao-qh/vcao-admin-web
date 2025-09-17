@@ -86,7 +86,7 @@ import type { RequestParams } from '@/api/type'
 
 const formItems = reactive<FormItems>([
   {
-    filed: 'username',
+    field: 'username',
     label: '用户名',
     type: 'input',
     placeholder: '请输入用户名',
@@ -144,7 +144,7 @@ const reqData = async (page: number, limit: number) => {
     limit,
   }
   formItems.forEach((item) => {
-    data[item.filed] = item.value
+    data[item.field] = item.value
   })
 
   const res = await reqUserInfo(data)
